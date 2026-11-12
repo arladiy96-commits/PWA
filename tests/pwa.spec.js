@@ -1,15 +1,28 @@
 import {test,expect} from '@playwright/test';
-async function start(page,role='admin'){
- await page.goto('/');await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
+import http from 'node:http';
+let originServer;
+test.afterEach(async()=>{if(originServer?.listening)await stopOrigin();});
+async function stopOrigin(){await new Promise(resolve=>{originServer.close(resolve);originServer.closeAllConnections();});}
+async function temporaryOrigin(){
+ originServer=http.createServer((req,res)=>{
+  const upstream=http.request({hostname:'127.0.0.1',port:8765,path:req.url,method:req.method},r=>{res.writeHead(r.statusCode,r.headers);r.pipe(res);});
+  upstream.on('error',()=>{res.writeHead(502);res.end();});req.pipe(upstream);
+ });
+ await new Promise(resolve=>originServer.listen(0,'127.0.0.1',resolve));
+ return `http://127.0.0.1:${originServer.address().port}`;
+}
+async function start(page,role='admin',origin='/'){
+ await page.goto(origin);await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
 }
 async function api(page,path,method='GET',body){return page.evaluate(async({path,method,body})=>{
  const r=await window.PWA.fetch(path,{method,...(body?{body:JSON.stringify(body)}:{})});
  const data=r.headers.get('Content-Type')?.includes('json')?await r.json():{size:(await r.blob()).size};
  return {status:r.status,data};
 },{path,method,body});}
-test('cabinets, saved data, offline reload, documents, no external API',async({page,context})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));const external=[];page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1:8765')&&!r.url().startsWith('blob:')&&!r.url().startsWith('data:'))external.push(r.url());});
- await start(page);
+test('cabinets, saved data, offline reload, documents, no external API',async({page,context,browserName})=>{
+ const origin=await temporaryOrigin();
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));const external=[];page.on('request',r=>{if(!r.url().startsWith(origin)&&!r.url().startsWith('blob:')&&!r.url().startsWith('data:'))external.push(r.url());});
+ await start(page,'admin',origin);
  const boot=await api(page,'/api/bootstrap');expect(boot.status).toBe(200);const pid=boot.data.products[0].id;
  const lid=(await api(page,'/api/loaders','POST',{name:'Проверка сохранения'})).data.id;
  await api(page,'/api/tariffs','PUT',{transport:'truck',product_id:pid,rate:'100',rate_over20:'150'});
@@ -21,7 +34,12 @@ test('cabinets, saved data, offline reload, documents, no external API',async({p
  await expect(page.locator('#pwa-cache-status')).toHaveText('Готово оффлайн');
  await page.reload();await expect(page.locator('.nav')).toBeVisible();
  expect((await api(page,`/api/loads/${id}`)).data.total_cents).toBe(200000);
- await context.setOffline(true);await page.reload();await expect(page.locator('.nav')).toBeVisible();
+ // WebKit's offline emulation kills SW responses before dispatch (#42775).
+ // Stop the actual origin instead, and prove it is unreachable outside the SW.
+ await stopOrigin();
+ await expect(fetch(origin)).rejects.toThrow();
+ if(browserName!=='webkit')await context.setOffline(true);
+ await page.reload();await expect(page.locator('.nav')).toBeVisible();
  expect((await api(page,`/api/statements/${sid}`)).data.stats.total_cents).toBe(200000);
  for(const role of ['manager','wagon','storekeeper']){
   await page.locator('#pwa-bar button').click();await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
