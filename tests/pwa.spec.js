@@ -67,3 +67,32 @@ test('server adapter never falls back and always uses server responses',async({p
  });
  expect(result.calls).toEqual([{url:'https://server.invalid/api/report',authorization:'Bearer test-token',telegram:null}]);expect(result.value.total_cents).toBe(987654321);expect(result.error).toContain('Изменения не сохранены');
 });
+
+test('system Back unwinds tabs, forms and crew picker without losing parent input',async({page})=>{
+ await start(page,'manager');
+ const nav=id=>page.locator(`[data-act="nav"][data-id="${id}"]`);
+ await nav('loaders').click();
+ await page.locator('[data-act="lv-add-loader"]').click();
+ await expect(page.locator('#lv-loader-editor')).toBeVisible();
+ await page.goBack();
+ await expect(page.locator('#overlay')).toHaveClass(/hidden/);
+ await expect(nav('loaders')).toHaveClass(/active/);
+ await page.goBack();await expect(nav('lev-home')).toHaveClass(/active/);
+ await nav('tariffs').click();await nav('loaders').click();
+ await page.goBack();await expect(nav('tariffs')).toHaveClass(/active/);
+ await page.goBack();await expect(nav('lev-home')).toHaveClass(/active/);
+ await page.locator('[data-act="lv-new-load"][data-id="truck"]').click();
+ await page.locator('#truck-form input[name="buyer"]').fill('Черновик покупателя');
+ await page.locator('[data-act="truck-crew-open"]').click();
+ await expect(page.locator('#truck-picker')).toBeVisible();
+ await page.goBack();await expect(page.locator('#truck-picker')).toHaveCount(0);
+ await expect(page.locator('#truck-form input[name="buyer"]')).toHaveValue('Черновик покупателя');
+ await page.goBack();await expect(page.locator('#overlay')).toHaveClass(/hidden/);
+ await expect(nav('lev-home')).toHaveClass(/active/);
+ // Closing with the X must consume the same history entry, without a dead Back.
+ await page.locator('[data-act="lv-new-load"][data-id="truck"]').click();
+ await page.locator('#modal [data-act="dismiss"]').click();
+ await expect(page.locator('#overlay')).toHaveClass(/hidden/);
+ await nav('tariffs').click();await page.goBack();
+ await expect(nav('lev-home')).toHaveClass(/active/);
+});

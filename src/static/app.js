@@ -86,6 +86,18 @@
     const act=state.me.role==='admin'?'ad-edit':state.me.role==='manager'?'lv-load':'detail';
     return `<section class="overdue-panel" aria-label="Незавершённые погрузки"><h2>Не завершены за прошлые дни <span>${items.length}</span></h2><div class="overdue-list">${items.map(x=>`<button type="button" data-act="${act}" data-id="${x.id}"><span><b>${vehicleName(x)} · ${esc(x.reference||'Без номера')}</b><small>${esc(x.load_date.split('-').reverse().join('.'))} · ${esc(x.product_name)} · ${tone(x.tonnes)} т</small>${x.buyer?`<small>${esc(x.buyer)}</small>`:''}</span><strong>${x.status==='progress'?'В работе':'Ожидает'} ›</strong></button>`).join('')}</div></section>`;
   }
+  function trackScreen(){
+    const keys=['tab','previewWagon','transport','filter','start','end','search','maximDate','traceRootTab'];
+    const view=Object.fromEntries(keys.map(k=>[k,state[k]]));
+    const roleView=lev.navigationView();
+    const key=JSON.stringify([view.tab,view.previewWagon,roleView.key]);
+    window.PWA.navigation.screen(key,async()=>{
+      Object.assign(state,view);syncWagonTelegramTheme();
+      if(['manager','admin'].includes(state.me.role)&&['lev-home','lev-detail','report','lev-stats'].includes(state.tab))await lev.restoreNavigation(roleView);
+      else if(state.tab==='loads')await refreshLoads();
+      else await render();
+    });
+  }
   function shell(inner,live=null){
     if(state.tab!=='lev-home'||inner.includes('lv-overview'))inner=overduePanel()+inner;
     live=live||liveListPaint;
@@ -100,6 +112,7 @@
       page.querySelectorAll('details').forEach((x,i)=>{x.open=!!expanded[i];});
       page.scrollTop=y;lastShellHTML=inner;return;
     }
+    trackScreen();
     lastShellHTML=inner;
     const previous=$('#page-scroll');
     const y=previous&&lastShellTab===state.tab?previous.scrollTop:0;
@@ -135,7 +148,7 @@
   tg?.onEvent?.('fullscreenFailed',syncTelegramViewport);
   tg?.onEvent?.('safeAreaChanged',syncTelegramViewport);
   tg?.onEvent?.('contentSafeAreaChanged',syncTelegramViewport);
-  function render(){if(!state.me)return;switch(state.tab){case'admin-home':return admin.renderHome();case'ad-people':return admin.renderPeople();case'ad-settings':return admin.renderSettings();case'ad-trash':return admin.renderTrash();case'ad-backups':return admin.renderBackups();case'ad-products':return admin.renderProducts();case'ad-buyers':return admin.renderBuyers();case'lev-detail':lev.renderTrace();break;case'lev-stats':lev.renderStats();break;case'lev-home':lev.renderOverview();break;case'os-loaders':olesya.renderPeople();break;case'os-stats':olesya.renderStats();break;case'loads':isWagonMode()?renderMaximLoads():renderLoads();break;case'wagon-history':renderMaximHistory();break;case'report':renderReport();break;case'loaders':renderLoaders();break;case'tariffs':renderTariffs();break;case'users':renderUsers();break;case'audit':renderAudit();break;}}
+  function render(){if(!state.me)return;switch(state.tab){case'admin-home':return admin.renderHome();case'ad-people':return admin.renderPeople();case'ad-settings':return admin.renderSettings();case'ad-trash':return admin.renderTrash();case'ad-backups':return admin.renderBackups();case'ad-products':return admin.renderProducts();case'ad-buyers':return admin.renderBuyers();case'lev-detail':return lev.renderTrace();case'lev-stats':return lev.renderStats();case'lev-home':return lev.renderOverview();case'os-loaders':return olesya.renderPeople();case'os-stats':return olesya.renderStats();case'loads':return isWagonMode()?renderMaximLoads():renderLoads();case'wagon-history':return renderMaximHistory();case'report':return renderReport();case'loaders':return renderLoaders();case'tariffs':return renderTariffs();case'users':return renderUsers();case'audit':return renderAudit();}}
   function loadStatus(x){return x==='loaded'?'<span class="badge done">✓ Загружен</span>':x==='progress'?'<span class="badge progress">● В работе</span>':'<span class="badge">○ Ожидает</span>';}
   async function refreshLoads(){if(isWagonMode()&&state.tab==='loads')state.start=state.end=state.maximDate||localDate();const p=new URLSearchParams({start:state.start,end:state.end});if(state.search.trim())p.set('search',state.search.trim());[state.loads,state.overdue]=await Promise.all([api('/api/loads?'+p),api('/api/overdue-loads')]);render();}
   // Единая геометрия открытых модалок во всех ролях. Android Telegram может
@@ -231,6 +244,7 @@
     api('/api/buyers?'+new URLSearchParams({transport})).then(names=>{if(!input.isConnected)return;buyers=names;if(document.activeElement===input)draw();}).catch(()=>{});
   }
   function openModal(title,html,opts={}){
+    window.PWA.navigation.layer('modal',()=>dismiss());
     uiEpoch++;clearTimeout(liveTimer);
     state.liveDetailId=null;
     const overlay=$('#overlay');
@@ -259,6 +273,7 @@
     uiEpoch++;setTimeout(flushLive,350);
     const overlay=$('#overlay');
     if(overlay.classList.contains('hidden')||overlay.classList.contains('closing'))return;
+    window.PWA.navigation.close('modal');
     overlay.setAttribute('aria-hidden','true');
     if(overlay.contains?.(document.activeElement))document.activeElement.blur();
     if(overlay.classList.contains('wagon-entry')){
@@ -428,6 +443,7 @@
   document.addEventListener('click',async e=>{
     const btn=e.target.closest('[data-act]');if(!btn)return;const act=btn.dataset.act,id=btn.dataset.id;
     try{
+      if((act==='lv-trace-back'||(act==='lv-archive'&&btn.classList.contains('lv-back'))||act==='os-back-stats')&&window.PWA.navigation.back())return;
       if(await delegatedClick(act,id,btn))return;
       if(act==='quick-menu'){quickMenu();}
       else if(act==='quick-nav'){dismiss();if(isWagonMode())await switchMaximTab(id);else {state.tab=id;render();if(id==='report'&&!state.report)await loadReport();}}

@@ -1,3 +1,4 @@
+import {createNavigation} from './navigation.js';
 import config from './config.js';
 import {createServerAdapter} from './server-adapter.js';
 const app=document.getElementById('app');
@@ -17,7 +18,7 @@ async function download(response){
   panel.querySelector('button').onclick=()=>panel.remove();
   // Explicit second tap works on iOS even after a long asynchronous document build.
 }
-window.PWA={mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download};
+window.PWA={navigation:createNavigation(),mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download};
 async function openApp(role){
   app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
   try{

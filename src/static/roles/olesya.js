@@ -100,6 +100,7 @@ window.WagonsRoles.olesya=function(ctx){
 
   let truckPicker=null, truckCopyRequest=0;
   function openTruckForm(data=null){
+    window.PWA.navigation.close('truck-picker');
     truckPicker=null;truckCopyRequest++;
     const edit=!!data;
     const selected=new Set(data?.crew||[]);
@@ -140,10 +141,12 @@ window.WagonsRoles.olesya=function(ctx){
       <div class="modal-form-fields"><div id="truck-crew-list"></div></div>
       <div class="modal-form-actions"><button type="button" class="btn primary full" data-act="truck-crew-done" id="truck-crew-done"></button></div>
     </section>`);
+    window.PWA.navigation.layer('truck-picker',()=>closeTruckPicker(false));
     drawTruckCrew();
   }
   function closeTruckPicker(commit=false){
     const picker=truckPicker;if(!picker)return false;
+    window.PWA.navigation.close('truck-picker');
     truckPicker=null;truckCopyRequest++;
     if(!$('#truck-picker')||!picker.form.isConnected)return false;
     $('#truck-picker input:focus')?.blur();

@@ -347,5 +347,18 @@ window.WagonsRoles.lev=function(ctx){
     if(state.tab==='lev-stats')return renderStats(live);
     if(state.tab==='report'&&!busy)return revisionId?openRevision(revisionId,live):statementId?showStatement(statementId,live):renderReport(live);
   }
-  return {header,menu,openRevision,renderTrace,refreshLive,renderStats,renderOverview,renderReport,loadReport,sendReport,downloadReport,renderLoaders,renderTariffs,saveRates,handleClick,handleSubmit,handleChange};
+  function navigationView(){
+    const view=structuredClone({mode,statementId,revisionId,revisionInclude,traceView,traceStack});
+    view.key=state.tab==='lev-detail'?['trace',view.traceView]:state.tab==='report'?['report',mode,statementId,revisionId]:null;
+    return view;
+  }
+  async function restoreNavigation(v){
+    mode=v.mode;statementId=v.statementId;revisionId=v.revisionId;revisionInclude=v.revisionInclude;
+    traceView=structuredClone(v.traceView);traceStack=structuredClone(v.traceStack);
+    if(state.tab==='lev-detail')return renderTrace();
+    if(state.tab==='report')return revisionId?openRevision(revisionId):statementId?showStatement(statementId):renderReport();
+    if(state.tab==='lev-stats')return renderStats();
+    return renderOverview();
+  }
+  return {navigationView,restoreNavigation,header,menu,openRevision,renderTrace,refreshLive,renderStats,renderOverview,renderReport,loadReport,sendReport,downloadReport,renderLoaders,renderTariffs,saveRates,handleClick,handleSubmit,handleChange};
 };
