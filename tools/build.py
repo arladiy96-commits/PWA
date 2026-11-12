@@ -62,6 +62,7 @@ def engine():
     if not all(list(CACHE.glob(x.split('==')[0].replace('-','_')+'-*.whl')) for x in WHEELS):
         subprocess.run([sys.executable,'-m','pip','download','--no-deps','--only-binary=:all:','--platform','any','--python-version','312','-d',str(CACHE),*WHEELS],check=True)
     runtime=target/'runtime';runtime.mkdir()
+    (runtime/'package.json').write_text('{"type":"commonjs"}')
     for name in files:
         path=CACHE/name
         pkg=next((v for v in lock['packages'].values() if v['file_name']==name),None)
