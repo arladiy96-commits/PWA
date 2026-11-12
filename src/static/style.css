@@ -1,0 +1,149 @@
+:root{color-scheme:dark;--bg:#081321;--panel:#10243a;--panel2:#112a43;--line:#26445f;--ink:#eaf6ff;--muted:#8da8bd;--accent:#4ed8f4;--green:#5ce9b1;--warn:#eac47b;--danger:#ff878d;--shadow:0 20px 55px rgba(0,3,15,.3)}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Arial',sans-serif;min-height:100vh;overflow-x:hidden}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}input,select{border:1px solid #395472;background:#071b2e;color:var(--ink);border-radius:11px;min-height:42px;padding:10px 12px;width:100%;outline:none}input::placeholder{color:#6d8ba4}input:focus,select:focus{border-color:var(--accent)}.ambient{pointer-events:none;position:fixed;filter:blur(80px);border-radius:50%;opacity:.18}.a1{top:-100px;right:-110px;width:360px;height:300px;background:#0b8fff}.a2{bottom:-180px;left:-130px;width:290px;height:360px;background:#136c85}.app-frame{position:relative;width:min(100%,1020px);min-height:100vh;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 94px)}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:22px}.identity{display:flex;gap:12px;align-items:center}.mark{width:45px;height:45px;display:grid;place-items:center;border:1px solid #278eae;border-radius:15px;background:linear-gradient(135deg,#143b61,#0c2740);box-shadow:0 0 25px #0e96be24;font-size:24px}.top h1{font-size:20px;letter-spacing:.14em;line-height:1.1;margin:0;font-weight:850}.top small{color:var(--muted);font-size:11px;letter-spacing:.06em}.user{max-width:43%;text-align:right}.user b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.user small{color:var(--muted)}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.17em;font-size:10px;font-weight:800}.page-title{font-size:26px;line-height:1.12;margin:3px 0 5px}.sub{color:var(--muted);font-size:13px;line-height:1.45}.pane{background:linear-gradient(165deg,#11283eeb,#0b1f31f2);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.hero{margin-bottom:16px;padding:18px;background:linear-gradient(135deg,#16334e,#0d2239)}.hero-top{display:flex;justify-content:space-between;align-items:center}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.kpi{background:#08192999;border:1px solid #2b4760;border-radius:12px;padding:12px 10px}.kpi strong{font-size:24px;letter-spacing:-.03em;display:block;line-height:1.15}.kpi small{display:block;color:var(--muted);font-size:10px;margin-top:6px}.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}.toolbar input{min-width:0}.toolbar select{width:auto;min-width:132px}.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.grow{flex:1;min-width:0}.muted{color:var(--muted)}.tiny{font-size:11px}.btn{border:1px solid #40617a;background:#16354e;color:var(--ink);border-radius:12px;min-height:41px;padding:9px 14px;font-weight:750;display:inline-flex;gap:8px;align-items:center;justify-content:center;text-align:center;white-space:nowrap}.btn.primary{background:linear-gradient(110deg,#2cbee5,#51e5ed);border-color:transparent;color:#062137;box-shadow:0 5px 25px #21bbdb24}.btn.ghost{background:transparent}.btn.good{background:#163f36;color:var(--green);border-color:#387b63}.btn.danger{color:var(--danger);border-color:#703845;background:#3c1e2b}.btn.small{min-height:33px;padding:6px 10px;border-radius:9px;font-size:11px}.btn.full{width:100%}.date-input{width:145px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:18px 0 10px}.section-head h2{font-size:17px;margin:0}.tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--line);background:#10243a;border-radius:13px;margin-bottom:12px}.tab{flex:1;background:transparent;color:var(--muted);border:0;border-radius:10px;min-height:38px;font-size:13px;font-weight:750}.tab.active{background:#23567c;color:white;box-shadow:0 1px 12px #4ed8f40e}.cards{display:grid;gap:9px}.load-card{padding:13px 14px;border-radius:15px;background:linear-gradient(160deg,#10273c,#0d2032);border:1px solid #2a4862;transition:border-color .15s}.load-card:active{border-color:#4ed8f4}.line1{display:flex;align-items:center;gap:8px}.type-icon{height:34px;min-width:34px;display:grid;place-items:center;background:#1b4160;border-radius:10px}.load-name{font-weight:800;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.badge{border-radius:99px;border:1px solid #4d6b84;padding:4px 8px;color:#a8c1d3;font-size:10px;font-weight:800;white-space:nowrap}.badge.done{color:#6be7b1;background:#17443b7d;border-color:#256e58}.badge.progress{color:#f1d188;background:#4d401b80;border-color:#77642f}.detail{display:flex;justify-content:space-between;gap:6px;align-items:center;margin:10px 0;color:#a8bed0;font-size:12px}.detail strong{color:white;font-size:13px}.card-foot{display:flex;justify-content:space-between;gap:6px;align-items:center;border-top:1px solid #243e52;padding-top:10px}.crew-caption{font-size:11px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.card-btns{display:flex;gap:6px}.empty{padding:38px 12px;text-align:center;color:var(--muted);border:1px dashed #38536b;border-radius:15px}.empty .em{font-size:35px;display:block;margin-bottom:10px}.nav{position:fixed;bottom:0;left:0;right:0;background:#071521ed;border-top:1px solid #28485d;backdrop-filter:blur(18px);padding:9px max(10px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));z-index:30}.nav-inner{display:flex;justify-content:space-around;gap:4px;max-width:800px;margin:auto}.nav-btn{border:0;background:transparent;color:#8aacc5;display:grid;gap:4px;justify-items:center;padding:6px;min-width:58px;flex:1;font-size:10px;font-weight:700;border-radius:12px}.nav-btn b{font-size:19px;font-weight:400}.nav-btn.active{color:#68e1f3;background:#17374c}.overlay{position:fixed;inset:0;z-index:100;background:#020b12bd;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px)}.overlay.hidden,.toast.hidden{display:none}.modal{width:min(100%,620px);max-height:92vh;overflow:auto;background:#0c2033;border:1px solid #3c5d74;border-radius:24px 24px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -30px 70px #0008}.modal h2{font-size:20px;margin:0}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.x{background:#1b3950;border:0;border-radius:10px;color:#aac8d9;width:34px;height:34px;font-size:20px}.field{display:block;margin-bottom:13px;font-weight:650;color:#c4d7e7;font-size:12px}.field input,.field select{margin-top:6px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.form-actions{display:flex;gap:9px;margin-top:12px}.form-actions>*{flex:1}.choice{display:flex;align-items:center;gap:9px;background:#122c42;border:1px solid #31516a;padding:10px 12px;border-radius:12px;margin-bottom:7px;cursor:pointer}.choice input{height:18px;width:18px;min-height:18px;accent-color:#3ad1e7}.choice strong{font-size:13px}.pill-list{display:flex;flex-wrap:wrap;gap:7px}.pill{padding:8px 10px;border:1px solid #426780;background:#173950;color:#e7f5fc;border-radius:9px;font-size:12px}.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}.report-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:15px 0}.value-card{border:1px solid #33566d;border-radius:14px;background:#122a3f;padding:12px}.value-card b{font-size:20px;display:block}.value-card small{color:var(--muted)}.table-wrap{overflow-x:auto;border:1px solid #294760;border-radius:14px}.data-table{border-collapse:collapse;width:100%;font-size:12px}.data-table th{text-align:left;background:#193852;color:#9fd4e6;padding:11px 10px;white-space:nowrap}.data-table td{padding:10px;border-top:1px solid #25435b}.data-table tr:nth-child(even){background:#0d2639}.list-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-bottom:1px solid #29465b}.list-item:last-child{border:0}.list-item small{color:var(--muted);display:block;margin-top:4px}.control{max-width:140px}.toast{position:fixed;z-index:999;left:50%;bottom:95px;transform:translateX(-50%);background:#214960;border:1px solid #5a96a9;border-radius:13px;padding:12px 18px;max-width:90%;min-width:180px;text-align:center;box-shadow:var(--shadow);font-size:13px}.loading{text-align:center;padding:28vh 15px}.spinner{margin:0 auto 18px;border:3px solid #23445e;border-top-color:#4be5f3;border-radius:50%;width:36px;height:36px;animation:spin .8s linear infinite}.loading h2{letter-spacing:.2em}.loading p{color:var(--muted)}@keyframes spin{to{transform:rotate(360deg)}}.note{border:1px solid #386584;background:#102f46;padding:12px;border-radius:12px;font-size:12px;color:#a9cddd;line-height:1.6;margin:12px 0}.danger-text{color:var(--danger)}.toolbar-stack{display:flex;gap:7px;flex-wrap:wrap}.toolbar-stack .date-input{flex:1;min-width:124px}.link{color:var(--accent);text-decoration:none}
+@media(min-width:750px){.app-frame{padding:30px 28px 110px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.modal{align-self:center;border-radius:24px;max-height:90vh}.nav{max-width:800px;margin:0 auto;border:1px solid var(--line);border-radius:18px 18px 0 0}.kpis{gap:12px}.kpi{padding:15px}}
+@media(max-width:370px){.kpi strong{font-size:20px}.btn.small{font-size:10px;padding:5px 7px}.user{max-width:40%}.app-frame{padding-left:12px;padding-right:12px}.form-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* VAGONY · stable Telegram Mini App shell v2
+   Вся страница НЕ прокручивается: только центральная рабочая область. */
+html,body{width:100%;height:100%;max-height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;touch-action:pan-x pan-y}
+.app-frame{
+  position:relative;display:flex;flex-direction:column;
+  width:min(100%,1020px);height:var(--miniapp-height,100dvh);max-height:var(--miniapp-height,100dvh);
+  min-height:0;overflow:hidden;margin:0 auto;padding:var(--telegram-top,0px) 0 0;
+  overscroll-behavior:none;
+}
+.top.app-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex:0 0 auto;min-height:68px;margin:0;padding:10px 18px;
+  background:linear-gradient(180deg,#081321f7,#081321ec);
+  border-bottom:1px solid #28415a;z-index:3;
+}
+.toolbar-menu{border:0;background:transparent;color:#f3f7fc;min-width:48px;min-height:46px;
+  display:grid;place-items:center;font-size:31px;line-height:1;border-radius:10px}
+.toolbar-menu:active{background:#17364f}
+.toolbar-role{display:flex;align-items:center;gap:9px;max-width:65%;border:1px solid #35516b;
+  background:#0d2032;padding:10px 13px;border-radius:999px;min-height:43px;
+  color:#c4d3df;font-size:12px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar-role i{width:9px;height:9px;flex:0 0 auto;background:#59d5b1;border-radius:50%}
+.page-scroll{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;overscroll-behavior-x:none;
+  touch-action:pan-y;padding:18px 16px 22px;scrollbar-width:thin;scrollbar-color:#355572 transparent}
+.page-scroll:focus{outline:none}
+.nav{
+  flex:0 0 auto;position:relative;bottom:auto;left:auto;right:auto;z-index:5;
+  width:100%;max-width:none;margin:0;
+  padding:9px max(10px,env(safe-area-inset-right)) calc(9px + var(--telegram-bottom,0px)) max(10px,env(safe-area-inset-left));
+  background:#071521f5;border-top:1px solid #28485d;border-left:0;border-right:0;
+  border-bottom:0;border-radius:0;backdrop-filter:blur(18px);
+}
+.nav-inner{max-width:800px}
+.overlay{overscroll-behavior:none;touch-action:none}
+.modal{max-height:min(90dvh,calc(var(--miniapp-height,100dvh) - var(--telegram-top,0px) - 12px));
+  overscroll-behavior:contain;touch-action:pan-y;
+  padding-bottom:calc(22px + var(--telegram-bottom,0px))}
+.quick-links{display:grid;gap:8px;margin-top:16px}
+.quick-link{justify-content:flex-start;min-height:46px}
+.toast{bottom:calc(96px + var(--telegram-bottom,0px))}
+@media(min-width:750px){.app-frame{padding:var(--telegram-top,0px) 0 0}.top.app-toolbar{padding:12px 28px}.page-scroll{padding:25px 28px 35px}.nav{max-width:none;border-radius:0;border-left:0;border-right:0}}
+@media(max-width:370px){.app-frame{padding-left:0;padding-right:0}.top.app-toolbar{padding:8px 12px}.page-scroll{padding:14px 12px 18px}.nav-btn{min-width:0;padding:6px 2px}}
+/* Период в одну строку на обычном телефоне, без переноса кнопки «Сегодня». */
+.toolbar-stack{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:center;gap:7px}
+.toolbar-stack .date-input{flex:none;width:100%;min-width:0;font-size:13px;padding:8px 6px}
+.toolbar-stack .btn{min-width:0;padding-left:10px;padding-right:10px}
+@media(max-width:355px){.toolbar-stack{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar-stack>.btn{grid-column:1/-1}}
+
+
+
+
+/* Keyboard geometry only. Existing modal colors, spacings, and role skins stay intact.
+   visualViewport is more reliable than 90dvh in Telegram's Android WebView. */
+#overlay.modal-viewport:not(.wagon-entry){
+  inset:0;
+  height:100%;
+  /* The scrim covers the full WebView even during the IME animation. */
+}
+#overlay.modal-viewport:not(.wagon-entry) .modal{
+  position:absolute;
+  bottom:max(0px,calc(100% - var(--sheet-top,0px) - var(--sheet-height,100dvh)));
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  max-height:calc(var(--sheet-height,100dvh) - max(12px,var(--telegram-top,0px)));
+  overflow:hidden;
+}
+#overlay.modal-viewport:not(.wagon-entry) .modal-head{
+  flex:0 0 auto;
+}
+#overlay.modal-viewport:not(.wagon-entry) #truck-form,
+#overlay.modal-viewport:not(.wagon-entry) .crew-editor{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+#overlay.modal-viewport:not(.wagon-entry) .modal-form-fields{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  scroll-padding-block:10px;
+}
+#overlay.modal-viewport:not(.wagon-entry) .modal-form-actions{
+  flex:0 0 auto;
+}
+/* Search results have one scroll owner while typing; no competing 30vh/38vh scroller. */
+#overlay.modal-viewport #truck-crew-list,
+#overlay.modal-viewport #crew-list{
+  max-height:none!important;
+  overflow:visible!important;
+}
+/* Ordinary admin forms also remain usable without dragging the entire dialog. */
+#overlay.modal-viewport:not(.wagon-entry) .modal > form:not(#truck-form){
+  flex:1 1 auto;
+  min-height:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scroll-padding-block:10px;
+}
+
+
+/* Keep the underlying photographic dashboard completely still during IME
+   transitions. Only the modal can adapt to the visual viewport. This rule is
+   inert whenever a dialog is closed and preserves the existing cover crop. */
+html.modal-background-frozen #app.app-frame{
+  height:var(--modal-frame-height,var(--miniapp-height,100dvh));
+  max-height:var(--modal-frame-height,var(--miniapp-height,100dvh));
+}
+
+/* Draw focus inside the control, including forms with a clipped scrollport.
+   Unlike an outer outline this cannot be cut off at the left/right edges. */
+#overlay.modal-viewport input:focus,
+#overlay.modal-viewport select:focus,
+#overlay.modal-viewport textarea:focus{
+  outline:2px solid var(--accent);
+  outline-offset:-2px;
+}
+#overlay.modal-viewport .field{min-width:0}
+#overlay.modal-viewport input,#overlay.modal-viewport select{min-width:0}
+
+.buyer-autocomplete{position:relative;min-width:0;width:100%}
+.buyer-autocomplete input{width:100%;box-sizing:border-box}
+.buyer-suggestions{position:absolute;top:100%;left:0;right:0;z-index:50;max-height:180px;overflow-y:auto;background:#eef3f7;border:1px solid #acbac6;border-radius:12px;box-shadow:0 6px 18px #0002}
+.buyer-suggestions[hidden]{display:none}
+.buyer-suggestions button{display:block;width:100%;padding:12px 14px;border:0;border-bottom:1px solid #d5dee5;background:transparent;color:#203443;text-align:left;font:inherit;white-space:normal;overflow-wrap:anywhere}
+.buyer-suggestions button:focus,.buyer-suggestions button:active{background:#d8e5ed}
+
+.overdue-panel{margin:0 0 16px;padding:14px;border:1px solid #d7ae67;border-left:5px solid #bd812d;border-radius:16px;background:#fff3dc;color:#352b20}
+.overdue-panel h2{margin:0 0 10px;font-size:17px;color:#574025}
+.overdue-panel h2 span{display:inline-block;padding:2px 8px;border-radius:9px;background:#efd29f}
+.overdue-list{max-height:280px;overflow:auto}
+.overdue-list button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:12px 0;border:0;border-top:1px solid #e6d3b3;background:transparent;color:#352b20;text-align:left;font:inherit}
+.overdue-list button span{min-width:0}.overdue-list b,.overdue-list small{display:block;overflow-wrap:anywhere}
+.overdue-list small{margin-top:4px;font-size:13px;color:#68533b}.overdue-list strong{font-size:12px;flex-shrink:0}

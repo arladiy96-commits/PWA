@@ -1,0 +1,161 @@
+/* Сланец. Только Максим и его предпросмотр. Последний слой после старых тем. */
+html.wagon-skin,html.wagon-skin body{background:#c8d1db!important;color:#10151b!important;color-scheme:light!important}
+html.wagon-skin #app.wagon-mode{--ink:#10151b;--muted:#526175;--accent:#8b303b;--line:#b7c2cf;--green:#155b4c;background:#bdc8d3 url('./assets/slate-yard.webp') center center/cover no-repeat!important;color:var(--ink)!important;max-width:640px}
+html.wagon-skin #app.wagon-mode .ui-icon{color:inherit}
+html.wagon-skin #app.wagon-mode .top.app-toolbar.maxim-top{height:76px!important;min-height:76px!important;padding:12px 22px!important;background:#dce3eb40!important;border-color:#8997a660!important;gap:10px!important}
+html.wagon-skin #app.wagon-mode .maxim-brand{display:flex;align-items:center;font-size:26px!important;gap:10px!important;color:#080d12!important;letter-spacing:-1px}
+html.wagon-skin #app.wagon-mode .maxim-brand-icon,html.wagon-skin #app.wagon-mode .maxim-card-icon{background:none!important;border:0!important;box-shadow:none!important;color:#10151b!important;border-radius:0;flex:0 0 34px;width:34px;height:36px}
+html.wagon-skin #app.wagon-mode .maxim-brand-icon svg{width:38px;height:38px;stroke-width:1.8}
+html.wagon-skin #app.wagon-mode .maxim-user{max-width:45%!important}
+html.wagon-skin #app.wagon-mode .maxim-user strong{font-size:15px!important;color:#10151b!important}
+html.wagon-skin #app.wagon-mode .maxim-user span{font-size:10px!important;color:#465365!important}
+html.wagon-skin #app.wagon-mode .maxim-avatar{width:34px;height:34px;flex-basis:34px;background:none;border:1px solid #17212c;color:#10151b}
+html.wagon-skin #app.wagon-mode .maxim-avatar svg{width:24px;height:24px}
+html.wagon-skin #app.wagon-mode .page-scroll{padding:10px 22px 12px!important;background:transparent!important;scrollbar-width:none}
+html.wagon-skin #app.wagon-mode .maxim-view{max-width:600px}
+html.wagon-skin #app.wagon-mode .maxim-title-row{margin:0 0 12px!important;gap:8px}
+html.wagon-skin #app.wagon-mode .maxim-title-row h1,html.wagon-skin #app.wagon-mode .mj-heading h1{color:#080d12!important;font-size:34px!important;line-height:1.1!important;letter-spacing:-1.1px!important;margin:0 0 3px!important}
+html.wagon-skin #app.wagon-mode .maxim-title-row p,html.wagon-skin #app.wagon-mode .mj-heading p{font-size:13px!important;color:#495669!important;margin:0}
+html.wagon-skin #app.wagon-mode .maxim-main-date{min-width:112px!important;height:44px;border:0!important;box-shadow:none!important;background:none!important;border-radius:0;padding:0;gap:9px;color:#10151b!important}
+html.wagon-skin #app.wagon-mode .maxim-main-date strong{font-size:15px;color:#10151b}
+html.wagon-skin #app.wagon-mode .maxim-main-date svg{width:26px;height:26px}
+html.wagon-skin #app.wagon-mode .maxim-main-date em{display:none}
+html.wagon-skin #app.wagon-mode .maxim-tiles,html.wagon-skin #app.wagon-mode .mj-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0!important;background:#e0e6ed;border-radius:12px;padding:10px 0;margin:0 0 12px!important;box-shadow:0 2px 6px #15253412}
+html.wagon-skin #app.wagon-mode .maxim-tile,html.wagon-skin #app.wagon-mode .mj-stat{position:relative;min-width:0;height:62px!important;min-height:0;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;padding:0 14px!important;gap:3px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;color:#526175}
+html.wagon-skin #app.wagon-mode .maxim-tile+.maxim-tile,html.wagon-skin #app.wagon-mode .mj-stat+.mj-stat{border-left:1px solid #b7c2cf!important}
+html.wagon-skin #app.wagon-mode .maxim-tile span,html.wagon-skin #app.wagon-mode .mj-stat>span{font-size:12px!important;color:#10151b!important;font-weight:450;white-space:nowrap}
+html.wagon-skin #app.wagon-mode .maxim-tile strong,html.wagon-skin #app.wagon-mode .mj-stat strong{font-size:40px!important;line-height:1!important;letter-spacing:-1px;color:#080d12}
+html.wagon-skin #app.wagon-mode .tile-loaded strong,html.wagon-skin #app.wagon-mode .mj-stat-done strong{color:#155b4c!important}
+html.wagon-skin #app.wagon-mode .tile-open strong,html.wagon-skin #app.wagon-mode .mj-stat-left strong{color:#791f26!important}
+html.wagon-skin #app.wagon-mode .maxim-tile:after{width:29px;height:29px;right:12px;bottom:2px;opacity:.8;color:#526175}
+html.wagon-skin #app.wagon-mode .maxim-tile.selected{outline:0;box-shadow:none!important}
+html.wagon-skin #app.wagon-mode .maxim-tile.selected span{text-decoration:underline;text-underline-offset:4px;text-decoration-color:#8b303b}
+html.wagon-skin #app.wagon-mode .maxim-list-heading,html.wagon-skin #app.wagon-mode .mj-days-title{margin:0 0 6px!important;background:#d8e0e9d9;border-radius:7px;padding:3px 9px}
+html.wagon-skin #app.wagon-mode .maxim-list-heading h2,html.wagon-skin #app.wagon-mode .mj-days-title h2{color:#10151b!important;font-size:23px!important;letter-spacing:-.5px;margin:0!important}
+html.wagon-skin #app.wagon-mode .maxim-list-heading h2 span{background:#cbd5e0!important;color:#10151b!important;border:0!important;font-size:18px;font-weight:700;height:28px;min-width:30px;border-radius:20px;margin-left:10px}
+html.wagon-skin #app.wagon-mode .maxim-list{gap:6px!important}
+html.wagon-skin #app.wagon-mode .maxim-item,html.wagon-skin #app.wagon-mode .maxim-item:last-child{position:relative;min-height:59px!important;background:#e0e6ed!important;border:0!important;border-radius:10px!important;box-shadow:0 2px 5px #13243317!important}
+html.wagon-skin #app.wagon-mode .maxim-item-open{display:flex;flex-direction:row;align-items:center;gap:13px!important;padding:8px 12px!important;color:#10151b!important}
+html.wagon-skin #app.wagon-mode .maxim-card-icon{flex-basis:32px;width:32px}
+html.wagon-skin #app.wagon-mode .maxim-card-icon svg{width:32px;height:32px;stroke-width:1.8}
+html.wagon-skin #app.wagon-mode .maxim-item-main{display:grid;gap:4px;flex:1;min-width:0}
+html.wagon-skin #app.wagon-mode .maxim-item-main strong{font-size:16px!important;color:#10151b;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.wagon-skin #app.wagon-mode .maxim-item-main small{font-size:12px!important;color:#526175;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.wagon-skin #app.wagon-mode .maxim-item-side{display:grid;justify-items:end;gap:4px;min-width:76px}
+html.wagon-skin #app.wagon-mode .maxim-item-side>strong{font-size:16px;color:#10151b;line-height:1.1}
+html.wagon-skin #app.wagon-mode .maxim-status{display:flex;align-items:center;gap:5px;font-size:10px!important;font-weight:500!important;padding:3px 7px!important;border:0!important;box-shadow:none;border-radius:6px;color:#17202a!important}
+html.wagon-skin #app.wagon-mode .maxim-status:before{content:'';width:7px;height:7px;border-radius:50%;background:#995407}
+html.wagon-skin #app.wagon-mode .s-planned{background:#f5d3a8!important}
+html.wagon-skin #app.wagon-mode .s-progress{background:#bcd7e8!important}
+html.wagon-skin #app.wagon-mode .s-loaded{background:#b9ddd2!important}
+html.wagon-skin #app.wagon-mode .s-progress:before{background:#27536b}
+html.wagon-skin #app.wagon-mode .s-loaded:before{background:#155b4c}
+html.wagon-skin #app.wagon-mode .maxim-done{position:absolute;right:93px;top:50%;transform:translateY(-50%);height:30px!important;min-width:30px!important;width:30px;margin:0!important;border:0!important;background:#acbacb!important;box-shadow:none!important;color:#10151b!important}
+html.wagon-skin #app.wagon-mode .maxim-item:has(.maxim-done) .maxim-item-main{padding-right:30px}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom{padding:0 10px max(5px,var(--telegram-bottom,0px))!important;background:#b9c4d0!important;border:0!important;border-radius:12px 12px 0 0;backdrop-filter:none!important}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-inner{gap:0!important;max-width:600px;border:0!important;background:none!important;box-shadow:none!important;padding:6px 0 0;border-radius:0}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-btn{position:relative;height:64px!important;min-height:64px!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#10151b!important;font-size:13px!important;font-weight:500;gap:3px!important;padding:6px 2px!important;max-width:none;margin:0}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-btn+.nav-btn:after{content:'';position:absolute;left:0;top:9px;bottom:8px;width:1px;background:#95a5b8}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-btn.active{color:#7e2933!important}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-btn b svg{width:27px;height:27px}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add{overflow:visible;padding-top:0!important}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add b{display:grid;place-items:center;width:46px;height:46px;margin-top:-8px;border-radius:50%;background:#953b46;color:white;box-shadow:0 3px 7px #3b10273a}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add b svg{width:33px;height:33px}
+/* Журнал */
+html.wagon-skin #app.wagon-mode .maxim-journal{padding-bottom:0;color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-heading{margin-bottom:9px}
+html.wagon-skin #app.wagon-mode .mj-month-picker{grid-template-columns:38px 1fr 38px;min-height:42px;margin-bottom:10px}
+html.wagon-skin #app.wagon-mode .mj-month-picker strong{color:#10151b;font-size:19px}
+html.wagon-skin #app.wagon-mode .mj-month-picker small{display:none}
+html.wagon-skin #app.wagon-mode .mj-month-picker button{border:1px solid #1b2835;background:#d5dee785;color:#10151b;border-radius:50%;width:37px;height:37px;box-shadow:none;font-size:32px}
+html.wagon-skin #app.wagon-mode .mj-summary{padding:12px 17px;background:#e0e6ed;border:0;border-radius:10px;box-shadow:none;margin-bottom:7px}
+html.wagon-skin #app.wagon-mode .mj-summary:after,html.wagon-skin #app.wagon-mode .mj-summary-mark{display:none}
+html.wagon-skin #app.wagon-mode .mj-summary-head{margin-bottom:5px}
+html.wagon-skin #app.wagon-mode .mj-summary-head>span:first-child{font-size:11px;color:#4a586c;letter-spacing:1px}
+html.wagon-skin #app.wagon-mode .mj-tonnage{gap:8px;flex-wrap:wrap}
+html.wagon-skin #app.wagon-mode .mj-tonnage strong{font-size:43px;color:#080d12;line-height:1.08;letter-spacing:-1.5px}
+html.wagon-skin #app.wagon-mode .mj-tonnage span{font-size:27px;color:#080d12;font-weight:750}
+html.wagon-skin #app.wagon-mode .mj-summary p{color:#526175;font-size:12px;margin:5px 0 0}
+html.wagon-skin #app.wagon-mode .mj-stats{margin-bottom:7px!important}
+html.wagon-skin #app.wagon-mode .mj-period{background:#e0e6ed;border:0;border-radius:10px;margin-bottom:7px}
+html.wagon-skin #app.wagon-mode .mj-calendar-toggle{min-height:46px;padding:9px 16px;color:#10151b;font-size:13px;font-weight:500;gap:15px}
+html.wagon-skin #app.wagon-mode .mj-calendar-toggle .ui-icon{width:27px;height:27px;color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-calendar-toggle span:last-child{color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-days-title h2{font-size:21px!important}
+html.wagon-skin #app.wagon-mode .mj-days-title>span{color:#526175}
+html.wagon-skin #app.wagon-mode .mj-day-card{background:#e0e6ed;border:0;border-radius:10px;box-shadow:none;margin-bottom:6px}
+html.wagon-skin #app.wagon-mode .mj-day-row{padding:8px 15px;gap:17px;min-height:52px;color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-day-icon svg{width:27px;height:27px}
+html.wagon-skin #app.wagon-mode .mj-day-left{flex:1;gap:3px}
+html.wagon-skin #app.wagon-mode .mj-day-left strong,html.wagon-skin #app.wagon-mode .mj-day-right strong{color:#10151b;font-size:15px}
+html.wagon-skin #app.wagon-mode .mj-day-left small{color:#526175;font-size:11px}
+html.wagon-skin #app.wagon-mode .mj-day-right{gap:9px}
+html.wagon-skin #app.wagon-mode .mj-day-right span{color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-calendar,html.wagon-skin #app.wagon-mode .mj-day-details{background:#d5dee7;border-color:#b5c0ce}
+html.wagon-skin #app.wagon-mode .mj-cal-day{background:#edf1f5;border:1px solid #bec8d4;color:#17212c}
+html.wagon-skin #app.wagon-mode .mj-cal-day.selected{background:#8b303b;color:white;border-color:#8b303b}
+html.wagon-skin #app.wagon-mode .mj-cal-day.is-today{border-color:#8b303b}
+html.wagon-skin #app.wagon-mode .mj-cal-day i,html.wagon-skin #app.wagon-mode .mj-calendar-dot{background:#8b303b}
+html.wagon-skin #app.wagon-mode .mj-cal-day.selected i{background:white}
+html.wagon-skin #app.wagon-mode .mj-cal-weekday,html.wagon-skin #app.wagon-mode .mj-calendar p,html.wagon-skin #app.wagon-mode .mj-day-stats small,html.wagon-skin #app.wagon-mode .mj-day-bottom>span{color:#526175}
+html.wagon-skin #app.wagon-mode .mj-day-stats b,html.wagon-skin #app.wagon-mode .mj-day-bottom>span strong{color:#10151b}
+html.wagon-skin #app.wagon-mode .mj-day-bottom{border-color:#b5c0ce}
+html.wagon-skin #app.wagon-mode .mj-day-bottom button,html.wagon-skin #app.wagon-mode .mj-message button,html.wagon-skin #app.wagon-mode .mj-empty button,html.wagon-skin #app.wagon-mode .maxim-exit-preview{background:#8b303b;color:white;border:0;border-radius:8px;padding:10px}
+html.wagon-skin #app.wagon-mode .mj-days-title button,html.wagon-skin #app.wagon-mode .maxim-back-today{color:#76232f}
+html.wagon-skin #app.wagon-mode .maxim-empty,html.wagon-skin #app.wagon-mode .mj-empty,html.wagon-skin #app.wagon-mode .mj-message{color:#465365!important;background:#e0e6ed!important;border:0!important}
+/* Все формы и подробности — та же плотная светлая поверхность. */
+html.wagon-skin #overlay{color:#10151b;--ink:#10151b;--muted:#526175;--accent:#8b303b;background:#18233166}
+html.wagon-skin #overlay .modal,html.wagon-skin #overlay.wagon-entry .modal{background:#e0e6ed!important;color:#10151b!important;border:1px solid #b7c2cf!important;box-shadow:0 -10px 40px #15253433!important}
+html.wagon-skin #overlay .modal-head,html.wagon-skin #overlay.wagon-entry .modal-head,html.wagon-skin #overlay.wagon-entry .maxim-form-actions{background:#e0e6ed!important;border-color:#b7c2cf!important}
+html.wagon-skin #overlay .modal-head h2,html.wagon-skin #overlay .maxim-field{color:#17212c!important}
+html.wagon-skin #overlay .maxim-field input,html.wagon-skin #overlay .maxim-field select{background:#f4f6f8!important;color:#10151b!important;border-color:#a5b2c2!important;color-scheme:light!important}
+html.wagon-skin #overlay .maxim-field input:focus,html.wagon-skin #overlay .maxim-field select:focus{border-color:#8b303b!important;box-shadow:0 0 0 2px #8b303b20!important}
+html.wagon-skin #overlay .x,html.wagon-skin #overlay .btn,html.wagon-skin #overlay.wagon-entry .maxim-next{background:#cbd5e0!important;color:#263445!important;border-color:#a5b2c2!important}
+html.wagon-skin #overlay .maxim-submit,html.wagon-skin #overlay .btn.primary{background:#8b303b!important;color:white!important;border-color:#8b303b!important;box-shadow:none!important}
+html.wagon-skin #overlay .note,html.wagon-skin #overlay .pill,html.wagon-skin #overlay .value-card{background:#d2dce6!important;color:#263445!important;border-color:#a5b2c2!important}
+html.wagon-skin #overlay .value-card b{color:#10151b!important}
+html.wagon-skin #overlay .sub,html.wagon-skin #overlay .value-card small,html.wagon-skin #overlay .maxim-form-note{color:#526175!important}
+html.wagon-skin #toast{background:#e0e6ed!important;color:#10151b!important;border-color:#a5b2c2!important}
+html.wagon-skin button:focus-visible{outline:2px solid #8b303b!important;outline-offset:2px}
+@media(max-width:380px){
+html.wagon-skin #app.wagon-mode .top.app-toolbar.maxim-top{padding:10px 14px!important;gap:7px!important}
+html.wagon-skin #app.wagon-mode .page-scroll{padding-left:14px!important;padding-right:14px!important}
+html.wagon-skin #app.wagon-mode .maxim-brand{font-size:23px!important;gap:8px!important}
+html.wagon-skin #app.wagon-mode .maxim-avatar{display:none}
+html.wagon-skin #app.wagon-mode .maxim-user strong{font-size:13px!important}
+html.wagon-skin #app.wagon-mode .maxim-title-row h1{font-size:31px!important}
+html.wagon-skin #app.wagon-mode .maxim-title-row p{font-size:11px!important}
+html.wagon-skin #app.wagon-mode .maxim-item-open{gap:8px!important;padding:8px 9px!important}
+html.wagon-skin #app.wagon-mode .maxim-card-icon{flex-basis:27px;width:27px}
+html.wagon-skin #app.wagon-mode .maxim-card-icon svg{width:27px;height:27px}
+html.wagon-skin #app.wagon-mode .maxim-item-main strong{font-size:14px!important}
+html.wagon-skin #app.wagon-mode .maxim-item-main small{font-size:11px!important}
+html.wagon-skin #app.wagon-mode .maxim-done{right:88px;width:26px!important;min-width:26px!important;height:26px!important}
+html.wagon-skin #app.wagon-mode .maxim-item:has(.maxim-done) .maxim-item-main{padding-right:24px}
+html.wagon-skin #app.wagon-mode .maxim-tile,html.wagon-skin #app.wagon-mode .mj-stat{padding-left:11px!important;padding-right:8px!important}
+html.wagon-skin #app.wagon-mode .maxim-tile:after{width:24px;right:7px}
+html.wagon-skin #app.wagon-mode .mj-day-row{gap:10px;padding:8px 12px}
+html.wagon-skin #app.wagon-mode .mj-tonnage strong{font-size:36px}
+html.wagon-skin #app.wagon-mode .mj-tonnage span{font-size:24px}
+}
+
+/* Компактная шапка и безопасный нижний отступ на Android. */
+html.wagon-skin #app.wagon-mode .top.app-toolbar.maxim-top{height:50px!important;min-height:50px!important;padding:6px 18px!important;gap:8px!important}
+html.wagon-skin #app.wagon-mode .maxim-brand{font-size:21px!important;gap:8px!important;letter-spacing:-.6px}
+html.wagon-skin #app.wagon-mode .maxim-brand-icon{width:28px;height:29px;flex-basis:28px}
+html.wagon-skin #app.wagon-mode .maxim-brand-icon svg{width:29px;height:29px}
+html.wagon-skin #app.wagon-mode .maxim-user{gap:1px!important;max-width:48%!important}
+html.wagon-skin #app.wagon-mode .maxim-user strong{font-size:13px!important;line-height:1.2}
+html.wagon-skin #app.wagon-mode .maxim-user span{font-size:9px!important;line-height:1.2}
+html.wagon-skin #app.wagon-mode .maxim-avatar{width:28px;height:28px;flex-basis:28px}
+html.wagon-skin #app.wagon-mode .maxim-avatar svg{width:20px;height:20px}
+html.wagon-skin #app.wagon-mode .page-scroll{padding-top:8px!important}
+html.wagon-skin #app.wagon-mode .maxim-title-row{margin-bottom:10px!important}
+html.wagon-skin #app.wagon-mode .maxim-tiles{margin-bottom:9px!important}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom{padding:0 10px max(22px,env(safe-area-inset-bottom,0px),var(--wagon-safe-bottom,0px),var(--telegram-bottom,0px))!important;overflow:visible}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-inner{padding-top:8px;overflow:visible}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .nav-btn{height:66px!important;min-height:66px!important}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add b{width:49px;height:49px;margin-top:-9px;background:linear-gradient(145deg,#c36772 0%,#a34250 42%,#792630 100%);border:1px solid #d48790;box-shadow:inset 0 2px 3px #f5b8bd80,inset 0 -2px 4px #4e132e40,0 4px 9px #38142440}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add b svg{filter:drop-shadow(0 1px 1px #531b36);width:34px;height:34px}
+html.wagon-skin #app.wagon-mode .nav.maxim-bottom .maxim-bottom-add:active b{transform:translateY(2px);box-shadow:inset 0 1px 2px #f5b8bd66,0 2px 5px #38142433}
+@media(max-width:360px){html.wagon-skin #app.wagon-mode .top.app-toolbar.maxim-top{padding-left:14px!important;padding-right:14px!important}html.wagon-skin #app.wagon-mode .maxim-brand{font-size:19px!important}html.wagon-skin #app.wagon-mode .maxim-user strong{font-size:12px!important}}

@@ -1,0 +1,78 @@
+/* Sapphire design. Scoped to Maxim and administrator's Maxim preview. */
+html.wagon-skin,html.wagon-skin body{color-scheme:dark!important;background:#031728!important;color:#f2f8ff!important}
+html.wagon-skin #app.wagon-mode{background:#031728 url('/static/assets/rail-yard.webp') center bottom/cover no-repeat!important;color:#f2f8ff!important;--ink:#f2f8ff;--muted:#9dbfdc;--line:#376b8b;--accent:#49ddf4;--green:#56f5d0;max-width:640px}
+.ui-icon{width:24px;height:24px;display:block;flex-shrink:0}
+.wagon-mode .top.app-toolbar.maxim-top{height:73px!important;min-height:73px!important;padding:12px 18px!important;gap:10px!important;background:linear-gradient(110deg,#031321bb,#07365766)!important;border-bottom:1px solid #32698599!important}
+.wagon-mode .maxim-brand{flex:1;gap:12px!important;font-size:23px!important;color:#f4f8ff!important}
+.wagon-mode .maxim-brand-icon,.wagon-mode .maxim-card-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border:1px solid #4fdfff99;border-radius:11px;background:linear-gradient(135deg,#227299bb,#06223b99);box-shadow:inset 0 1px 3px #8ae8ff44,0 3px 12px #0003;color:#9eeeff}
+.wagon-mode .maxim-user{max-width:43%!important;margin-left:auto;gap:3px!important}
+.wagon-mode .maxim-user strong{font-size:14px!important;color:#fff!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wagon-mode .maxim-user span{font-size:9px!important;color:#9dbfda!important}
+.wagon-mode .maxim-avatar{display:grid;place-items:center;flex:0 0 29px;width:29px;height:29px;border:1px solid #326d9d;border-radius:50%;background:#06325799;color:#9ed6ff}
+.wagon-mode .maxim-avatar svg{width:19px;height:19px}
+.wagon-mode .maxim-exit-preview{background:#123951;color:#c4ecff;border-color:#407b9b}
+.wagon-mode .page-scroll{background:transparent!important;padding:15px 18px 24px!important;scrollbar-color:#386e8c transparent}
+.wagon-mode .maxim-title-row{gap:10px;margin-bottom:14px!important;align-items:center}
+.wagon-mode .maxim-title-row h1,.wagon-mode .maxim-history-title h1{font-size:32px!important;letter-spacing:-.035em!important;color:#f7fbff!important;margin-bottom:3px!important}
+.wagon-mode .maxim-title-row p,.wagon-mode .maxim-history-title p{font-size:12px!important;color:#98bcdd!important;text-transform:none;white-space:nowrap}
+.wagon-mode .maxim-title-row p::first-letter{text-transform:uppercase}
+.wagon-mode .maxim-main-date{height:40px;min-width:128px;border-radius:11px;border-color:#55a9d2;background:linear-gradient(125deg,#15517677,#04182bdd);padding:0 10px;color:#9de9fa;box-shadow:inset 0 1px 2px #c2eaff25}
+.wagon-mode .maxim-main-date strong{font-size:14px;color:#eef8ff}
+.wagon-mode .maxim-main-date em{color:#c2ddf5}
+.wagon-mode .maxim-main-date svg{width:21px;height:21px}
+.wagon-mode .maxim-tiles{gap:10px;margin-bottom:18px!important}
+.wagon-mode .maxim-tile{position:relative;overflow:hidden;height:78px!important;padding:10px 12px!important;border-radius:12px;border:1px solid #3a8cb4;background:linear-gradient(130deg,#18577a99,#04233fbb);box-shadow:inset 0 1px 2px #a6eaff33,0 5px 15px #0002}
+.wagon-mode .maxim-tile:after{content:'';position:absolute;width:43px;height:28px;right:9px;bottom:12px;opacity:.13;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black'%3E%3Cpath d='M2 5h20v12H2zM8 5v12M16 5v12M1 17h22'/%3E%3Ccircle cx='6' cy='20' r='2'/%3E%3Ccircle cx='18' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+.wagon-mode .maxim-tile span{font-size:12px!important;color:#b9d4e9;font-weight:450}
+.wagon-mode .maxim-tile strong{font-size:36px;color:#f4f9ff;line-height:1.05}
+.wagon-mode .maxim-tile.tile-loaded{background:linear-gradient(125deg,#13617299,#03293dbb);border-color:#327b8e;color:#55efd1}
+.wagon-mode .maxim-tile.tile-loaded strong{color:#55efd1}
+.wagon-mode .maxim-tile.tile-open{background:linear-gradient(125deg,#59605e88,#112b3cbb);border-color:#7c857f;color:#ffda83}
+.wagon-mode .maxim-tile.tile-open strong{color:#ffda83}
+.wagon-mode .maxim-tile.selected{outline:1px solid #5eeaff;outline-offset:-1px;box-shadow:inset 0 0 15px #26bcdf22,0 0 10px #38d8ef19}
+.wagon-mode .maxim-list-heading{margin-bottom:10px!important}
+.wagon-mode .maxim-list-heading h2{font-size:21px;color:#f1f7fe}
+.wagon-mode .maxim-list-heading h2 span{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 5px;font-size:14px;background:linear-gradient(130deg,#286c92,#10334e);border:1px solid #4d8caf;color:#def5ff;font-weight:500;vertical-align:middle}
+.wagon-mode .maxim-list{gap:8px!important;background:transparent;border:0;border-radius:0;overflow:visible}
+.wagon-mode .maxim-item,.wagon-mode .maxim-item:last-child{min-height:63px!important;border:1px solid #4b8dafbb!important;border-radius:12px!important;background:linear-gradient(115deg,#12496be8,#06233ae8 65%,#174568dc)!important;box-shadow:inset 0 1px 2px #c1eaff24,0 4px 14px #0002!important}
+.wagon-mode .maxim-item-open{padding:10px 9px!important;gap:9px!important;color:#fff!important}
+.wagon-mode .maxim-card-icon{width:33px;height:33px;flex-basis:33px;border-color:#3986ac88;border-radius:9px}
+.wagon-mode .maxim-card-icon svg{width:23px;height:23px}
+.wagon-mode .maxim-item-main{gap:5px}
+.wagon-mode .maxim-item-main strong{font-size:14px;color:#f4f8ff;line-height:1.25}
+.wagon-mode .maxim-item-main small{font-size:11px;color:#a1c3df;line-height:1.2}
+.wagon-mode .maxim-item-side{gap:5px}
+.wagon-mode .maxim-item-side>strong{font-size:15px;color:#f7fbff}
+.wagon-mode .maxim-status{padding:3px 7px!important;font-size:10px!important;font-weight:500!important;border:1px solid;box-shadow:inset 0 0 9px #ffffff0b}
+.wagon-mode .maxim-status.s-progress{color:#66d9ff;background:#08548355;border-color:#2ba6df}
+.wagon-mode .maxim-status.s-planned{color:#ffda87;background:#6e603a44;border-color:#bfa566}
+.wagon-mode .maxim-status.s-loaded{color:#64f5d5;background:#075c5755;border-color:#30bca8}
+.wagon-mode .maxim-done{display:grid;place-items:center;align-self:center;min-width:30px!important;width:30px;height:30px!important;margin:0 9px 0 0!important;border-radius:50%!important;border:1px solid #7de8ff!important;background:linear-gradient(140deg,#2999ce,#073f6b)!important;color:#e5fbff!important;box-shadow:0 0 12px #42cfff44,inset 0 1px 4px #c7f7ff77}
+.wagon-mode .maxim-done svg{width:20px;height:20px}
+.wagon-mode .nav.maxim-bottom{background:transparent!important;padding:8px 17px calc(17px + max(env(safe-area-inset-bottom,0px),var(--telegram-bottom,0px)))!important}
+.wagon-mode .nav.maxim-bottom .nav-inner{gap:7px!important;padding:7px;max-width:604px;border-radius:23px;border:1px solid #468bb4;background:linear-gradient(120deg,#164c6fdd,#062035eb);box-shadow:inset 0 1px 4px #a2dfff33,0 6px 25px #0007}
+.wagon-mode .nav.maxim-bottom .nav-btn{height:58px!important;min-height:58px!important;border-radius:14px!important;gap:5px!important;color:#adcde7!important;font-size:12px!important;border:1px solid #2b638688;background:linear-gradient(130deg,#1b587877,#06213aaa)!important}
+.wagon-mode .nav.maxim-bottom .nav-btn.active{color:#e3f7ff!important;border-color:#3987ad}
+.wagon-mode .nav.maxim-bottom .nav-btn b{display:block}
+.wagon-mode .nav.maxim-bottom .nav-btn.maxim-bottom-add{background:linear-gradient(145deg,#65edfa,#03b7d8)!important;color:#032338!important;border:1px solid #9df6ff;box-shadow:inset 0 1px 2px #fff8,0 0 17px #15d9f32b}
+.wagon-mode .maxim-bottom-add .ui-icon{width:28px;height:28px;stroke-width:2}
+.wagon-mode .maxim-back-today{color:#7eddf5}
+.wagon-mode .maxim-empty{background:#082a43e8!important;border:1px solid #3f7394!important;border-radius:12px!important;color:#adcce2!important}
+.wagon-mode .maxim-history-date{color:#b8d7eb;background:#06223bdd;border:0!important;border-radius:8px}
+.wagon-mode .maxim-date{background:#092d48dd!important;border-color:#407b9b!important;color:#abcfe4}
+.wagon-mode .maxim-date input{color:#e3f5ff!important;color-scheme:dark!important}
+html.wagon-skin .modal,html.wagon-skin #overlay.wagon-entry .modal{background:linear-gradient(145deg,#103750,#061a2c)!important;color:#eaf7ff!important;border:1px solid #437d9d!important;box-shadow:0 -10px 40px #0007!important}
+html.wagon-skin #overlay.wagon-entry .modal-head,html.wagon-skin #overlay.wagon-entry .maxim-form-actions{background:#0a263b!important;border-color:#315d78!important}
+html.wagon-skin .modal .modal-head h2{color:#f3faff!important}
+html.wagon-skin .modal .x,html.wagon-skin .modal .btn,html.wagon-skin #overlay.wagon-entry .maxim-next{background:#153e58!important;color:#c4e6fa!important;border-color:#356b8a!important}
+html.wagon-skin .maxim-field{color:#bcd9eb!important}
+html.wagon-skin .maxim-field input,html.wagon-skin .maxim-field select{color-scheme:dark!important;color:#effaff!important;background:#061d30!important;border-color:#3a6681!important}
+html.wagon-skin .maxim-field input:focus,html.wagon-skin .maxim-field select:focus{border-color:#53dbf2!important;box-shadow:0 0 0 2px #45d5ef22!important}
+html.wagon-skin .maxim-submit,html.wagon-skin .modal .btn.primary{background:linear-gradient(135deg,#61eafa,#04b9d8)!important;color:#032338!important;border-color:#7ceaf8!important}
+html.wagon-skin .maxim-form-note,html.wagon-skin .modal .sub{color:#9dbdd4!important}
+html.wagon-skin .modal .note,html.wagon-skin .modal .pill,html.wagon-skin .modal .value-card{background:#0a2a40!important;color:#bddced!important;border-color:#35627d!important}
+html.wagon-skin .modal .value-card b,html.wagon-skin .modal .value-card small{color:#d5edfb!important}
+html.wagon-skin .toast{background:#103c55!important;color:#e6faff!important;border-color:#5ac9e2!important}
+html.wagon-skin button:focus-visible{outline:2px solid #75ebff;outline-offset:3px}
+@media(max-width:370px){.wagon-mode .top.app-toolbar.maxim-top{padding:10px 12px!important}.wagon-mode .maxim-brand{font-size:20px!important;gap:7px!important}.wagon-mode .maxim-avatar{display:none}.wagon-mode .page-scroll{padding:14px 12px 22px!important}.wagon-mode .maxim-title-row h1{font-size:28px!important}.wagon-mode .maxim-main-date{min-width:110px!important}.wagon-mode .maxim-title-row p{font-size:10px!important}.wagon-mode .maxim-tile{padding:9px!important}.wagon-mode .maxim-tile span{font-size:10px!important}.wagon-mode .maxim-item-main strong{font-size:12px!important}.wagon-mode .maxim-card-icon{width:27px;flex-basis:27px}.wagon-mode .maxim-item-open{gap:6px!important;padding:9px 7px!important}.wagon-mode .maxim-item-main small{font-size:10px}.wagon-mode .maxim-status{font-size:9px!important}.wagon-mode .nav.maxim-bottom{padding-left:12px!important;padding-right:12px!important}}
+.wagon-mode .nav.maxim-bottom .nav-btn.active{background:linear-gradient(130deg,#226489aa,#09283eee)!important;box-shadow:inset 0 1px 3px #95eaff24}

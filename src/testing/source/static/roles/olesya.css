@@ -1,0 +1,45 @@
+/* Olesya · Slate. Isolated by role and root class. */
+html.olesya-skin,html.olesya-skin body{color-scheme:light;background:#c8d1db;color:#14202c}
+html.olesya-skin .ambient{display:none}
+html.olesya-skin #app[data-role="olesya"]{--ink:#14202c;--muted:#526175;--accent:#903442;--line:#b6c4d2;max-width:640px;background:#c8d1db url('./assets/olesya-warehouse.webp') center/cover no-repeat;color:#14202c}
+html.olesya-skin .os-header{height:52px;min-height:52px;padding:7px 18px;background:#dbe3ecbb;border-bottom:1px solid #b1bfcc}
+.os-header>strong{display:flex;align-items:center;gap:9px;font-size:21px}.os-header>div{display:grid;text-align:right;gap:1px;margin-left:auto}.os-header b{font-size:13px}.os-header small{font-size:10px;color:#526175}
+html.olesya-skin .page-scroll{background:transparent;padding:13px 18px 18px;scrollbar-width:none}
+html.olesya-skin .olesya-screen{padding:0;background:none}
+.os-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.os-title h1{font-size:31px;letter-spacing:-1px;line-height:1.15;margin:0 0 4px}.os-title p{font-size:12px;color:#46566a;margin:0}.os-date{display:flex;align-items:center;gap:6px}.os-date input{max-width:125px;font-size:12px;padding:4px;min-height:38px;background:#e1e8ef;border:0}
+.os-group,.os-panel{background:#e0e7ef;border:1px solid #eaf0f5;border-radius:14px;padding:12px;margin-bottom:13px;box-shadow:0 3px 10px #14283c15}
+.os-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.os-group h2{display:flex;align-items:center;gap:9px;margin:0;font-size:20px;flex:1}.os-group h2>span{margin-left:auto;font-size:16px}.os-group .os-group-head:has(.btn) h2>span{margin-left:0}.os-list{display:grid;gap:5px}
+.os-card{width:100%;display:flex;align-items:center;text-align:left;gap:10px;background:#f0f4f8;border:1px solid #cbd7e3;border-radius:10px;padding:11px 9px;color:#14202c;min-width:0}.os-card-icon{flex:0 0 29px}.os-card-icon svg{width:29px;height:29px}.os-card-body{display:grid;gap:3px;min-width:0;flex:1}.os-card-body>strong{font-size:15px;overflow-wrap:anywhere}.os-card-body small{font-size:11px;color:#526175;overflow-wrap:anywhere;line-height:1.3}.os-card-side{display:grid;justify-items:end;gap:6px;flex-shrink:0}.os-card-side>b{font-size:15px}.os-status .badge{border:0;background:#f3d6b1;color:#724507;padding:4px 6px;font-size:9px;font-weight:550;border-radius:6px}.os-status.progress .badge{background:#c5dbee;color:#234c72}.os-status.loaded .badge{background:#bfdfd2;color:#195746}.os-hint{font-size:11px;line-height:1.4;color:#526175;margin:10px 2px 0}.os-empty{text-align:center;padding:12px}
+html.olesya-skin .btn{background:#d2dce7;border-color:#b3c0cf;color:#26364a;box-shadow:none}html.olesya-skin .btn.primary{background:#903442;color:white;border-color:#903442;box-shadow:none}.os-back{margin-bottom:12px}
+html.olesya-skin input,html.olesya-skin select{background:#f3f6f9;color:#14202c;border-color:#acbacb;color-scheme:light}html.olesya-skin input::placeholder{color:#708095}.os-add-person{margin:9px 0 13px}.os-people{background:#e5ecf3;border-radius:13px;overflow:hidden}.os-person{display:flex;align-items:center;gap:12px;padding:12px 13px;border-bottom:1px solid #c5d1dd}.os-person:last-child{border:0}.os-person>span{display:grid;place-items:center;background:#c4d1df;border-radius:50%;width:32px;height:32px;flex:0 0 32px;font-size:12px}.os-person strong{font-size:14px;overflow-wrap:anywhere}
+html.olesya-skin .os-nav{background:#bbc7d3;border:0;border-radius:13px 13px 0 0;backdrop-filter:none;padding:8px 10px max(24px,env(safe-area-inset-bottom,0px),var(--wagon-safe-bottom,0px),var(--telegram-bottom,0px))}.os-nav .nav-inner{gap:0}.os-nav .nav-btn{min-height:52px;padding:5px;color:#26374b;font-size:12px;font-weight:550;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:0}.os-nav .nav-btn+.nav-btn{border-left:1px solid #9eafc1}.os-nav .nav-btn.active{background:none;color:#903442}.os-nav .nav-btn.active span{text-decoration:underline;text-underline-offset:5px}
+.os-panel h2{font-size:19px;margin:0 0 5px}.os-tabs{display:flex;gap:4px}.os-tabs button{flex:1;min-width:0;border:0;background:#cbd7e2;color:#35465a;border-radius:7px;font-size:11px;padding:9px 5px}.os-tabs button.selected{background:#903442;color:white}.os-range{display:flex;gap:10px;margin:12px 0}.os-range label{display:grid;gap:5px;flex:1;min-width:0;font-size:12px;color:#526175}.os-range input{min-width:0;font-size:13px;padding:9px 5px}.os-types{margin-top:10px}.os-overline{font-size:10px;letter-spacing:1px;color:#526175;margin:3px 0 7px}.os-tonnes{font-size:37px;font-weight:800;letter-spacing:-1px;overflow-wrap:anywhere}.os-tonnes small{font-size:20px}.os-numbers{display:flex;margin-top:14px;border-top:1px solid #b9c8d7;padding-top:12px}.os-numbers>span{flex:1;display:grid;gap:4px;font-size:11px;text-align:center;color:#526175}.os-numbers>span+span{border-left:1px solid #b9c8d7}.os-numbers b{font-size:25px;color:#185b4b}.os-work{display:grid;margin:8px 0}.os-work button{display:flex;align-items:center;gap:15px;text-align:left;background:#f0f4f8;border:0;border-bottom:1px solid #d3dce6;padding:12px;color:#25384d}.os-work button>span:first-child{flex:1}.os-work b{color:#903442;font-size:20px}.os-day-heading{font-size:22px;margin:12px 0 8px;background:#dce5eedd;border-radius:8px;padding:6px 10px}.os-day{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border:0;background:#e0e7ef;border-radius:11px;margin-bottom:7px;color:#14202c;text-align:left}.os-day>span:nth-child(2){display:grid;gap:4px;flex:1;min-width:0}.os-day small{font-size:10px;color:#526175}.os-day strong{font-size:14px;white-space:nowrap}
+html.olesya-skin .overlay{background:#17273877;--muted:#526175;--ink:#14202c;--accent:#903442}html.olesya-skin .modal{background:#e0e7ef;color:#14202c;border-color:#b7c5d5;box-shadow:0 -10px 40px #16283f33}html.olesya-skin .field{color:#26374b}html.olesya-skin .x{background:#cad6e2;color:#26374b}html.olesya-skin .choice,html.olesya-skin .note,html.olesya-skin .value-card,html.olesya-skin .pill{background:#edf2f7;color:#26374b;border-color:#bac9d9}html.olesya-skin .choice input{accent-color:#903442}html.olesya-skin .value-card small,html.olesya-skin .sub{color:#526175}html.olesya-skin .toast{background:#e0e7ef;color:#14202c;border-color:#b7c5d5}
+@media(max-width:360px){html.olesya-skin .page-scroll{padding:10px 12px}.os-group{padding:9px}.os-card{gap:7px;padding:9px 7px}.os-card-body>strong{font-size:13px}.os-card-body small{font-size:10px}.os-card-icon{flex-basis:24px}.os-card-icon svg{width:24px}.os-title h1{font-size:28px}.os-date input{max-width:112px}.os-tabs button{font-size:10px}.os-day{gap:7px}.os-day strong{font-size:12px}}
+
+html.olesya-skin #app .page-scroll{background:transparent!important}html.olesya-skin #app .olesya-screen{display:block}html.olesya-skin #app .os-nav .nav-btn.active{background:transparent!important;color:#903442!important}
+
+/* Отдельные карточки без внешних контейнеров. */
+html.olesya-skin .os-group{background:none;border:0;box-shadow:none;padding:0;margin-bottom:18px;border-radius:0}
+html.olesya-skin .os-group-head{padding:5px 7px;margin-bottom:7px;background:#dce5eedb;border-radius:8px}
+html.olesya-skin .os-group h2{font-size:20px}
+html.olesya-skin .os-list{gap:7px}
+html.olesya-skin .os-card{background:#e0e6ed;border:0;border-radius:11px;padding:10px 12px;box-shadow:0 2px 5px #13243317}
+html.olesya-skin .os-hint{display:none}
+html.olesya-skin .os-panel:has(.os-work){background:none;border:0;box-shadow:none;padding:0}
+html.olesya-skin .os-panel:has(.os-work)>h2{background:#dce5eedb;border-radius:8px;padding:7px 10px}
+html.olesya-skin .os-panel:has(.os-work)>p{background:#e0e6ed;border-radius:7px;padding:8px 10px;margin:5px 0;font-size:11px}
+html.olesya-skin .os-panel:has(.os-work)>small{display:block;background:#e0e6ed;border-radius:7px;padding:8px 10px;font-size:10px}
+html.olesya-skin .os-work{gap:7px}
+html.olesya-skin .os-work button{border:0;border-radius:10px;background:#e0e6ed;padding:12px}
+
+/* Machine form and crew selection are separate views of one dialog. */
+#overlay #truck-form[hidden]{display:none!important}
+.truck-crew-summary{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.truck-crew-summary .sub{margin:7px 0 12px;overflow-wrap:anywhere}
+#overlay .truck-picker{height:620px;max-height:100%;gap:12px}
+.truck-picker-tools{flex:0 0 auto;display:grid;gap:8px}
+.truck-picker-tools .field{margin:0}
+.truck-picker-tools button{white-space:normal}
+.truck-picker .modal-form-actions{padding-top:4px}
+.truck-picker .choice{min-height:48px;padding:9px 12px}

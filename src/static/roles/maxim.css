@@ -1,0 +1,408 @@
+/* MAXIM · clear graphite v2; opaque surfaces, bright type, no gradients, no glow. */
+html.wagon-skin,html.wagon-skin body{background:#111315!important;color:#f6f6f4}
+html.wagon-skin .ambient{display:none!important}
+html.wagon-skin #app.wagon-mode{background:#111315;color:#f6f6f4;--accent:#e0c5a0;--line:#465055;--muted:#bac0c2;--ink:#f6f6f4;--green:#85d2a7}
+.wagon-mode .top.app-toolbar{min-height:54px;padding:8px 17px;background:#1c2022;border-bottom:1px solid #3c4245;gap:13px;flex-shrink:0}
+.wagon-mode .toolbar-menu{min-width:35px;width:35px;min-height:36px;font-size:25px;color:#eff1f0}
+.wagon-mode .maxim-brand{font-size:16px;font-weight:800;letter-spacing:.015em;color:#f5f5f2;flex:1;text-align:left}
+.wagon-mode .maxim-user{display:grid;gap:3px;text-align:right;max-width:42%}
+.wagon-mode .maxim-user strong{font-size:12px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f5f5f2}
+.wagon-mode .maxim-user span{font-size:10px;color:#bdc2c2;line-height:1.1}
+.wagon-mode .page-scroll{background:#111315;padding:22px 16px 32px;scrollbar-color:#656a6e transparent}
+.wagon-mode .nav{background:#1c2022;border-top:1px solid #42484a;padding:7px 12px calc(7px + var(--telegram-bottom,0px));backdrop-filter:none;box-shadow:none}
+.wagon-mode .nav-inner{justify-content:center;gap:10px;max-width:480px}
+.wagon-mode .nav-btn{color:#abb1b3;font-size:12px;padding:7px 12px;max-width:180px;min-height:50px;border-radius:10px}
+.wagon-mode .nav-btn b{font-size:21px}
+.wagon-mode .nav-btn.active{background:#36312c;color:#f5d6ad}
+.maxim-view{max-width:660px;margin:0 auto}
+.maxim-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
+.maxim-eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;color:#c4a989;margin-bottom:5px}
+.maxim-title-row h1{font-size:31px;line-height:1.12;letter-spacing:-.03em;margin:0 0 5px;color:#fff;font-weight:800}
+.maxim-title-row p{font-size:13px;color:#bcc1c3;margin:0;text-transform:capitalize}
+.maxim-add{min-height:43px;min-width:109px;padding:0 12px;background:#e4c7a0;border:1px solid #e4c7a0;border-radius:9px;color:#1b1a17;font-size:14px;font-weight:800;white-space:nowrap;box-shadow:none}
+.maxim-add-outline{background:#272a2c;color:#e5ceaf;border-color:#766957}
+.maxim-counts{display:flex;align-items:center;gap:11px;padding:12px 0 15px;border-top:1px solid #32383a;border-bottom:1px solid #32383a;margin-bottom:14px;font-size:12px;color:#b8bebe}
+.maxim-counts b{font-size:17px;color:#f5f5f4;margin-right:2px}
+.maxim-counts .maxim-count-done b{color:#9be0b5}
+.maxim-count-divider{width:1px;height:18px;background:#4b5254}
+.maxim-search{height:45px;display:flex;align-items:center;gap:10px;padding:0 13px;background:#202426;border:1px solid #4a5255;border-radius:10px;margin-bottom:11px}
+.maxim-search span{font-size:25px;line-height:1;color:#aab0b2}
+.maxim-search input{background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important;padding:0!important;width:100%;font-size:14px;color:#fbfbf9!important;outline:0!important}
+.maxim-search input::placeholder{color:#9da6aa}
+.maxim-filter{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 0 15px}
+.maxim-filter button{background:#24282a;border:1px solid #4b5356;border-radius:8px;color:#c9cdd0;font-size:12px;padding:9px 12px;font-weight:700;white-space:nowrap}
+.maxim-filter button.selected{background:#e0c6a5;border-color:#e0c6a5;color:#24201c}
+.maxim-list{display:grid;gap:9px}
+.maxim-item{display:flex;align-items:stretch;border:1px solid #485054;border-left:4px solid #7b8588;border-radius:10px;background:#202426;min-height:82px;overflow:hidden;box-shadow:none;filter:none;backdrop-filter:none}
+.maxim-item.is-loaded{border-left-color:#78cba0}.maxim-item.is-progress{border-left-color:#76badb}.maxim-item.is-planned{border-left-color:#e3b77e}
+.maxim-item-open{display:flex;flex-direction:column;justify-content:center;min-width:0;flex:1;text-align:left;background:transparent;color:inherit;border:0;padding:12px 8px 12px 13px;gap:9px}
+.maxim-item-head{display:flex;align-items:center;justify-content:space-between;gap:7px;width:100%}
+.maxim-item-head strong{font-size:16px;font-weight:790;letter-spacing:.015em;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.maxim-item-sub{font-size:12px;line-height:1.35;color:#c5cbce;white-space:normal}
+.maxim-item-sub b{color:#f2f4f3;font-weight:750}
+.maxim-dot{padding:0 5px;color:#929a9d}
+.maxim-status{font-size:10px;line-height:1.15;border-radius:6px;padding:6px 7px;white-space:nowrap;font-weight:800}
+.maxim-status.s-loaded{background:#23563c;color:#c0f6d2}.maxim-status.s-planned{background:#664723;color:#ffe0b1}.maxim-status.s-progress{background:#224d66;color:#c0e8ff}
+.maxim-arrow{align-self:center;font-size:27px;color:#d2d9d9;padding:0 13px 0 4px}
+.maxim-done{align-self:center;border:1px solid #629c76;background:#2b593b;color:#ddffde;border-radius:9px;margin:0 9px 0 2px;font-weight:800;font-size:20px;height:41px;min-width:43px}
+.maxim-foot-note{font-size:11px;color:#939c9f;margin:18px 2px 8px;text-align:center}
+.maxim-empty{text-align:center;padding:32px 14px;background:#1e2224;border:1px dashed #596166;border-radius:11px;color:#c0c8c9;font-size:13px;line-height:1.65}
+.maxim-history-date{font-size:12px;color:#d4d1ca;padding:15px 3px 1px;text-transform:capitalize;font-weight:700}
+.maxim-quick-days{display:flex;gap:8px;margin-bottom:11px}
+.maxim-quick-days button{flex:1;min-height:38px;background:#292d30;border:1px solid #4b5357;border-radius:8px;color:#d7dce0;font-size:12px;font-weight:700}
+.maxim-date-row{display:flex;gap:9px;margin-bottom:12px}
+.maxim-date{display:flex;align-items:center;gap:7px;min-width:0;flex:1;height:47px;padding:0 10px;border:1px solid #555f62;border-radius:9px;background:#252a2c;color:#bec4c6;font-size:11px}
+.maxim-date input{color:#f6f7f8;background:transparent;border:0;border-radius:0;outline:0;padding:0;height:40px;min-height:0;font-size:12px;font-weight:700;width:100%;min-width:0;color-scheme:dark}
+.maxim-date input:focus{border:0;box-shadow:none}
+html.wagon-skin .overlay{background:#060809d9;backdrop-filter:none}
+html.wagon-skin .modal{background:#1f2325;border-color:#4f595d;color:#fff;box-shadow:none}
+html.wagon-skin .modal .modal-head h2{color:#fff}
+html.wagon-skin .modal .x{background:#31383b;color:#fff}
+html.wagon-skin .modal .btn{background:#30383b;color:#f5f4f1;border-color:#657074}
+html.wagon-skin .modal .btn.primary{background:#e4c7a0;border-color:#e4c7a0;color:#1d1e1e}
+.maxim-form{display:grid;gap:12px}
+.maxim-field{display:grid;gap:7px;font-size:13px;font-weight:750;color:#f0f1f0}
+.maxim-field input,.maxim-field select{background:#2b3032!important;border:1px solid #5a6468!important;border-radius:9px!important;color:#fff!important;padding:11px 12px!important;min-height:46px!important;font-size:16px!important}
+.maxim-field input:focus,.maxim-field select:focus{border-color:#e4c7a0!important;outline:0}
+.maxim-date-choice-label{color:#f0f1f0;font-size:13px;font-weight:750;margin:3px 0 -4px}
+.maxim-day-picker{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:7px}
+.maxim-day-picker button{border:1px solid #596165;background:#2b3032;color:#e0e4e5;min-height:42px;border-radius:8px;font-size:12px;font-weight:750;padding:5px}
+.maxim-day-picker button.active{background:#e4c7a0;border-color:#e4c7a0;color:#22201d}
+.maxim-custom-date.hidden{display:none!important}
+.maxim-form-note{margin:0;color:#b9c2c4;font-size:12px;line-height:1.5}
+.maxim-form-actions{display:grid;gap:8px;margin-top:4px}
+.maxim-submit,.maxim-next{border-radius:9px;min-height:46px;font-size:14px;font-weight:800}
+.maxim-submit{background:#e4c7a0;color:#1e1b18;border:1px solid #e4c7a0}
+.maxim-next{background:#303638;color:#f0dac0;border:1px solid #766b5c}
+@media(max-width:365px){.maxim-title-row h1{font-size:27px}.maxim-title-row p{font-size:11px}.maxim-add{min-width:95px;padding:0 10px;font-size:12px}.maxim-counts{gap:7px;font-size:11px}.maxim-item-head strong{font-size:14px}.maxim-status{font-size:9px;padding:5px}.maxim-dot{padding:0 3px}.maxim-day-picker button{font-size:11px}}
+
+/* ВАГОНЫ / концепция №3: light editorial + navy / sand. Только роль Максима. */
+html.wagon-skin{color-scheme:light!important;background:#f7f9fc!important}
+html.wagon-skin body{color-scheme:light!important;background:#f7f9fc!important;color:#172338!important}
+html.wagon-skin .ambient{display:none!important}
+html.wagon-skin #app.wagon-mode{background:#f7f9fc!important;color:#172338!important;--ink:#172338;--muted:#617086;--line:#d9e1eb;--accent:#213a5a;--green:#226d47}
+.wagon-mode .top.app-toolbar{min-height:50px!important;margin:0!important;padding:6px 16px!important;background:#213a5a!important;border:0!important;gap:10px;flex-shrink:0;box-shadow:none!important}
+.wagon-mode .toolbar-menu{color:#fff!important;font-size:24px!important;width:36px;min-width:36px;min-height:36px;background:transparent!important}
+.wagon-mode .maxim-brand{font-size:16px!important;font-weight:780;color:#fff!important;letter-spacing:0;text-align:left;flex:1}
+.wagon-mode .maxim-user{display:grid;gap:1px;max-width:44%;text-align:right}
+.wagon-mode .maxim-user strong{font-size:12px;color:#fff!important;font-weight:700;line-height:1.25}
+.wagon-mode .maxim-user span{font-size:10px;color:#c9d8e9!important;line-height:1.2}
+.wagon-mode .page-scroll{background:#f7f9fc!important;padding:16px 14px 22px!important;scrollbar-color:#b5c0cf transparent}
+.wagon-mode .nav{background:#fff!important;border-top:1px solid #dce4ed!important;padding:5px 10px calc(6px + var(--telegram-bottom,0px))!important;backdrop-filter:none!important;box-shadow:0 -1px 6px rgba(23,35,56,.03)!important}
+.wagon-mode .nav-inner{display:flex;justify-content:center;gap:3px;max-width:450px}
+.wagon-mode .nav-btn{flex:1;color:#778397!important;font-size:10px!important;padding:4px 7px!important;max-width:none;min-height:52px!important;border-radius:8px!important;gap:2px!important;background:transparent!important}
+.wagon-mode .nav-btn b{font-size:20px!important;font-weight:500}
+.wagon-mode .nav-btn.active{background:#eaf0f8!important;color:#213a5a!important}
+.wagon-mode .nav-btn.maxim-bottom-add{color:#fff!important;background:#213a5a!important;font-size:10px!important;max-width:155px;margin:0 3px}
+.wagon-mode .maxim-bottom-add b{font-size:25px!important;line-height:1.05}
+.wagon-mode .maxim-view{max-width:640px;margin:0 auto}
+.wagon-mode .maxim-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 13px!important}
+.wagon-mode .maxim-title-row h1,.wagon-mode .maxim-history-title h1{font-size:24px!important;color:#18283f!important;margin:0 0 3px!important;line-height:1.18!important;font-weight:800!important;letter-spacing:-.025em!important}
+.wagon-mode .maxim-title-row p,.wagon-mode .maxim-history-title p{margin:0!important;color:#6e7c8e!important;font-size:12px!important;text-transform:capitalize}
+.wagon-mode .maxim-main-date{position:relative;display:flex;align-items:center;gap:4px;min-width:127px;height:37px;border:1px solid #cfd9e6;background:#fff;border-radius:9px;padding:0 8px;font-size:14px;color:#213a5a}
+.wagon-mode .maxim-main-date span{font-size:18px;flex:0 0 auto}
+.wagon-mode .maxim-main-date input{width:100%;min-width:0;border:0!important;box-shadow:none!important;background:transparent!important;color:#253b56!important;color-scheme:light!important;min-height:35px!important;font-size:11px!important;padding:0!important;outline:0!important;font-weight:650}
+.wagon-mode .maxim-back-today{display:block;border:0;background:transparent;color:#305c95;padding:0 0 12px;font-size:12px;font-weight:700}
+.wagon-mode .maxim-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.wagon-mode .maxim-tile{display:flex;flex-direction:column;justify-content:space-between;min-width:0;height:71px;text-align:left;padding:10px 12px;background:#e9eef5;color:#263d59;border-radius:11px;border:1px solid transparent;box-shadow:none;filter:none}
+.wagon-mode .maxim-tile span{font-size:11px;line-height:1.1;color:#516179;font-weight:600;white-space:nowrap}
+.wagon-mode .maxim-tile strong{font-size:27px;line-height:1;color:#233d60;font-weight:800;letter-spacing:-.025em}
+.wagon-mode .maxim-tile.tile-loaded{background:#e6f2e9}
+.wagon-mode .maxim-tile.tile-loaded strong{color:#206d45}
+.wagon-mode .maxim-tile.tile-open{background:#f3eee5}
+.wagon-mode .maxim-tile.tile-open strong{color:#96733b}
+.wagon-mode .maxim-tile.selected{outline:2px solid #6686a9;outline-offset:-2px}
+.wagon-mode .maxim-tile.tile-loaded.selected{outline-color:#6ba47f}
+.wagon-mode .maxim-tile.tile-open.selected{outline-color:#bca577}
+.wagon-mode .maxim-list-heading{display:flex;align-items:center;justify-content:space-between;margin:0 0 9px}
+.wagon-mode .maxim-list-heading h2{font-size:15px;color:#1e314d;line-height:1.25;margin:0;font-weight:780}
+.wagon-mode .maxim-list-heading h2 span{font-size:11px;font-weight:750;background:#e6ecf3;color:#60738a;padding:3px 7px;border-radius:99px;margin-left:4px}
+.wagon-mode .maxim-search{display:flex;align-items:center;height:37px!important;padding:0 10px!important;margin:0 0 10px!important;border:1px solid #d9e2ec!important;border-radius:9px!important;background:#fff!important;gap:8px!important}
+.wagon-mode .maxim-search span{font-size:21px;color:#8c9cb0}
+.wagon-mode .maxim-search input{border:0!important;background:transparent!important;color:#1d314d!important;box-shadow:none!important;font-size:13px!important;min-height:0!important;padding:0!important}
+.wagon-mode .maxim-search input::placeholder{color:#a1adbb!important}
+.wagon-mode .maxim-list{display:grid;gap:0!important;background:#fff;border:1px solid #e0e7ef;border-radius:12px;overflow:hidden}
+.wagon-mode .maxim-item{display:flex;align-items:stretch;min-height:61px!important;border:0!important;border-bottom:1px solid #e9eef3!important;background:#fff!important;border-radius:0!important;box-shadow:none!important;filter:none!important;backdrop-filter:none!important}
+.wagon-mode .maxim-item:last-child{border-bottom:0!important}
+.wagon-mode .maxim-item-open{flex:1;min-width:0;display:flex;flex-direction:row;align-items:center;justify-content:space-between;text-align:left;padding:9px 12px!important;gap:8px!important;background:transparent!important;border:0!important;color:#192c45!important}
+.wagon-mode .maxim-item-main{display:grid;min-width:0;gap:4px;flex:1}
+.wagon-mode .maxim-item-main strong{font-size:14px;color:#172944;line-height:1.15;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wagon-mode .maxim-item-main small{font-size:11px;font-weight:450;color:#758296;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wagon-mode .maxim-item-side{display:grid;justify-items:end;gap:5px;flex:0 0 auto}
+.wagon-mode .maxim-item-side>strong{font-size:12px;color:#283f59;font-weight:750;line-height:1.2}
+.wagon-mode .maxim-status{font-size:10px!important;font-weight:700!important;line-height:1.1!important;border-radius:5px!important;padding:4px 6px!important;letter-spacing:0!important}
+.wagon-mode .maxim-status.s-loaded{background:#e0f0e3;color:#276c41}
+.wagon-mode .maxim-status.s-progress{background:#e2ecf9;color:#2e618e}
+.wagon-mode .maxim-status.s-planned{background:#f6eddb;color:#8d662d}
+.wagon-mode .maxim-done{background:#e5f2e9!important;color:#226d43!important;border:1px solid #b7d8c2!important;font-size:18px!important;margin:11px 8px 11px 0!important;min-width:36px!important;height:auto!important;border-radius:8px!important}
+.wagon-mode .maxim-empty{padding:26px 15px!important;background:#fff!important;border:0!important;border-radius:0!important;color:#697c92!important;font-size:13px;line-height:1.55}
+.wagon-mode .maxim-history-title{margin-bottom:16px}
+.wagon-mode .maxim-history-date{color:#4b6481;font-size:11px;padding:12px 10px 6px!important;background:#edf2f7;font-weight:750;text-transform:capitalize}
+.wagon-mode .maxim-history-list{gap:0!important}
+.wagon-mode .maxim-history-list .maxim-history-date:not(:first-child){border-top:1px solid #e0e7ef}
+.wagon-mode .maxim-date-row{display:flex;gap:8px;margin:0 0 12px}
+.wagon-mode .maxim-date{background:#fff!important;border:1px solid #dbe3ec!important;border-radius:9px!important;display:flex;align-items:center;gap:4px;min-width:0;flex:1;height:43px;padding:0 8px;font-size:11px;color:#76859a}
+.wagon-mode .maxim-date input{color:#293d56!important;color-scheme:light!important;background:transparent!important;border:0!important;outline:0!important;padding:0!important;min-width:0;min-height:36px!important;font-size:11px!important;width:100%;font-weight:650}
+/* Максим: новая форма — светлая, без экрана-подложки и темноты из прошлой темы. */
+html.wagon-skin .overlay{background:#0c1c30a3!important;backdrop-filter:none!important}
+html.wagon-skin .modal{background:#fff!important;color:#152a42!important;border:0!important;box-shadow:0 -10px 32px rgba(10,27,50,.15)!important;border-radius:18px 18px 0 0!important}
+html.wagon-skin .modal .modal-head h2{color:#19334f!important;font-size:19px}
+html.wagon-skin .modal .x{background:#eff3f8!important;color:#34506e!important}
+html.wagon-skin .modal .sub{color:#6b7b90!important}
+html.wagon-skin .modal .btn{background:#eef2f7!important;color:#213a5a!important;border-color:#d5dfea!important}
+html.wagon-skin .modal .btn.primary{background:#213a5a!important;color:#fff!important;border-color:#213a5a!important}
+.wagon-mode .maxim-form{display:grid;gap:13px}
+html.wagon-skin .maxim-field{display:grid;gap:6px;color:#223b5a!important;font-size:12px;font-weight:720}
+html.wagon-skin .maxim-field input,html.wagon-skin .maxim-field select{color-scheme:light!important;background:#f7f9fc!important;border:1px solid #d5e0eb!important;border-radius:9px!important;color:#1c2e48!important;min-height:46px!important;font-size:16px!important;padding:11px 12px!important;outline:0!important}
+html.wagon-skin .maxim-field input:focus,html.wagon-skin .maxim-field select:focus{border-color:#547da8!important}
+html.wagon-skin .maxim-form-note{font-size:12px;color:#6e8093;line-height:1.45;margin:2px 0}
+.wagon-mode .maxim-form-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:5px}
+.wagon-mode .maxim-submit,.wagon-mode .maxim-next{min-height:46px;font-size:12px!important;font-weight:750;border-radius:9px!important;padding:7px 8px}
+.wagon-mode .maxim-submit{color:#fff!important;background:#213a5a!important;border:1px solid #213a5a!important}
+.wagon-mode .maxim-next{background:#f0ede6!important;color:#24384e!important;border:1px solid #e3dbce!important}
+html.wagon-skin .modal .note{background:#f5f7fa!important;color:#344d66!important;border:1px solid #dce4ee!important}
+html.wagon-skin .modal .pill{background:#f3f6f9!important;color:#29415d!important;border:1px solid #dae3ed!important}
+html.wagon-skin .modal .value-card{background:#f5f8fb!important;border-color:#dce5ee!important;color:#243a55!important}
+html.wagon-skin .modal .badge{color:#4b657b}
+html.wagon-skin .toast{background:#213a5a;color:#fff}
+@media(max-width:370px){
+ .wagon-mode .maxim-tile{padding:9px!important;height:68px!important}
+ .wagon-mode .maxim-tile span{font-size:10px!important}
+ .wagon-mode .maxim-title-row h1{font-size:22px!important}
+ .wagon-mode .maxim-main-date{min-width:113px!important}
+ .wagon-mode .maxim-main-date input{font-size:10px!important}
+ .wagon-mode .maxim-item-main strong{font-size:13px!important}
+ .wagon-mode .maxim-item-open{padding:9px!important}
+}
+
+/* Печатаем дату по-русски, системный календарь оставляем интерактивным поверх подписи. */
+.wagon-mode .maxim-main-date{min-width:132px;justify-content:space-between;padding:0 11px;overflow:hidden;cursor:pointer}
+.wagon-mode .maxim-main-date strong{font-size:12px;color:#283f5b;font-weight:740;flex:1;text-align:center;white-space:nowrap}
+.wagon-mode .maxim-main-date em{font-size:13px;color:#637b98;font-style:normal}
+.wagon-mode .maxim-main-date input{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important;z-index:2}
+/* Модальное окно вынесено за #app, поэтому кнопки формы стилизуем по html-классу. */
+html.wagon-skin .maxim-submit{background:#213a5a!important;color:#fff!important;border:1px solid #213a5a!important}
+html.wagon-skin .maxim-next{background:#f0ede6!important;color:#24384e!important;border:1px solid #e3dbce!important}
+html.wagon-skin .toast{background:#213a5a!important;color:#fff!important;border-color:#213a5a!important;box-shadow:none!important}
+
+/* MAXIM · polish 2026-11-02: no duplicate menu/search; quiet integrated top,
+   lifted bottom action dock. Scoped to wagon view: other employee roles untouched. */
+html.wagon-skin,html.wagon-skin body{background:#f7f9fc!important}
+.wagon-mode .top.app-toolbar.maxim-top{
+  min-height:53px!important;height:53px!important;
+  padding:5px 17px!important;background:#f7f9fc!important;
+  border-bottom:1px solid #dfe5ed!important;
+  box-shadow:none!important;gap:12px!important;
+}
+.wagon-mode .maxim-brand{display:flex!important;align-items:center;gap:9px!important;
+  font-size:18px!important;letter-spacing:-.02em!important;color:#193451!important;font-weight:800!important}
+.wagon-mode .maxim-brand-icon{display:grid;place-items:center;width:31px;height:31px;flex:0 0 31px;
+  border-radius:9px;background:#213a5a;color:#fff;font-size:20px;font-weight:450;line-height:1}
+.wagon-mode .maxim-user{max-width:50%!important;gap:1px!important;min-width:0}
+.wagon-mode .maxim-user strong{font-size:11px!important;color:#233a55!important;line-height:1.2!important}
+.wagon-mode .maxim-user span{font-size:9px!important;color:#77879a!important;line-height:1.2!important}
+.wagon-mode .maxim-exit-preview{border:1px solid #d7e0e9;background:#fff;color:#23415e;
+  border-radius:10px;padding:8px 11px;font-size:12px;font-weight:750;min-height:35px}
+/* Lift the dock above the Android/iPhone gesture area and make all three
+   destinations one cohesive component instead of full-width clipped tiles. */
+.wagon-mode .nav.maxim-bottom{padding:7px 12px calc(14px + max(env(safe-area-inset-bottom, 0px),var(--telegram-bottom,0px)))!important;
+  background:#f7f9fc!important;border-top:0!important;box-shadow:none!important;}
+.wagon-mode .nav.maxim-bottom .nav-inner{width:100%;max-width:540px;display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.16fr) minmax(0,1fr);align-items:stretch;
+  gap:5px!important;background:#fff;border:1px solid #dce5ee;border-radius:17px;
+  padding:6px;box-shadow:0 6px 20px rgba(22,47,77,.085)}
+.wagon-mode .nav.maxim-bottom .nav-btn{height:52px!important;min-height:52px!important;max-width:none!important;
+  padding:4px 2px!important;border-radius:11px!important;margin:0!important;
+  color:#718198!important;font-size:10px!important;gap:2px!important;
+  align-content:center!important;justify-content:center!important;
+  transition:background .12s ease}
+.wagon-mode .nav.maxim-bottom .nav-btn b{font-size:18px!important;line-height:1!important}
+.wagon-mode .nav.maxim-bottom .nav-btn.active{background:#e9f0f7!important;color:#233f60!important}
+.wagon-mode .nav.maxim-bottom .nav-btn.maxim-bottom-add{background:#213a5a!important;color:#fff!important;font-weight:800!important}
+.wagon-mode .nav.maxim-bottom .nav-btn.maxim-bottom-add b{font-size:23px!important;line-height:1!important}
+.wagon-mode .page-scroll{padding-bottom:24px!important}
+.wagon-mode .maxim-list-heading{margin-top:0!important;margin-bottom:11px!important}
+.wagon-mode .maxim-title-row{margin-bottom:14px!important}
+.wagon-mode .maxim-tiles{margin-bottom:19px!important}
+@media(max-width:355px){
+ .wagon-mode .maxim-brand{font-size:16px!important}
+ .wagon-mode .maxim-user span{font-size:8px!important}
+ .wagon-mode .nav.maxim-bottom{padding-left:9px!important;padding-right:9px!important}
+}
+
+
+/* VAGONY: stable keyboard-aware bottom sheet for wagon entry only.
+   No layout changes to the main page, admin or storekeeper modals. */
+html.wagon-skin #overlay.wagon-entry{
+  position:fixed!important;
+  top:var(--sheet-top,0px)!important;
+  bottom:auto!important;
+  left:0!important;right:0!important;
+  width:100%!important;
+  height:var(--sheet-height,100dvh)!important;
+  display:flex!important;align-items:flex-end!important;justify-content:center!important;
+  overflow:hidden!important;
+  touch-action:none!important;
+  background:rgba(15,29,46,.43)!important;
+  backdrop-filter:none!important;
+  z-index:100!important;
+}
+html.wagon-skin #overlay.wagon-entry.hidden{display:none!important}
+html.wagon-skin #overlay.wagon-entry .modal{
+  display:flex!important;
+  flex-direction:column!important;
+  flex:0 1 auto!important;
+  width:min(100%,620px)!important;
+  height:min(580px, var(--sheet-height,100dvh))!important;
+  max-height:100%!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  border-radius:20px 20px 0 0!important;
+  box-shadow:0 -6px 36px rgba(16,39,70,.12)!important;
+  transform:translate3d(0,0,0);
+  opacity:1;
+  transition:transform 220ms cubic-bezier(.22,.8,.25,1),opacity 180ms ease!important;
+  will-change:transform;
+  contain:layout style;
+}
+html.wagon-skin #overlay.wagon-entry.entering .modal,
+html.wagon-skin #overlay.wagon-entry.closing .modal{
+  transform:translate3d(0,100%,0)!important;
+  opacity:1!important;
+}
+html.wagon-skin #overlay.wagon-entry .modal-head{
+  flex:0 0 auto!important;
+  padding:15px 18px 13px!important;
+  margin:0!important;
+  border-bottom:1px solid #e6ebf2!important;
+  background:#fff!important;
+}
+html.wagon-skin #overlay.wagon-entry .maxim-form{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  gap:0!important;
+  min-height:0!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+html.wagon-skin #overlay.wagon-entry .maxim-form-fields{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  padding:15px 18px 14px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  display:grid;
+  gap:13px;
+  align-content:start;
+}
+html.wagon-skin #overlay.wagon-entry .maxim-form-actions{
+  flex:0 0 auto!important;
+  position:relative!important;
+  z-index:1!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  margin:0!important;
+  padding:10px 18px calc(12px + max(env(safe-area-inset-bottom,0px),var(--telegram-bottom,0px)))!important;
+  background:#fff!important;
+  border-top:1px solid #e3e9f0!important;
+}
+html.wagon-skin #overlay.wagon-entry.keyboard-visible .maxim-form-actions{
+  padding-bottom:8px!important;
+}
+html.wagon-skin #overlay.wagon-entry .maxim-submit{
+  order:2;
+  min-height:48px!important;
+  font-size:15px!important;
+  font-weight:800!important;
+}
+html.wagon-skin #overlay.wagon-entry .maxim-next{
+  order:1;
+  min-height:36px!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  background:#f1f4f8!important;
+  border-color:#e4eaf2!important;
+}
+@media(max-height:550px){
+  html.wagon-skin #overlay.wagon-entry .modal-head{padding-top:9px!important;padding-bottom:8px!important}
+  html.wagon-skin #overlay.wagon-entry .maxim-form-fields{padding-top:8px!important;padding-bottom:8px!important;gap:8px}
+  html.wagon-skin #overlay.wagon-entry .maxim-form-actions{padding-top:7px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html.wagon-skin #overlay.wagon-entry .modal{transition:none!important}
+}
+
+/* Журнал Максима (Sapphire). Собственная разметка/стили, без влияния на другие роли. */
+html.wagon-skin .wagon-mode .maxim-journal{padding-bottom:22px;color:#ecf8ff}
+html.wagon-skin .wagon-mode .mj-heading{margin-bottom:17px}
+html.wagon-skin .wagon-mode .mj-heading h1{font-size:29px;line-height:1.14;letter-spacing:-.04em;margin:0 0 4px;color:#f5fcff;font-weight:830}
+html.wagon-skin .wagon-mode .mj-heading p{font-size:12px;color:#8fb8d1;margin:0}
+html.wagon-skin .wagon-mode .mj-month-picker{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:8px;margin:0 0 15px;min-height:54px}
+html.wagon-skin .wagon-mode .mj-month-picker>div{text-align:center;display:grid;gap:3px}
+html.wagon-skin .wagon-mode .mj-month-picker strong{font-size:17px;color:#f2fbff;font-weight:750}
+html.wagon-skin .wagon-mode .mj-month-picker small{font-size:10px;color:#8bafca}
+html.wagon-skin .wagon-mode .mj-month-picker button{height:39px;width:39px;display:grid;place-items:center;border-radius:11px;border:1px solid #316884;background:#113650b8;color:#a6eaff;font-size:29px;line-height:1;padding:0 0 3px;box-shadow:inset 0 1px 0 #9af5ff12}
+html.wagon-skin .wagon-mode .mj-summary{position:relative;overflow:hidden;padding:19px 19px 18px;border:1px solid #428bac;border-radius:17px;background:linear-gradient(122deg,#13517ce3 0%,#093c60ee 45%,#09273fef 100%);box-shadow:0 8px 27px #0004,inset 0 1px #87d9ff23;margin-bottom:11px}
+html.wagon-skin .wagon-mode .mj-summary:after{content:"";position:absolute;pointer-events:none;border-radius:50%;width:170px;height:170px;right:-95px;top:-80px;background:#65eaff;filter:blur(65px);opacity:.28}
+html.wagon-skin .wagon-mode .mj-summary-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:12px;position:relative;z-index:1}
+html.wagon-skin .wagon-mode .mj-summary-head>span:first-child{font-size:10px;font-weight:800;color:#9ccce5;letter-spacing:.075em}
+html.wagon-skin .wagon-mode .mj-summary-mark{display:grid;place-items:center;color:#69e9f7}
+html.wagon-skin .wagon-mode .mj-summary-mark svg{width:23px;height:23px}
+html.wagon-skin .wagon-mode .mj-tonnage{display:flex;align-items:baseline;gap:7px;position:relative;z-index:1;min-width:0}
+html.wagon-skin .wagon-mode .mj-tonnage strong{font-size:clamp(32px,8.4vw,46px);font-weight:820;line-height:1.05;letter-spacing:-.045em;color:#f7feff;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+html.wagon-skin .wagon-mode .mj-tonnage span{font-size:16px;color:#9deff7;font-weight:630;white-space:nowrap}
+html.wagon-skin .wagon-mode .mj-summary p{position:relative;z-index:1;margin:10px 0 0;font-size:11px;color:#aacde2}
+html.wagon-skin .wagon-mode .mj-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:18px}
+html.wagon-skin .wagon-mode .mj-stat{display:flex;flex-direction:column;justify-content:space-between;min-width:0;gap:7px;background:#092d47e8;border:1px solid #2f6080;border-radius:11px;padding:12px 11px 11px;box-shadow:inset 0 1px #73c0e51a}
+html.wagon-skin .wagon-mode .mj-stat span{font-size:11px;color:#99bdd3;white-space:nowrap}
+html.wagon-skin .wagon-mode .mj-stat strong{font-size:27px;line-height:1;color:#f0f9ff;font-weight:810;font-variant-numeric:tabular-nums}
+html.wagon-skin .wagon-mode .mj-stat-done strong{color:#61ecd1}
+html.wagon-skin .wagon-mode .mj-stat-left strong{color:#ffd18a}
+html.wagon-skin .wagon-mode .mj-period{border-radius:12px;border:1px solid #28536f;background:#07253bc9;margin-bottom:20px;overflow:hidden}
+html.wagon-skin .wagon-mode .mj-calendar-toggle{width:100%;min-height:45px;display:flex;align-items:center;gap:10px;padding:10px 13px;border:0;background:transparent;color:#d9efff;font-size:12px;font-weight:680;text-align:left}
+html.wagon-skin .wagon-mode .mj-calendar-toggle .ui-icon{height:19px;width:19px;color:#71dff0}
+html.wagon-skin .wagon-mode .mj-calendar-toggle span:nth-child(2){flex:1}
+html.wagon-skin .wagon-mode .mj-calendar-toggle span:last-child{color:#8ec6e7;font-size:19px}
+html.wagon-skin .wagon-mode .mj-calendar{border-top:1px solid #285672;padding:13px 13px 10px}
+html.wagon-skin .wagon-mode .mj-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+html.wagon-skin .wagon-mode .mj-cal-weekday{font-size:10px;color:#91b5cf;text-align:center;padding:4px 0 6px}
+html.wagon-skin .wagon-mode .mj-cal-day{position:relative;min-width:0;min-height:38px;border-radius:8px;background:#0e354f;border:1px solid #204763;color:#d5ecff;display:grid;place-items:center;align-content:center;font-weight:630;font-size:12px;padding:4px;gap:2px}
+html.wagon-skin .wagon-mode .mj-cal-day i{width:4px;height:4px;background:#56e2da;border-radius:50%}
+html.wagon-skin .wagon-mode .mj-cal-day.is-today{border-color:#74d5f5}
+html.wagon-skin .wagon-mode .mj-cal-day.selected{background:#39c9e8;color:#03283c;border-color:#96f6ff;font-weight:800}
+html.wagon-skin .wagon-mode .mj-cal-day.selected i{background:#035071}
+html.wagon-skin .wagon-mode .mj-calendar p{font-size:10px;color:#8baec4;display:flex;align-items:center;gap:6px;margin:11px 0 2px}
+html.wagon-skin .wagon-mode .mj-calendar-dot{width:6px;height:6px;border-radius:50%;background:#56e2da;display:inline-block}
+html.wagon-skin .wagon-mode .mj-days-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+html.wagon-skin .wagon-mode .mj-days-title h2{font-size:16px!important;color:#f4fcff!important;font-weight:770!important;margin:0!important;line-height:1.4}
+html.wagon-skin .wagon-mode .mj-days-title>span{font-size:11px;color:#86acc5}
+html.wagon-skin .wagon-mode .mj-days-title button{border:0;background:transparent;color:#70e1f2;font-size:12px;font-weight:760;padding:3px 0}
+html.wagon-skin .wagon-mode .mj-day-card{overflow:hidden;margin-bottom:8px;border:1px solid #37647c;border-radius:12px;background:linear-gradient(120deg,#0b324eeb,#07263fea);box-shadow:0 4px 14px #0001}
+html.wagon-skin .wagon-mode .mj-day-row{width:100%;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;padding:14px 13px;color:#e4f5ff}
+html.wagon-skin .wagon-mode .mj-day-left{display:grid;gap:4px;min-width:0}
+html.wagon-skin .wagon-mode .mj-day-left strong{font-size:13px;font-weight:760;color:#edfaff}
+html.wagon-skin .wagon-mode .mj-day-left small{font-size:11px;color:#8fb5ce}
+html.wagon-skin .wagon-mode .mj-day-right{display:flex;gap:10px;align-items:center;justify-content:end;white-space:nowrap}
+html.wagon-skin .wagon-mode .mj-day-right strong{font-size:13px;font-weight:750;color:#92eef3;font-variant-numeric:tabular-nums}
+html.wagon-skin .wagon-mode .mj-day-right span{font-size:17px;color:#80b8d4}
+html.wagon-skin .wagon-mode .mj-day-details{border-top:1px solid #285a78;padding:12px 13px 13px;background:#062337a1}
+html.wagon-skin .wagon-mode .mj-day-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+html.wagon-skin .wagon-mode .mj-day-stats>span{display:grid;gap:5px}
+html.wagon-skin .wagon-mode .mj-day-stats small{font-size:10px;color:#92b6d0}
+html.wagon-skin .wagon-mode .mj-day-stats b{font-size:17px;color:#e7f7ff;font-weight:750}
+html.wagon-skin .wagon-mode .mj-day-bottom{display:flex;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid #1c4d69;margin-top:12px;padding-top:11px}
+html.wagon-skin .wagon-mode .mj-day-bottom>span{font-size:11px;color:#9bbad0}
+html.wagon-skin .wagon-mode .mj-day-bottom>span strong{color:#dffaff;display:block;font-size:13px;margin-top:2px}
+html.wagon-skin .wagon-mode .mj-day-bottom button{border:1px solid #317996;border-radius:9px;background:#144967;color:#9bebff;padding:10px 11px;font-size:11px;font-weight:700}
+html.wagon-skin .wagon-mode .mj-empty,html.wagon-skin .wagon-mode .mj-message{display:grid;gap:10px;text-align:center;padding:26px 16px;border-radius:12px;background:#092b44c9;border:1px solid #315c7b;color:#9ec3dc;font-size:12px}
+html.wagon-skin .wagon-mode .mj-empty button,html.wagon-skin .wagon-mode .mj-message button{border:1px solid #367c99;background:#13425f;padding:10px;border-radius:8px;color:#98eaff;font-weight:700}
+html.wagon-skin .wagon-mode .mj-error{color:#ffd4cc}
+@media(max-width:370px){html.wagon-skin .wagon-mode .mj-summary{padding:16px 14px}html.wagon-skin .wagon-mode .mj-stat{padding:11px 8px}html.wagon-skin .wagon-mode .mj-stat span{font-size:10px}html.wagon-skin .wagon-mode .mj-day-row{padding:12px 9px}html.wagon-skin .wagon-mode .mj-day-right strong{font-size:12px}html.wagon-skin .wagon-mode .mj-day-bottom button{padding:9px 7px}}

@@ -1,0 +1,2 @@
+import {defineConfig,devices} from '@playwright/test';
+export default defineConfig({testDir:'./tests',testMatch:'**/*.spec.js',timeout:120000,expect:{timeout:60000},workers:1,retries:0,reporter:'list',use:{baseURL:'http://127.0.0.1:8765',trace:'retain-on-failure'},webServer:{command:'python -m http.server 8765 --directory dist',url:'http://127.0.0.1:8765',reuseExistingServer:!process.env.CI},projects:[{name:'android',use:{...devices['Pixel 7'],browserName:'chromium'}},{name:'iphone',use:{...devices['iPhone 13'],browserName:'webkit'}}]});

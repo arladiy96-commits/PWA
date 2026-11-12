@@ -1,0 +1,8 @@
+{
+  "name":"gruzcontrol-pwa",
+  "version":"0.1.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"build":"python tools/build.py","test:runtime":"node tests/runtime.cjs","test:browser":"playwright test","preview":"python -m http.server 8765 --directory dist"},
+  "devDependencies":{"@playwright/test":"1.58.2"}
+}

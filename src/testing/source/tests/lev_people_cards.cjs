@@ -1,0 +1,15 @@
+const {JSDOM}=require('jsdom'),fs=require('fs'),assert=require('assert');
+const dom=new JSDOM('<main id="app"></main>',{runScripts:'outside-only'}),w=dom.window;
+w.eval(fs.readFileSync(__dirname+'/../static/roles/lev.js','utf8').replace('return {header,menu,','return {personRows,personLedger,header,menu,'));
+const state={me:{role:'manager'},tab:'lev-stats'},$=s=>w.document.querySelector(s);
+const role=w.WagonsRoles.lev({state,$,esc:s=>String(s??'').replaceAll('<','&lt;'),money:n=>n/100+' ₸',tone:String,vehicleName:()=> 'Фура'});
+const x={load_id:8,reference:'12345678',transport:'wagon',load_date:'2026-11-10',product_name:'Мука',status:'loaded',crew_count:4,earned_cents:1000000,total_cents:4000000,rate_snapshot:40000,paid_cents:1000000,balance_cents:0,statements:[{statement_id:9,amount_cents:1000000}]};
+const d={person:{name:'Иванов'},earned_cents:1000000,paid_cents:1000000,balance_cents:0,items:[x]};
+$('#app').innerHTML=role.personRows([{loader_id:2,name:'Иванов',loads:17,amount_cents:1000000},{loader_id:0,name:'Наемник на тупике',loads:3,amount_cents:5000}]);
+assert.equal(w.document.querySelectorAll('.lp-person').length,2);assert.equal($('.lp-person').dataset.id,'2');assert($('.lp-person').textContent.includes('Погрузок: 17'));
+$('#app').innerHTML=role.personLedger(d,{},'2026-11-01','2026-11-11','');
+assert.equal($('.lp-work .lp-earned .lv-money').textContent,'10000 ₸');assert.equal($('.lp-calculation').open,false);assert($('.lp-calculation').textContent.includes('40000 ₸'));assert($('.lp-work-link').textContent.includes('10.11.2026'));assert.equal($('.lp-statements button').dataset.id,'9');assert(!$('#app').textContent.includes('наряд'));
+x.is_contractor=true;x.total_cents=x.earned_cents;x.crew_count=0;
+$('#app').innerHTML=role.personLedger(d,{},'2026-11-01','2026-11-11','');assert($('.lp-work').textContent.includes('Начислено наемнику'));assert(!$('.lp-calculation').textContent.includes('Грузчиков'));
+x.deleted=true;$('#app').innerHTML=role.personLedger(d,{},'2026-11-01','2026-11-11','');assert($('.lp-cancelled'));assert(!$('.lp-calculation'));
+console.log('PASS clickable people rows, personal amounts, folded crew calculation, dates, statement links, contractor and cancelled accrual');dom.window.close();

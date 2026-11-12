@@ -1,0 +1,22 @@
+const {JSDOM}=require('jsdom'),fs=require('fs'),path=require('path'),assert=require('assert');
+const root=path.join(__dirname,'../static');
+const dom=new JSDOM('<html><body><div id="app" class="app-frame"></div><div id="overlay" class="hidden"><div id="modal"></div></div><div id="toast"></div></body></html>',{url:'https://example.test',runScripts:'outside-only',pretendToBeVisual:true});
+const w=dom.window,$=s=>w.document.querySelector(s);let requests=[];
+const tg={isFullscreen:true,viewportStableHeight:844,safeAreaInset:{top:24,bottom:24},contentSafeAreaInset:{top:48,bottom:0},onEvent(){},initData:'test'};w.Telegram={WebApp:tg};w.innerHeight=844;
+w.fetch=async url=>{requests.push(url);const d=url.startsWith('/api/loads?')?[{id:1,transport:'wagon',reference:'12345678',product_name:'Мука',tonnes:'68.5',status:'planned',crew_count:0},{id:2,transport:'truck',vehicle_kind:'kamaz',reference:'',product_name:'Отруби',tonnes:'18',status:'progress',crew_count:3,buyer:'Астык'}]:[];return {ok:true,json:async()=>d}};
+for(const n of ['maxim','olesya','lev','admin'])w.eval(fs.readFileSync(path.join(root,'roles/'+n+'.js'),'utf8'));
+let code=fs.readFileSync(path.join(root,'app.js'),'utf8');
+code=code.replace('  enter();\n})();','  window.testUI={state,lev,shell,formLoad,syncTelegramViewport,syncModalViewport,openModal};\n})();');w.eval(code);
+const t=w.testUI;t.state.me={role:'manager',name:'Лев'};t.state.tab='lev-home';t.state.boot={products:[{id:1,name:'Мука'}],loaders:[],tariffs:[]};
+(async()=>{
+ t.state.tab='loaders';await t.lev.renderLoaders();assert(!$('#loader-form'));assert($('[data-act="lv-add-loader"]'));
+ $('#app').getBoundingClientRect=()=>({height:844});
+ await t.lev.handleClick('lv-add-loader');assert($('#lv-loader-editor'));assert(w.document.documentElement.classList.contains('modal-background-frozen'));
+ $('#lv-loader-editor input').focus();w.innerHeight=430;tg.viewportStableHeight=430;t.syncTelegramViewport();t.syncModalViewport();
+ assert.equal($('#app').style.getPropertyValue('--modal-frame-height'),'844px');assert($('#overlay').classList.contains('keyboard-visible'));
+ let body,url,method;w.fetch=async(u,opt={})=>{if(opt.method){url=u;method=opt.method;body=JSON.parse(opt.body);}return {ok:true,json:async()=>u==='/api/bootstrap'?{products:[],loaders:[],tariffs:[]}:[]}};
+ $('#lv-loader-editor input').value='Иванов';await t.lev.handleSubmit($('#lv-loader-editor'));assert.equal(url,'/api/loaders');assert.equal(body.name,'Иванов');assert.equal(method,'POST');
+ w.prompt=()=>{throw Error('native prompt must not open')};await t.lev.handleClick('rename-loader','7',{dataset:{name:'Иванов'}});
+ assert.equal($('#lv-loader-editor input').value,'Иванов');$('#lv-loader-editor input').value='Петров';await t.lev.handleSubmit($('#lv-loader-editor'));assert.equal(url,'/api/loaders/7');assert.equal(method,'PATCH');assert.equal(body.name,'Петров');
+ console.log('PASS add/rename modal, frozen 844px background with 430px keyboard viewport, same POST/PATCH API, no native prompt');dom.window.close();
+})().catch(e=>{console.error(e);dom.window.close();process.exitCode=1});
