@@ -78,7 +78,8 @@ test('system Back unwinds tabs, forms and crew picker without losing parent inpu
  await expect(page.locator('#overlay')).toHaveClass(/hidden/);
  await expect(nav('loaders')).toHaveClass(/active/);
  await page.goBack();await expect(nav('lev-home')).toHaveClass(/active/);
- await nav('tariffs').click();await nav('loaders').click();
+ await nav('tariffs').click();await expect(nav('tariffs')).toHaveClass(/active/);
+ await nav('loaders').click();await expect(nav('loaders')).toHaveClass(/active/);
  await page.goBack();await expect(nav('tariffs')).toHaveClass(/active/);
  await page.goBack();await expect(nav('lev-home')).toHaveClass(/active/);
  await page.locator('[data-act="lv-new-load"][data-id="truck"]').click();
@@ -93,6 +94,6 @@ test('system Back unwinds tabs, forms and crew picker without losing parent inpu
  await page.locator('[data-act="lv-new-load"][data-id="truck"]').click();
  await page.locator('#modal [data-act="dismiss"]').click();
  await expect(page.locator('#overlay')).toHaveClass(/hidden/);
- await nav('tariffs').click();await page.goBack();
+ await nav('tariffs').click();await expect(nav('tariffs')).toHaveClass(/active/);await page.goBack();
  await expect(nav('lev-home')).toHaveClass(/active/);
 });

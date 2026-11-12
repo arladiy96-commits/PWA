@@ -24,7 +24,11 @@ export function createNavigation(){
   push({key,leave});
  }
  function back(){if(index<=0||restoring||pending)return false;pending=true;history.back();return true;}
- function close(key){if(entries[index]?.key===key&&!restoring)back();}
+ function close(key){
+  if(entries[index]?.key!==key||restoring||pending)return;
+  // Already closed by its X/save button; a queued pop must not close a new form.
+  entries[index].leave=()=>{};back();
+ }
  let chain=Promise.resolve();
  addEventListener('popstate',event=>{
   const target=event.state?.pwaNavigation===session?event.state.index:null;
