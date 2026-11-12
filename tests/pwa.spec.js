@@ -26,6 +26,14 @@ test('cabinets, saved data, offline reload, documents, no external API',async({p
  for(const role of ['manager','wagon','storekeeper']){
   await page.locator('#pwa-bar button').click();await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
   expect((await api(page,'/api/loads')).status).toBe(200);
+  if(role==='manager'){
+   await page.locator('[data-act="nav"][data-id="loaders"]').click();
+   await page.locator('[data-act="lv-add-loader"]').click();
+   await page.locator('#lv-loader-editor input[name="name"]').fill('Добавлен через форму');
+   await page.locator('#lv-loader-editor button[type="submit"]').click();
+   await expect(page.locator('#overlay')).toHaveClass(/hidden/);
+   expect((await api(page,'/api/loaders')).data.some(x=>x.name==='Добавлен через форму')).toBe(true);
+  }
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);expect(overflow).toBe(false);
  }
  expect(external).toEqual([]);expect(errors).toEqual([]);

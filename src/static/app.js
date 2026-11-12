@@ -449,7 +449,7 @@
     }catch(err){notify('⚠ '+err.message);}
   });
   document.addEventListener('submit',async e=>{
-    if(!['load-form','loader-form','product-form','truck-form','os-loader-form'].includes(e.target.id))return;e.preventDefault();
+    if(!['load-form','loader-form','product-form','truck-form','os-loader-form','lv-loader-editor'].includes(e.target.id))return;e.preventDefault();
     try{
       if(e.target.id==='load-form')await saveLoad(false);
       else if(await olesya.handleSubmit?.(e.target))return;
