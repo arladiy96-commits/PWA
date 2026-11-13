@@ -161,7 +161,7 @@ window.WagonsRoles.lev=function(ctx){
       baseShell(head('Ведомость № '+id,'Дата сохраняется: '+(d.from===d.to?d.from:d.from+' — '+d.to))+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane"><b>Повторная сдача</b><p class="sub">Только погрузки исходной ведомости. Новые погрузки в неё не попадут.</p><label class="choice"><input type="checkbox" id="lv-include-contractor" ${revisionInclude?'checked':''}><strong>Добавить: Наемник на тупике — уже оплачено</strong></label><p class="sub">Тарифы берутся из раздела «Тарифы». Уже учтённые суммы повторно не добавляются.</p><p>Прежний итог: ${money(d.previous_total_cents)}<br>Новый итог: ${money(d.stats.total_cents)}</p>${extra.map(x=>`<p class="sub">№ ${esc(x.reference)} · ${esc(x.product_name)} · ${tone(x.rate_snapshot)} ₸/вагон · ${money(x.amount_cents)}</p>`).join('')}<button class="btn primary full" data-act="lv-resubmit" data-id="${id}">Сдать заново ведомость № ${id}</button></section>`+details(d),live);
     }catch(e){
       if(request!==revisionRequest||state.tab!=='report')return;
-      baseShell(head('Ведомость № '+id,'На исправлении')+`<button class="btn" data-act="lv-archive">← Все ведомости</button><section class="pane"><p>${esc(e.message)}</p><button class="btn" data-act="lv-revision-retry" data-id="${id}">Обновить расчёт</button><button class="btn" data-act="lv-revision-without" data-id="${id}">Без добавления наемника</button><button class="btn" data-act="nav" data-id="tariffs">Тарифы</button></section>`,live);
+      baseShell(head('Ведомость № '+id,'На исправлении')+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane"><p>${esc(e.message)}</p><button class="btn" data-act="lv-revision-retry" data-id="${id}">Обновить расчёт</button><button class="btn" data-act="lv-revision-without" data-id="${id}">Без добавления наемника</button><button class="btn" data-act="nav" data-id="tariffs">Тарифы</button></section>`,live);
     }
   }
   async function loadReport(){await renderReport();}
@@ -349,7 +349,9 @@ window.WagonsRoles.lev=function(ctx){
   }
   function navigationView(){
     const view=structuredClone({mode,statementId,revisionId,revisionInclude,traceView,traceStack});
-    view.key=state.tab==='lev-detail'?['trace',view.traceView]:state.tab==='report'?['report',mode,statementId,revisionId]:null;
+    const trace = view.traceView;
+    view.key=state.tab==='lev-detail'?['trace',trace?.type,trace?.id,view.traceStack.length]:
+      state.tab==='report'?(statementId||revisionId?['statement',Number(statementId||revisionId)]:['report',mode]):null;
     return view;
   }
   async function restoreNavigation(v){

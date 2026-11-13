@@ -167,8 +167,8 @@ window.WagonsRoles.admin=function(ctx){
       state.start=state.end=localDate();await refreshLoads();return true;
     }
     if(act==='preview-off'){
-      dismiss();state.previewWagon=false;syncWagonTelegramTheme();state.tab='loads';
-      state.filter='open';await refreshLoads();return true;
+      dismiss();state.previewWagon=false;syncWagonTelegramTheme();state.tab='admin-home';
+      state.filter='open';await renderHome();return true;
     }
     return false;
   }

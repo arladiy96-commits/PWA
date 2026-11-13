@@ -71,6 +71,12 @@ window.WagonsRoles.olesya=function(ctx){
   function header(u){return `<header class="top app-toolbar os-header"><strong>${osIcon('list')} Склад</strong><div><b>${esc(u.name)}</b><small>Заведующий складом</small></div>${osIcon('user')}</header>`;}
   function menu(){return `<nav class="nav os-nav"><div class="nav-inner">${[['loads','list','Погрузки'],['os-loaders','user','Грузчики'],['os-stats','clock','Статистика']].map(([id,i,label])=>`<button class="nav-btn ${state.tab===id?'active':''}" data-act="nav" data-id="${id}" ${state.tab===id?'aria-current="page"':''}>${osIcon(i)}<span>${label}</span></button>`).join('')}</div></nav>`;}
   let drill=null;
+  function navigationView(){
+    return state.me?.role==='storekeeper'&&state.tab==='loads'?drill:null;
+  }
+  function restoreNavigation(view){
+    drill=view;
+  }
   function rowCard(x){return `<button type="button" class="os-card" data-act="detail" data-id="${x.id}"><span class="os-card-icon">${osIcon(x.transport==='wagon'?'wagon':'truck')}</span><span class="os-card-body"><strong>${x.transport==='wagon'?'№ ':vehicleName(x)+' · '}${esc(x.reference||'Без номера')}</strong><small>${esc(x.product_name)}${x.buyer?' · '+esc(x.buyer):''}</small><small>${x.crew_count?'Бригада · '+x.crew_count+' чел.':'Бригада не назначена'}</small></span><span class="os-card-side"><b>${tone(x.tonnes)} т</b><span class="os-status ${x.status}">${loadStatus(x.status)}</span></span><span aria-hidden="true">›</span></button>`;}
   function renderLoads(){
     if(state.me.role!=='storekeeper')return legacyRenderLoads();
@@ -287,5 +293,5 @@ window.WagonsRoles.olesya=function(ctx){
     if(form.id==='truck-form'){await saveTruck();return true;}
     return false;
   }
-  return {drawTruckSummary,closeTruckPicker,fetchStats,header,menu,renderPeople,renderStats,renderLoads,formCrew,drawCrew,saveCrew,handleClick,handleInput,handleChange,handleSubmit};
+  return {navigationView,restoreNavigation,drawTruckSummary,closeTruckPicker,fetchStats,header,menu,renderPeople,renderStats,renderLoads,formCrew,drawCrew,saveCrew,handleClick,handleInput,handleChange,handleSubmit};
 };
