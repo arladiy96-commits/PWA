@@ -18,7 +18,20 @@ async function download(response){
   panel.querySelector('button').onclick=()=>panel.remove();
   // Explicit second tap works on iOS even after a long asynchronous document build.
 }
-window.PWA={navigation:createNavigation(),mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download};
+const navigation = createNavigation({
+  showExit() {
+    const hint = document.createElement('div');
+    hint.id = 'pwa-exit-hint';
+    hint.className = 'toast';
+    hint.setAttribute('role', 'status');
+    hint.textContent = 'Свайпни ещё раз, чтобы выйти';
+    document.body.append(hint);
+  },
+  hideExit() {
+    document.getElementById('pwa-exit-hint')?.remove();
+  }
+});
+window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download};
 async function openApp(role){
   app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
   try{
