@@ -86,17 +86,21 @@
     const act=state.me.role==='admin'?'ad-edit':state.me.role==='manager'?'lv-load':'detail';
     return `<section class="overdue-panel" aria-label="Незавершённые погрузки"><h2>Не завершены за прошлые дни <span>${items.length}</span></h2><div class="overdue-list">${items.map(x=>`<button type="button" data-act="${act}" data-id="${x.id}"><span><b>${vehicleName(x)} · ${esc(x.reference||'Без номера')}</b><small>${esc(x.load_date.split('-').reverse().join('.'))} · ${esc(x.product_name)} · ${tone(x.tonnes)} т</small>${x.buyer?`<small>${esc(x.buyer)}</small>`:''}</span><strong>${x.status==='progress'?'В работе':'Ожидает'} ›</strong></button>`).join('')}</div></section>`;
   }
+  let mainTabTarget = null;
   function trackScreen(){
-    const keys=['tab','previewWagon','transport','filter','start','end','search','maximDate','traceRootTab'];
+    const root = mainTabTarget === state.tab;
+    if (root) mainTabTarget = null;
+    const keys=['tab','previewWagon','transport','filter','start','end','search','maximDate','traceRootTab','reportStart','reportEnd'];
     const view=Object.fromEntries(keys.map(k=>[k,state[k]]));
     const roleView=lev.navigationView();
-    const key=JSON.stringify([view.tab,view.previewWagon,roleView.key]);
+    const warehouseView=olesya.navigationView();
+    const key=JSON.stringify([view.tab,view.previewWagon,roleView.key,warehouseView]);
     window.PWA.navigation.screen(key,async()=>{
-      Object.assign(state,view);syncWagonTelegramTheme();
+      Object.assign(state,view);olesya.restoreNavigation(warehouseView);syncWagonTelegramTheme();
       if(['manager','admin'].includes(state.me.role)&&['lev-home','lev-detail','report','lev-stats'].includes(state.tab))await lev.restoreNavigation(roleView);
       else if(state.tab==='loads')await refreshLoads();
       else await render();
-    });
+    }, {root});
   }
   function shell(inner,live=null){
     if(state.tab!=='lev-home'||inner.includes('lv-overview'))inner=overduePanel()+inner;
@@ -443,7 +447,10 @@
   document.addEventListener('click',async e=>{
     const btn=e.target.closest('[data-act]');if(!btn)return;const act=btn.dataset.act,id=btn.dataset.id;
     try{
-      if((act==='lv-trace-back'||(act==='lv-archive'&&btn.classList.contains('lv-back'))||act==='os-back-stats')&&window.PWA.navigation.back())return;
+      if((act==='lv-trace-back'||(act==='lv-archive'&&btn.classList.contains('lv-back'))||
+          act==='os-back-stats'||(act==='ad-go'&&id==='ad-settings'))&&window.PWA.navigation.back())return;
+      if(act==='nav'||act==='quick-nav')mainTabTarget=id;
+      if(act==='ad-reset'||act==='preview-off')mainTabTarget='admin-home';
       if(await delegatedClick(act,id,btn))return;
       if(act==='quick-menu'){quickMenu();}
       else if(act==='quick-nav'){dismiss();if(isWagonMode())await switchMaximTab(id);else {state.tab=id;render();if(id==='report'&&!state.report)await loadReport();}}
