@@ -3,6 +3,10 @@ import {test,expect} from '@playwright/test';
 test('brand launch dismisses and leaves entry usable; icons are available',async({page})=>{
   await page.goto('/');
   await expect(page.locator('#pwa-launch')).toBeVisible();
+  await expect(page.locator('#pwa-launch img')).toHaveCount(0);
+  await expect(page.locator('link[rel="stylesheet"]')).toHaveCount(0);
+  await expect(page.locator('#pwa-launch .gc-g path')).toHaveCount(1);
+  await expect(page.locator('#pwa-launch .gc-k path')).toHaveCount(1);
   await expect(page.locator('#pwa-launch')).toHaveCount(0,{timeout:5000});
   await expect(page.locator('[data-role="manager"]')).toBeVisible();
   expect(await page.evaluate(()=>document.elementFromPoint(innerWidth/2,innerHeight/2)?.closest('#pwa-launch')!==null)).toBe(false);

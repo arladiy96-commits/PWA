@@ -1,35 +1,18 @@
-/* One timeline, with no video download or dependency on the application runtime. */
-#pwa-launch{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#171c22;overflow:hidden;pointer-events:auto;animation:gc-exit .32s ease 2.65s forwards}
-.gc-stage{position:relative;width:min(82vw,380px);aspect-ratio:1;isolation:isolate}
-.gc-assembly,.gc-badge{position:absolute;inset:0;width:100%;height:100%}
-.gc-assembly{filter:drop-shadow(0 5px 4px #0008);animation:gc-vector-out .35s ease 2.05s forwards}
-.gc-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;white-space:nowrap;font:650 clamp(24px,7vw,34px)/1 system-ui,-apple-system,sans-serif;letter-spacing:-1px;color:#e3e8ed}
-.gc-word span{display:inline-block}
-.gc-letter-g{animation:gc-letter-g 1.25s cubic-bezier(.65,0,.25,1) both}
-.gc-letter-k{animation:gc-letter-k 1.25s cubic-bezier(.65,0,.25,1) both}
-.gc-tail{animation:gc-tail 1.15s cubic-bezier(.65,0,.25,1) both}
-.gc-tail-2{animation-delay:.08s}
-.gc-g,.gc-k,.gc-bar{transform-box:fill-box;transform-origin:center;opacity:0}
-.gc-g{animation:gc-g .75s cubic-bezier(.2,.7,.2,1) .75s forwards}
-.gc-k{animation:gc-k .75s cubic-bezier(.2,.7,.2,1) .85s forwards}
-.gc-bar{animation:gc-bar .65s cubic-bezier(.2,.7,.2,1) forwards}
-.gc-bar-1{animation-delay:1.05s}.gc-bar-2{animation-delay:1.18s}.gc-bar-3{animation-delay:1.31s}
-.gc-orbit{stroke-dasharray:1;stroke-dashoffset:1;animation:gc-orbit 1s cubic-bezier(.4,0,.2,1) 1.15s forwards}
-.gc-badge{opacity:0;object-fit:contain;animation:gc-badge .4s ease 2s forwards}
-.gc-glint{position:absolute;inset:0;border-radius:24%;background:linear-gradient(110deg,transparent 35%,#fff3 49%,transparent 63%);opacity:0;animation:gc-glint .6s ease 2.1s both;mix-blend-mode:screen}
-@keyframes gc-letter-g{0%,28%{opacity:1;transform:none}85%{opacity:1;transform:translate(47px,-15px) scale(2.3)}100%{opacity:0;transform:translate(47px,-15px) scale(2.3)}}
-@keyframes gc-letter-k{0%,28%{opacity:1;transform:none}85%{opacity:1;transform:translate(5px,22px) scale(2.3)}100%{opacity:0;transform:translate(5px,22px) scale(2.3)}}
-@keyframes gc-tail{0%,30%{opacity:1;transform:none}100%{opacity:0;transform:translate(25px,12px) scale(.15)}}
-@keyframes gc-g{from{opacity:0;transform:translate(-25px,25px) scale(.65)}to{opacity:1;transform:none}}
-@keyframes gc-k{from{opacity:0;transform:translate(30px,-20px) scale(.65)}to{opacity:1;transform:none}}
-@keyframes gc-bar{from{opacity:0;transform:translate(30px,40px) scaleY(.15)}to{opacity:1;transform:none}}
-@keyframes gc-orbit{to{stroke-dashoffset:0}}
-@keyframes gc-vector-out{to{opacity:0}}
-@keyframes gc-badge{to{opacity:1}}
-@keyframes gc-glint{0%{opacity:0;transform:translateX(-65%)}35%{opacity:.7}100%{opacity:0;transform:translateX(65%)}}
+/* Inline at build time: the first frame needs no CSS, image or script request. */
+#pwa-launch{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#171c22;overflow:hidden;pointer-events:auto;animation:gc-exit .24s ease 2.1s forwards}
+.gc-stage{display:block;width:min(96vw,560px);height:auto;overflow:visible;isolation:isolate;filter:drop-shadow(0 3px 2px #0005);animation:gc-enter .25s ease-out both}
+.gc-g,.gc-k{transform-origin:0 0}
+.gc-g{transform:translate(67px,174px) scale(.3);animation:gc-assemble-g .72s cubic-bezier(.45,0,.2,1) .55s forwards}
+.gc-k{transform:translate(185px,121px) scale(.45);animation:gc-assemble-k .72s cubic-bezier(.45,0,.2,1) .55s forwards}
+.gc-tail{font:600 64px system-ui,-apple-system,sans-serif;letter-spacing:-2px;animation:gc-tail .26s ease .55s forwards}
+.gc-bar{transform-box:fill-box;transform-origin:bottom;opacity:0;animation:gc-bar .42s ease-out forwards}
+.gc-bar-1{animation-delay:1s}.gc-bar-2{animation-delay:1.08s}.gc-bar-3{animation-delay:1.16s}
+.gc-orbit{opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:gc-orbit .65s cubic-bezier(.4,0,.2,1) 1.1s forwards}
+@keyframes gc-enter{from{transform:translateY(8px);opacity:.7}to{transform:none;opacity:1}}
+@keyframes gc-assemble-g{to{transform:translate(104px,0) scale(1)}}
+@keyframes gc-assemble-k{to{transform:translate(104px,0) scale(1)}}
+@keyframes gc-tail{to{opacity:0}}
+@keyframes gc-bar{from{opacity:0;transform:scaleY(.35)}to{opacity:1;transform:none}}
+@keyframes gc-orbit{0%{opacity:0;stroke-dashoffset:1}5%{opacity:1}100%{opacity:1;stroke-dashoffset:0}}
 @keyframes gc-exit{to{opacity:0;visibility:hidden;pointer-events:none}}
-@media(prefers-reduced-motion:reduce){
- #pwa-launch{display:none}
- .gc-word,.gc-assembly,.gc-glint{display:none}
- .gc-badge{animation:none;opacity:1}
-}
+@media(prefers-reduced-motion:reduce){#pwa-launch{display:none}}

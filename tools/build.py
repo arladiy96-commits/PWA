@@ -1,5 +1,5 @@
 """Build a static PWA; only testing builds contain the offline Python runtime."""
-import ast, concurrent.futures, hashlib, json, os, re, shutil, subprocess, sys, urllib.request
+import ast, concurrent.futures, hashlib, json, os, re, shutil, subprocess, sys, urllib.request, urllib.parse
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC, OUT, CACHE = ROOT/'src', ROOT/'dist', ROOT/'vendor-cache'
@@ -96,13 +96,23 @@ html=html.replace('</head>','''  <link rel="manifest" href="./manifest.webmanife
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="stylesheet" href="./client/pwa.css">
   <link rel="stylesheet" href="./client/launch.css">
-  <link rel="preload" as="image" href="./icons/gruzcontrol-512.png">
   <script type="module" src="./client/launch.js"></script>
   <script type="module" src="./client/start.js"></script>
 </head>''')
 html=html.replace('ВА Г О Н Ы','ГрузКонтроль').replace('Подключаемся к серверу...','Открываем приложение…')
 html=html.replace('<body>', '<body>\n'+(SRC/'client/launch.html').read_text())
 html=html.replace('content="#081323"', 'content="#171c22"')
+# Inline styles so the launch can paint without waiting for a chain of CSS requests.
+# Rebase background URLs from each original stylesheet location to index.html.
+def inline_style(match):
+    href=match.group(1).split('?')[0]
+    css=(OUT/href).read_text()
+    def rebase(m):
+        value=m.group(1).strip().strip('\"\'')
+        return 'url("'+urllib.parse.urljoin(href,value)+'")'
+    css=re.sub(r'url\(([^)]+)\)',rebase,css)
+    return '<style>'+css+'</style>'
+html=re.sub(r'<link rel="stylesheet" href="([^" ]+)"\s*/?>',inline_style,html)
 (OUT/'index.html').write_text(html)
 (OUT/'manifest.webmanifest').write_text(json.dumps({'id':'./','name':'ГрузКонтроль'+(' · тест' if MODE=='test' else ''),'short_name':'ГрузКонтроль','lang':'ru','start_url':'./','scope':'./','display':'standalone','background_color':'#171c22','theme_color':'#171c22','icons':[{'src':f'./icons/gruzcontrol-{size}.png','sizes':f'{size}x{size}','type':'image/png','purpose':'any'} for size in [192,512]]+[{'src':'./icons/gruzcontrol-maskable-512.png','sizes':'512x512','type':'image/png','purpose':'maskable'}]},ensure_ascii=False))
 (OUT/'.nojekyll').touch()
