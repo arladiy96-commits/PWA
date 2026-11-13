@@ -15,6 +15,13 @@
   pointer-events: none;
 }
 
+/* On tall Android screens, align with the system launch icon above the web viewport center. */
+@media (max-aspect-ratio: 9/18) {
+  #pwa-launch.android-standalone video {
+    transform: translateY(max(-24px, -4.3vw));
+  }
+}
+
 @keyframes launch-dismiss {
   to { opacity: 0; visibility: hidden; pointer-events: none; }
 }

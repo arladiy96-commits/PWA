@@ -2,3 +2,8 @@
   <video muted playsinline preload="none" disablepictureinpicture
          poster="./client/launch-poster.jpg" aria-hidden="true"></video>
 </div>
+<script>
+  if (/Android/i.test(navigator.userAgent) && matchMedia('(display-mode: standalone)').matches) {
+    document.getElementById('pwa-launch').classList.add('android-standalone');
+  }
+</script>
