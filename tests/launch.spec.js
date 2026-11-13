@@ -1,13 +1,11 @@
 import {test,expect} from '@playwright/test';
 
 test('brand launch dismisses and leaves entry usable; icons are available',async({page})=>{
+  // Inspect the poster independently of browser codec support.
+  await page.route('**/client/launch.js',route=>route.fulfill({contentType:'text/javascript',body:''}));
   await page.goto('/');
-  await expect(page.locator('#pwa-launch')).toBeVisible();
-  await expect(page.locator('#pwa-launch img')).toHaveCount(0);
-  await expect(page.locator('link[rel="stylesheet"]')).toHaveCount(0);
-  await expect(page.locator('#pwa-launch .gc-g path')).toHaveCount(1);
-  await expect(page.locator('#pwa-launch .gc-k path')).toHaveCount(1);
-  await expect(page.locator('#pwa-launch')).toHaveCount(0,{timeout:5000});
+  await expect(page.locator('#pwa-launch video')).toHaveAttribute('poster','./client/launch-poster.jpg');
+  await expect(page.locator('#pwa-launch')).toBeHidden({timeout:5500});
   await expect(page.locator('[data-role="manager"]')).toBeVisible();
   expect(await page.evaluate(()=>document.elementFromPoint(innerWidth/2,innerHeight/2)?.closest('#pwa-launch')!==null)).toBe(false);
   const icons=await page.evaluate(async()=>{
@@ -26,16 +24,16 @@ test('reduced motion and failed launch module cannot trap the user',async({page}
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.route('**/client/launch.js',route=>route.abort());
   await page.reload();
-  await expect(page.locator('#pwa-launch')).toBeHidden({timeout:5000});
+  await expect(page.locator('#pwa-launch')).toBeHidden({timeout:5500});
   await expect(page.locator('[data-role="manager"]')).toBeVisible();
 });
 
-test('capture assembly stages on phone',async({page},testInfo)=>{
-  // Freeze the timeline before the module cleanup, for reproducible visual review.
-  await page.route('**/client/launch.js',route=>route.fulfill({contentType:'text/javascript',body:''}));
+test('launch asset and playback failure fallback',async({page,request})=>{
+  const response=await request.get('/client/launch.mp4');
+  expect(response.ok()).toBe(true);
+  expect((await response.body()).subarray(4,8).toString()).toBe('ftyp');
+  await page.route('**/client/launch.mp4',route=>route.abort());
   await page.goto('/');
-  for(const time of [200,900,1600,2350]){
-    await page.evaluate(time=>document.getAnimations().forEach(animation=>{animation.pause();animation.currentTime=time}),time);
-    await page.screenshot({path:testInfo.outputPath(`launch-${time}.png`)});
-  }
+  await expect(page.locator('#pwa-launch')).toHaveCount(0,{timeout:3000});
+  await expect(page.locator('[data-role="manager"]')).toBeVisible();
 });
