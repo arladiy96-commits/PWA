@@ -1,18 +1,24 @@
-/* Inline at build time: the first frame needs no CSS, image or script request. */
-#pwa-launch{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#171c22;overflow:hidden;pointer-events:auto;animation:gc-exit .24s ease 2.1s forwards}
-.gc-stage{display:block;width:min(96vw,560px);height:auto;overflow:visible;isolation:isolate;filter:drop-shadow(0 3px 2px #0005);animation:gc-enter .25s ease-out both}
-.gc-g,.gc-k{transform-origin:0 0}
-.gc-g{transform:translate(67px,174px) scale(.3);animation:gc-assemble-g .72s cubic-bezier(.45,0,.2,1) .55s forwards}
-.gc-k{transform:translate(185px,121px) scale(.45);animation:gc-assemble-k .72s cubic-bezier(.45,0,.2,1) .55s forwards}
-.gc-tail{font:600 64px system-ui,-apple-system,sans-serif;letter-spacing:-2px;animation:gc-tail .26s ease .55s forwards}
-.gc-bar{transform-box:fill-box;transform-origin:bottom;opacity:0;animation:gc-bar .42s ease-out forwards}
-.gc-bar-1{animation-delay:1s}.gc-bar-2{animation-delay:1.08s}.gc-bar-3{animation-delay:1.16s}
-.gc-orbit{opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:gc-orbit .65s cubic-bezier(.4,0,.2,1) 1.1s forwards}
-@keyframes gc-enter{from{transform:translateY(8px);opacity:.7}to{transform:none;opacity:1}}
-@keyframes gc-assemble-g{to{transform:translate(104px,0) scale(1)}}
-@keyframes gc-assemble-k{to{transform:translate(104px,0) scale(1)}}
-@keyframes gc-tail{to{opacity:0}}
-@keyframes gc-bar{from{opacity:0;transform:scaleY(.35)}to{opacity:1;transform:none}}
-@keyframes gc-orbit{0%{opacity:0;stroke-dashoffset:1}5%{opacity:1}100%{opacity:1;stroke-dashoffset:0}}
-@keyframes gc-exit{to{opacity:0;visibility:hidden;pointer-events:none}}
-@media(prefers-reduced-motion:reduce){#pwa-launch{display:none}}
+#pwa-launch {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #171c22;
+  overflow: hidden;
+  animation: launch-dismiss .2s linear 4.4s forwards;
+}
+
+#pwa-launch video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+@keyframes launch-dismiss {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pwa-launch { display: none; }
+}
