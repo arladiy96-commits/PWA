@@ -8,7 +8,17 @@ html.pwa .nav{padding-bottom:env(safe-area-inset-bottom,0px)!important}
 .pwa-entry{margin:auto;padding:45px 24px;max-width:480px;color:#19283c;font-family:system-ui;overflow:auto;height:100dvh;box-sizing:border-box}
 .pwa-entry h1{font-size:32px;margin:12px 0}.pwa-entry p{line-height:1.5}.pwa-entry .eyebrow{font-size:11px;letter-spacing:2px}.pwa-entry .sub{color:#526175;font-size:13px}.pwa-entry details{font-size:13px;margin-top:24px}.pwa-entry .field input{background:#f0f3f7;color:#172334}
 .pwa-roles{display:grid;gap:10px;margin:24px 0}.pwa-roles .btn{display:flex;justify-content:space-between;align-items:center;padding:17px;background:#e9eef4;border:1px solid #a7b5c5;color:#172334;font-size:16px;border-radius:12px}
-#pwa-document{position:fixed;z-index:2000;left:12px;right:12px;bottom:calc(85px + env(safe-area-inset-bottom,0px));margin:auto;max-width:500px;background:#f5f8fc;border:1px solid #9eacbd;color:#19283c;padding:16px;border-radius:12px;box-shadow:0 8px 30px #182c4940;display:flex;gap:14px;align-items:center;font:13px system-ui}
-#pwa-document a{color:#214c80;text-decoration:underline}#pwa-document button{margin-left:auto;background:none;border:0;font-size:24px;color:#233246}
+#pwa-document{position:fixed;z-index:2000;left:12px;right:12px;bottom:calc(85px + env(safe-area-inset-bottom,0px));margin:auto;max-width:480px;background:#f5f8fc;border:1px solid #a9bacb;border-radius:14px;padding:12px;color:#19283c;box-shadow:0 8px 30px #20314a38;font:14px system-ui}
+.pwa-document-head,.pwa-document-actions{display:flex;align-items:center;gap:8px}
+.pwa-document-head{justify-content:space-between}
+.pwa-document-head>div{min-width:0}
+.pwa-document-name{margin-top:4px;overflow-wrap:anywhere;color:#516277;font-size:12px}
+.pwa-document-actions{flex-wrap:wrap;margin-top:10px}
+.pwa-document-actions a,.pwa-document-share{display:inline-flex;align-items:center;min-height:44px;border-radius:8px;padding:8px 12px;font:600 14px system-ui;text-decoration:none}
+.pwa-document-actions a{background:#e2eaf3;color:#203c5c}
+.pwa-document-share{border:0;background:#244565;color:#fff}
+.pwa-document-share[hidden]{display:none}
+.pwa-document-close{flex:none;min-width:44px;min-height:44px;background:none;border:0;color:#233246;font-size:24px}
+.pwa-document-message{margin-top:8px;color:#68483b;font-size:12px}
 /* Prevent iOS input zoom and respect the home indicator. */
 input,select,textarea{font-size:16px!important}

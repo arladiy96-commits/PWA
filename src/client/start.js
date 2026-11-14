@@ -1,23 +1,12 @@
 import {createNavigation} from './navigation.js';
 import config from './config.js';
+import {showDocument} from './document-panel.js';
 import {createServerAdapter} from './server-adapter.js';
 const app=document.getElementById('app');
 const roleNames={admin:'Администратор',manager:'Лев',wagon:'Максим',storekeeper:'Заведующий складом',pending:'Тестовая заявка'};
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const loadScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=new URL('../'+src,import.meta.url);s.onload=resolve;s.onerror=()=>reject(Error('Не удалось загрузить интерфейс'));document.head.append(s);});
 let adapter;
-let downloadUrl;
-async function download(response){
-  const disposition=response.headers.get('Content-Disposition')||'';
-  const encoded=disposition.match(/filename\*=UTF-8''(.+)/i);
-  let name=encoded?decodeURIComponent(encoded[1]):'ГрузКонтроль.docx';
-  const blob=await response.blob();
-  if(downloadUrl)URL.revokeObjectURL(downloadUrl);downloadUrl=URL.createObjectURL(blob);
-  let panel=document.getElementById('pwa-document');if(!panel){panel=document.createElement('aside');panel.id='pwa-document';document.body.append(panel);}
-  panel.innerHTML=`<b>Документ готов</b><a download="${escape(name)}" href="${downloadUrl}">Сохранить / открыть</a><button type="button" aria-label="Закрыть">×</button>`;
-  panel.querySelector('button').onclick=()=>panel.remove();
-  // Explicit second tap works on iOS even after a long asynchronous document build.
-}
 const navigation = createNavigation({
   showExit() {
     const hint = document.createElement('div');
@@ -31,7 +20,7 @@ const navigation = createNavigation({
     document.getElementById('pwa-exit-hint')?.remove();
   }
 });
-window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download};
+window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument};
 async function openApp(role){
   app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
   try{
@@ -57,10 +46,22 @@ async function setupOffline(){
   if(!('serviceWorker' in navigator)){label.textContent='Оффлайн недоступен';return;}
   try{
     const reg=await navigator.serviceWorker.register(new URL('../sw.js',import.meta.url),{scope:new URL('../',import.meta.url).pathname});
-    const status=()=>{label.textContent=reg.active?(config.mode==='test'?'Готово оффлайн':navigator.onLine?'Сервер':'Нет сети'):'Загружаем оффлайн…';};
-    status();navigator.serviceWorker.addEventListener('controllerchange',status);
-    const watch=worker=>worker?.addEventListener('statechange',()=>{status();if(worker.state==='installed'&&reg.active){label.textContent='Есть обновление';label.onclick=()=>{if(confirm('Обновить приложение? Несохранённый ввод будет потерян.')){worker.postMessage('ACTIVATE');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload(),{once:true});}};}});
-    watch(reg.installing);reg.addEventListener('updatefound',()=>watch(reg.installing));
+    const status = () => {
+      const waiting = reg.waiting;
+      label.textContent = waiting ? 'Есть обновление' : reg.active
+        ? (config.mode === 'test' ? 'Готово оффлайн' : navigator.onLine ? 'Сервер' : 'Нет сети')
+        : 'Загружаем оффлайн…';
+      label.onclick = waiting ? () => {
+        if (!confirm('Обновить приложение? Несохранённый ввод будет потерян.')) return;
+        navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), {once: true});
+        waiting.postMessage('ACTIVATE');
+      } : null;
+    };
+    const watch = () => reg.installing?.addEventListener('statechange', status);
+    status();
+    watch();
+    reg.addEventListener('updatefound', watch);
+    navigator.serviceWorker.addEventListener('controllerchange', status);
   }catch{label.textContent='Оффлайн не готов';}
 }
 window.addEventListener('pwa-session-expired',()=>{sessionStorage.removeItem('gruzcontrol-server-session');location.reload();});
@@ -68,7 +69,14 @@ if(config.mode==='test'){
   const selected=sessionStorage.getItem('gruzcontrol-test-role');
   if(roleNames[selected])openApp(selected);
   else{
-    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети дождись надписи «Готово оффлайн».</p></details></section>`;
+    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><p class="sub" id="pwa-build">Сборка: …</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети дождись надписи «Готово оффлайн».</p></details></section>`;
+    fetch(new URL('../build.json', import.meta.url))
+      .then(response => response.json())
+      .then(({version}) => {
+        const label = document.getElementById('pwa-build');
+        if (label) label.textContent = 'Сборка: ' + version;
+      })
+      .catch(() => document.getElementById('pwa-build')?.remove());
     app.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{sessionStorage.setItem('gruzcontrol-test-role',b.dataset.role);openApp(b.dataset.role);});
   }
 }else{
