@@ -165,7 +165,7 @@ window.WagonsRoles.lev=function(ctx){
     }
   }
   async function loadReport(){await renderReport();}
-  async function sendReport(fmt,id){await post(`/api/report/send/${fmt}`,id?{statement_id:Number(id)}:{start:state.reportStart,end:state.reportEnd});notify(window.PWA.mode==='test'?'Документ готов — нажми «Сохранить / открыть»':'Файл отправлен тебе в Telegram');}
+  async function sendReport(fmt,id){await post(`/api/report/send/${fmt}`,id?{statement_id:Number(id)}:{start:state.reportStart,end:state.reportEnd});if(window.PWA.mode!=='test')notify('Файл отправлен тебе в Telegram');}
   async function downloadFile(url,name){const res=await window.PWA.fetch(url,{headers:{'X-Telegram-Init-Data':tg?.initData||''}});
     if(!res.ok){const j=await res.json();throw new Error(j.detail||'Ошибка создания файла');}
     await window.PWA.download(res);notify('Файл сформирован');
@@ -221,7 +221,7 @@ window.WagonsRoles.lev=function(ctx){
       btn.disabled=true;
       try{
         await post('/api/report/send/docx',{person_id:Number(btn.dataset.id),start:btn.dataset.start,end:btn.dataset.end,transport:btn.dataset.transport});
-        notify(window.PWA.mode==='test'?'Документ готов — нажми «Сохранить / открыть»':'Файл отправлен тебе в Telegram');
+        if(window.PWA.mode!=='test')notify('Файл отправлен тебе в Telegram');
       }finally{btn.disabled=false;}
       return true;
     }
@@ -234,7 +234,7 @@ window.WagonsRoles.lev=function(ctx){
     if(act==='lv-stats-export'){
       if(!statsRendered||btn.disabled)return true;
       btn.disabled=true;
-      try{await post('/api/report/send/docx',{stats_section:id,...statsRendered});notify(window.PWA.mode==='test'?'Документ готов — нажми «Сохранить / открыть»':'Файл отправлен тебе в Telegram');}
+      try{await post('/api/report/send/docx',{stats_section:id,...statsRendered});if(window.PWA.mode!=='test')notify('Файл отправлен тебе в Telegram');}
       finally{btn.disabled=false;}return true;
     }
     if(act==='lv-stats-send'){
@@ -242,7 +242,7 @@ window.WagonsRoles.lev=function(ctx){
       const {start,end,transport}=statsRendered||{start:statsStart,end:statsEnd,transport:statsTransport};
       if(!start||!end||start>end)throw new Error('Проверь даты периода');
       sendingSummary=true;btn.disabled=true;
-      try{await post('/api/report/send/docx',{loader_summary:true,start,end,transport});notify(window.PWA.mode==='test'?'Ведомость готова — нажми «Сохранить / открыть»':'Ведомость отправлена тебе в Telegram');}
+      try{await post('/api/report/send/docx',{loader_summary:true,start,end,transport});if(window.PWA.mode!=='test')notify('Ведомость отправлена тебе в Telegram');}
       finally{sendingSummary=false;btn.disabled=false;}
       return true;
     }
@@ -258,7 +258,7 @@ window.WagonsRoles.lev=function(ctx){
       await renderStats();return true;
     }
 
-    if(act==='lv-draft'){await post('/api/report/send/docx',{pending:true});notify(window.PWA.mode==='test'?'Документ готов — нажми «Сохранить / открыть»':'Файл отправлен тебе в Telegram');return true;}
+    if(act==='lv-draft'){await post('/api/report/send/docx',{pending:true});if(window.PWA.mode!=='test')notify('Файл отправлен тебе в Telegram');return true;}
     if(act==='lv-open'){state.tab='report';mode='pending';await renderReport();return true;}
     if(act==='lv-archive'){state.tab='report';mode='archive';await renderReport();return true;}
     if(act==='lv-mode'){mode=id;await renderReport();return true;}
