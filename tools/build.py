@@ -122,6 +122,8 @@ else:
     if not config['apiBase'].startswith('https://'): raise SystemExit('Server build requires HTTPS PWA_API_BASE')
 assets=sorted('./'+p.relative_to(OUT).as_posix() for p in OUT.rglob('*') if p.is_file())
 version=hashlib.sha256(b''.join((OUT/p[2:]).read_bytes() for p in assets)).hexdigest()[:16]
+(OUT/'build.json').write_text(json.dumps({'version':version[:8]}))
+assets.append('./build.json')
 sw=(SRC/'sw.js').read_text().replace('__VERSION__',version).replace('__ASSETS__',json.dumps(assets))
 (OUT/'sw.js').write_text(sw)
 print(f'Built {MODE}: {len(assets)} assets, {sum(p.stat().st_size for p in OUT.rglob("*") if p.is_file())/1024/1024:.1f} MiB')
