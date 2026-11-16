@@ -127,7 +127,7 @@ window.WagonsRoles.lev=function(ctx){
   function tabs(){return (state.me?.role==='admin'?'<div class="ad-tools"><button class="btn" data-act="ad-go" data-id="tariffs">Тарифы</button><button class="btn" data-act="ad-go" data-id="lev-stats">Статистика</button></div>':'')+`<div class="lv-tabs">${[['pending','К сдаче'],['period','За период'],['archive','Сданные']].map(([id,name])=>`<button data-act="lv-mode" data-id="${id}" class="${mode===id?'selected':''}">${name}</button>`).join('')}</div>`;}
   async function renderReport(live=null){
     const shell=html=>baseShell(html,live);
-    statementId=null;revisionId=null;revisionData=null;revisionRequest++;
+    state.editingPendingStatement=null;statementId=null;revisionId=null;revisionData=null;revisionRequest++;
     try{
       let body='';current=null;
       if(mode==='archive'){
@@ -136,8 +136,12 @@ window.WagonsRoles.lev=function(ctx){
       }else{
         const overview=mode==='pending'?await api('/api/settlement-overview'):null;
         const d=mode==='pending'?overview.pending:await api('/api/report?'+new URLSearchParams({start:state.reportStart,end:state.reportEnd}));
-        current=d;state.report=d;
+        current=d;state.report=d;state.editingPendingStatement=mode==='pending'&&d.cancelled?d.id:null;
         body=(mode==='period'?`<section class="pane"><div class="lv-range"><label>С<input id="report-start" type="date" value="${state.reportStart}"></label><label>По<input id="report-end" type="date" value="${state.reportEnd}"></label></div><button class="btn full" data-act="load-report">Показать период</button></section>`:'')+`<section class="pane lv-hero"><small>${mode==='pending'?'К СДАЧЕ В КАССУ':'НАЧИСЛЕНО ЗА ПЕРИОД'}</small>${amount(d.stats.total_cents)}<p class="sub">${mode==='pending'?'Все несданные начисления, включая прошлые дни. Отрицательные суммы — корректировки.':'Общий отчёт, включая уже сданные начисления.'}</p>${mode==='pending'?`<button class="btn full" style="margin-bottom:8px" data-act="lv-draft">В Telegram</button><button class="btn primary full" data-act="lv-submit" ${d.details.length?'':'disabled'}>Сдать ведомость</button>`:`<button class="btn primary full" data-act="send-report" data-id="docx">В Telegram</button>`}</section>`+(mode==='pending'?`<details class="pane"><summary>Состав к сдаче · ${d.loads.length} погрузок</summary>${d.loads.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${money(x.total_cents)}</span></div>`).join('')||'<p>Всё сдано</p>'}</details><details class="pane"><summary>Не завершены · ${overview.unfinished.length}</summary><p class="sub">По сегодня включительно. Пока не начислены, сдачу не блокируют.</p>${overview.unfinished.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${statusName(x.status)}</span></div>`).join('')||'<p>Все погрузки завершены</p>'}</details>`:'')+details(d);
+      }
+      if(mode==='pending'&&current?.cancelled){
+        body=`<section class="pane"><b>Ведомость № ${current.id} · К сдаче</b><p class="sub">Дата сохраняется: ${esc(current.from===current.to?current.from:current.from+' — '+current.to)}. Новые завершённые погрузки автоматически добавляются в эту ведомость до её сдачи.</p></section>`+body;
+        if(state.me.role==='admin')body+=`<section class="pane"><h3>Изменить погрузки</h3>${(current.revision_loads||current.loads).map(x=>`<div class="lv-line"><span>${esc(vehicleName(x))} ${esc(x.reference||x.buyer||'')}</span><button class="btn" data-act="ad-revision-edit" data-id="${x.id}" data-statement="${current.id}" ${x.deleted?'disabled':''}>Изменить</button></div>`).join('')}</section>`;
       }
       if(state.tab!=='report')return;
       shell(head('Начисления','Ведомости и расчёты с грузчиками')+tabs()+body);
@@ -150,19 +154,7 @@ window.WagonsRoles.lev=function(ctx){
     shell(head('Ведомость № '+id,'Погрузки за '+(d.from===d.to?d.from:d.from+' — '+d.to))+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane lv-hero"><small>РАСЧЁТ ЗАФИКСИРОВАН</small>${amount(d.stats.total_cents)}<p class="sub">Состав и суммы сохранены на момент сдачи</p>${state.me?.role==='admin'?`<button class="btn danger full" style="margin-bottom:10px" data-act="ad-cancel-statement" data-id="${id}">Отменить сдачу ведомости</button>`:''}<button class="btn primary full" data-act="lv-send" data-id="${id}">В Telegram</button></section>`+details(d));
   }
   async function openRevision(id,live=null){
-    if(revisionId!==Number(id))revisionInclude=false;
-    revisionId=Number(id);statementId=null;state.tab='report';revisionData=null;
-    const request=++revisionRequest;
-    try{
-      const d=await api('/api/admin/statements/'+id+'/revision?include_contractor='+revisionInclude);
-      if(request!==revisionRequest||state.tab!=='report')return;
-      revisionData=d;
-      const extra=d.details.filter(x=>x.is_contractor);
-      baseShell(head('Ведомость № '+id,'Дата сохраняется: '+(d.from===d.to?d.from:d.from+' — '+d.to))+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane"><b>Повторная сдача</b><p class="sub">Только погрузки исходной ведомости. Новые погрузки в неё не попадут.</p><label class="choice"><input type="checkbox" id="lv-include-contractor" ${revisionInclude?'checked':''}><strong>Добавить: Наемник на тупике — уже оплачено</strong></label><p class="sub">Тарифы берутся из раздела «Тарифы». Уже учтённые суммы повторно не добавляются.</p><p>Прежний итог: ${money(d.previous_total_cents)}<br>Новый итог: ${money(d.stats.total_cents)}</p>${extra.map(x=>`<p class="sub">№ ${esc(x.reference)} · ${esc(x.product_name)} · ${tone(x.rate_snapshot)} ₸/вагон · ${money(x.amount_cents)}</p>`).join('')}<button class="btn primary full" data-act="lv-resubmit" data-id="${id}">Сдать заново ведомость № ${id}</button></section>`+details(d),live);
-    }catch(e){
-      if(request!==revisionRequest||state.tab!=='report')return;
-      baseShell(head('Ведомость № '+id,'На исправлении')+`<button class="btn" data-act="lv-archive">← Все ведомости</button><section class="pane"><p>${esc(e.message)}</p><button class="btn" data-act="lv-revision-retry" data-id="${id}">Обновить расчёт</button><button class="btn" data-act="lv-revision-without" data-id="${id}">Без добавления наемника</button><button class="btn" data-act="nav" data-id="tariffs">Тарифы</button></section>`,live);
-    }
+    state.tab='report';mode='pending';await renderReport(live);
   }
   async function loadReport(){await renderReport();}
   async function sendReport(fmt,id){await post(`/api/report/send/${fmt}`,id?{statement_id:Number(id)}:{start:state.reportStart,end:state.reportEnd});notify('Файл отправлен тебе в Telegram');}
