@@ -15,7 +15,13 @@ window.WagonsRoles.lev=function(ctx){
     const paths={home:'<path d="m3 10 9-7 9 7v11h-6v-7H9v7H3z"/>',report:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',stats:'<path d="M12 3v9h9A9 9 0 1 1 12 3Z"/><path d="M16 3a8 8 0 0 1 5 5h-5z"/>',people:'<circle cx="9" cy="7" r="3"/><path d="M3 21v-4a6 6 0 0 1 12 0v4M16 4a3 3 0 0 1 0 6M18 13a5 5 0 0 1 3 4v4M7 21v-5M11 21v-5"/>',rates:'<path d="M5 4h14M5 8h14M12 8v13"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6M17 2v6M3 11h18M7 15h3M14 15h3"/>',left:'<path d="m14 6-6 6 6 6"/>',right:'<path d="m10 6 6 6-6 6"/>',mill:'<path d="M3 22V9l5-4 5 4v13M8 5v17M13 22V5l4-3 4 3v17M17 2v20M3 9h10M13 7h8"/>'};
     return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]||paths.report}</svg>`;
   };
-  function header(){return `<header class="lf-header"><span class="lf-brand">${frostIcon('mill')}<b>ГрузКонтроль</b></span><span class="lf-identity">${frostIcon('people')}<span>${esc(state.me.name||'Лев')}</span></span></header>`;}
+  function header(){
+    const identity = frostIcon('people') + `<span>${esc(state.me.name||'Лев')}</span>`;
+    return `<header class="lf-header"><span class="lf-brand">${frostIcon('mill')}<b>ГрузКонтроль</b></span>
+      ${window.PWA?.settingsMarkup
+        ? `<button type="button" class="lf-identity" data-act="pwa-settings" aria-label="Меню приложения">${identity}</button>`
+        : `<span class="lf-identity">${identity}</span>`}</header>`;
+  }
   function menu(){
     const active=state.tab==='lev-detail'?(state.traceRootTab||'report'):state.tab;
     return `<footer class="lf-footer">${state.tab==='lev-home'?`<div class="lf-add"><button class="btn primary" data-act="lv-new-load" data-id="wagon">${overviewIcon('wagon')}<span>+ Вагон</span></button><button class="btn" data-act="lv-new-load" data-id="truck">${overviewIcon('truck')}<span>+ Машина</span></button></div>`:''}<nav class="nav" aria-label="Разделы"><div class="nav-inner">${[['lev-home','home','Главная'],['report','report','Ведомости'],['lev-stats','stats','Статистика'],['loaders','people','Грузчики'],['tariffs','rates','Тарифы']].map(([id,ic,label])=>`<button class="nav-btn ${active===id?'active':''}" data-act="nav" data-id="${id}" ${active===id?'aria-current="page"':''}>${frostIcon(ic)}<span>${label}</span></button>`).join('')}</div></nav></footer>`;
