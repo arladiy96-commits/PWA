@@ -1,6 +1,7 @@
 body{background:#c8d1db}
 html.pwa #app.app-frame{margin-top:env(safe-area-inset-top,0px)!important;height:calc(100dvh - env(safe-area-inset-top,0px))!important;min-height:0!important;--miniapp-height:calc(100dvh - env(safe-area-inset-top,0px));--lev-safe-top:0px!important;--telegram-top:0px!important;--wagon-safe-bottom:env(safe-area-inset-bottom,0px)!important}
 html.pwa:not(.lev-frost) .nav{padding-bottom:env(safe-area-inset-bottom,0px)!important}
+html.pwa.lev-frost #app[data-role="lev"]{--lev-top-blend:linear-gradient(to bottom,#c8d1db 0,rgba(200,209,219,0) 46px)}
 html.pwa.lev-frost .lf-footer{padding-bottom:max(30px,calc(env(safe-area-inset-bottom,0px) + 4px))}
 html.pwa.lev-frost button.lf-identity{background:none;border-block:0;border-right:0;color:inherit;font-family:inherit;padding-block:4px;padding-right:0}
 .pwa-settings-link{margin:12px 0 2px}
