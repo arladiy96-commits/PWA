@@ -31,7 +31,10 @@ test('cabinets, saved data, offline reload, documents, no external API',async({p
  const pending=await api(page,'/api/statements/pending');expect(pending.data.stats.total_cents).toBe(200000);
  const sid=(await api(page,'/api/statements','POST',{token:pending.data.token})).data.id;
  expect((await api(page,`/api/statements/${sid}/export`)).data.size).toBeGreaterThan(100);
+ await expect(page.locator('#pwa-bar')).toHaveCount(0);
+ await page.locator('[data-act="pwa-settings"]').click();
  await expect(page.locator('#pwa-cache-status')).toHaveText('Готово оффлайн');
+ await page.locator('#modal [data-act="dismiss"]').click();
  await page.reload();await expect(page.locator('.nav')).toBeVisible();
  expect((await api(page,`/api/loads/${id}`)).data.total_cents).toBe(200000);
  // WebKit's offline emulation kills SW responses before dispatch (#42775).
@@ -42,7 +45,7 @@ test('cabinets, saved data, offline reload, documents, no external API',async({p
  await page.reload();await expect(page.locator('.nav')).toBeVisible();
  expect((await api(page,`/api/statements/${sid}`)).data.stats.total_cents).toBe(200000);
  for(const role of ['manager','wagon','storekeeper']){
-  await page.locator('#pwa-bar button').click();await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
+  await page.locator('[data-act="pwa-settings"]').click();await page.locator('[data-act="pwa-switch"]').click();await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
   expect((await api(page,'/api/loads')).status).toBe(200);
   if(role==='manager'){
    await page.locator('[data-act="nav"][data-id="loaders"]').click();
