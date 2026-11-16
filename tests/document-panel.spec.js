@@ -23,7 +23,7 @@ test('exports open the system share menu when file sharing is available', async 
   const name = 'Ведомость 14.11.2026.docx';
   await expect(panel.getByRole('link',{name:'Сохранить / открыть'})).toHaveAttribute('download', name);
   await panel.getByRole('button',{name:'Поделиться'}).click();
-  expect(await page.evaluate(() => window.sharedFile)).toEqual({
+  await expect.poll(() => page.evaluate(() => window.sharedFile)).toEqual({
     name, type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', body:'Word content'
   });
   await expect(panel.getByRole('status')).toBeHidden();
