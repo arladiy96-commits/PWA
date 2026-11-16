@@ -1,10 +1,11 @@
-:root{--pwa-top:calc(38px + env(safe-area-inset-top,0px))}
 body{background:#c8d1db}
-#pwa-bar{position:fixed;inset:0 0 auto;z-index:110;height:var(--pwa-top);padding:env(safe-area-inset-top,0px) 12px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#dce3eb;color:#233246;border-bottom:1px solid #aab5c2;font:600 11px system-ui}
-#pwa-bar button{border:1px solid #a5b1bf;border-radius:7px;padding:5px 9px;background:#eef2f6;color:#233246;font:inherit}
-#pwa-cache-status{font-weight:400;font-size:10px;cursor:pointer}
-html.pwa #app.app-frame{margin-top:var(--pwa-top)!important;height:calc(100dvh - var(--pwa-top))!important;min-height:0!important;--miniapp-height:calc(100dvh - var(--pwa-top));--lev-safe-top:0px!important;--telegram-top:0px!important;--wagon-safe-bottom:env(safe-area-inset-bottom,0px)!important}
-html.pwa .nav{padding-bottom:env(safe-area-inset-bottom,0px)!important}
+html.pwa #app.app-frame{margin-top:env(safe-area-inset-top,0px)!important;height:calc(100dvh - env(safe-area-inset-top,0px))!important;min-height:0!important;--miniapp-height:calc(100dvh - env(safe-area-inset-top,0px));--lev-safe-top:0px!important;--telegram-top:0px!important;--wagon-safe-bottom:env(safe-area-inset-bottom,0px)!important}
+html.pwa:not(.lev-frost) .nav{padding-bottom:env(safe-area-inset-bottom,0px)!important}
+html.pwa.lev-frost .lf-footer{padding-bottom:max(30px,calc(env(safe-area-inset-bottom,0px) + 4px))}
+html.pwa.lev-frost button.lf-identity{background:none;border-block:0;border-right:0;color:inherit;font-family:inherit;padding-block:4px;padding-right:0}
+.pwa-settings-link{margin:12px 0 2px}
+#modal [data-act="pwa-update"]{margin-bottom:8px}
+#modal [data-act="pwa-update"][hidden]{display:none!important}
 .pwa-entry{margin:auto;padding:45px 24px;max-width:480px;color:#19283c;font-family:system-ui;overflow:auto;height:100dvh;box-sizing:border-box}
 .pwa-entry h1{font-size:32px;margin:12px 0}.pwa-entry p{line-height:1.5}.pwa-entry .eyebrow{font-size:11px;letter-spacing:2px}.pwa-entry .sub{color:#526175;font-size:13px}.pwa-entry details{font-size:13px;margin-top:24px}.pwa-entry .field input{background:#f0f3f7;color:#172334}
 .pwa-roles{display:grid;gap:10px;margin:24px 0}.pwa-roles .btn{display:flex;justify-content:space-between;align-items:center;padding:17px;background:#e9eef4;border:1px solid #a7b5c5;color:#172334;font-size:16px;border-radius:12px}

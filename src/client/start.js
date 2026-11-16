@@ -20,56 +20,76 @@ const navigation = createNavigation({
     document.getElementById('pwa-exit-hint')?.remove();
   }
 });
-window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument};
+let offlineStatus = 'Подготовка…';
+let updateApp;
+
+function settingsMarkup() {
+  return `<p class="sub" id="pwa-cache-status" role="status">${offlineStatus}</p>
+    <button type="button" class="btn full" data-act="pwa-update"${updateApp ? '' : ' hidden'}>Обновить приложение</button>
+    <button type="button" class="btn full" data-act="pwa-switch">${config.mode === 'test' ? 'Сменить кабинет' : 'Выйти'}</button>`;
+}
+
+async function leaveCabinet() {
+  if (config.mode === 'server') {
+    try { await adapter.fetch(config.logoutPath, {method:'POST'}); } catch {}
+    sessionStorage.removeItem('gruzcontrol-server-session');
+  } else {
+    sessionStorage.removeItem('gruzcontrol-test-role');
+  }
+  location.reload();
+}
+
+window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument,settingsMarkup,leaveCabinet,applyUpdate:()=>updateApp?.()};
 async function openApp(role){
   app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
   try{
     if(config.mode==='test'){
       const {createTestAdapter}=await import('./test-adapter.js');adapter=await createTestAdapter(role);
     }
-    const bar=document.createElement('div');bar.id='pwa-bar';
-    bar.innerHTML=`<span>${config.mode==='test'?'ТЕСТ · '+escape(roleNames[role]):'ГрузКонтроль'}</span><span id="pwa-cache-status">Подготовка…</span><button type="button">${config.mode==='test'?'Кабинет':'Выйти'}</button>`;
-    bar.querySelector('button').onclick=async()=>{
-      if(config.mode==='server'){
-        try{await adapter.fetch(config.logoutPath,{method:'POST'});}catch{}
-        sessionStorage.removeItem('gruzcontrol-server-session');
-      }else sessionStorage.removeItem('gruzcontrol-test-role');
-      location.reload();
-    };
-    document.body.prepend(bar);document.documentElement.classList.add('pwa');
+    document.documentElement.classList.add('pwa');
     for(const file of ['static/roles/maxim.js','static/roles/olesya.js','static/roles/lev.js','static/roles/admin.js','static/app.js'])await loadScript(file);
     await setupOffline();
   }catch(error){app.innerHTML=`<div class="loading"><h2>Не удалось открыть</h2><p>${escape(error.message)}</p><button class="btn primary" onclick="location.reload()">Повторить</button></div>`;}
 }
 async function setupOffline(){
-  const label=document.getElementById('pwa-cache-status');
-  if(!('serviceWorker' in navigator)){label.textContent='Оффлайн недоступен';return;}
-  try{
-    const reg=await navigator.serviceWorker.register(new URL('../sw.js',import.meta.url),{scope:new URL('../',import.meta.url).pathname});
+  function displayStatus(text, update) {
+    offlineStatus = text;
+    updateApp = update;
+    const label = document.getElementById('pwa-cache-status');
+    if (label) label.textContent = text;
+    const button = document.querySelector('[data-act="pwa-update"]');
+    if (button) button.hidden = !update;
+  }
+  if (!('serviceWorker' in navigator)) {
+    displayStatus('Оффлайн недоступен');
+    return;
+  }
+  try {
+    const reg = await navigator.serviceWorker.register(new URL('../sw.js',import.meta.url),{scope:new URL('../',import.meta.url).pathname});
     const status = () => {
       const waiting = reg.waiting;
-      label.textContent = waiting ? 'Есть обновление' : reg.active
+      const text = waiting ? 'Есть обновление' : reg.active
         ? (config.mode === 'test' ? 'Готово оффлайн' : navigator.onLine ? 'Сервер' : 'Нет сети')
         : 'Загружаем оффлайн…';
-      label.onclick = waiting ? () => {
+      displayStatus(text, waiting ? () => {
         if (!confirm('Обновить приложение? Несохранённый ввод будет потерян.')) return;
         navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), {once: true});
         waiting.postMessage('ACTIVATE');
-      } : null;
+      } : undefined);
     };
     const watch = () => reg.installing?.addEventListener('statechange', status);
     status();
     watch();
     reg.addEventListener('updatefound', watch);
     navigator.serviceWorker.addEventListener('controllerchange', status);
-  }catch{label.textContent='Оффлайн не готов';}
+  } catch { displayStatus('Оффлайн не готов'); }
 }
 window.addEventListener('pwa-session-expired',()=>{sessionStorage.removeItem('gruzcontrol-server-session');location.reload();});
 if(config.mode==='test'){
   const selected=sessionStorage.getItem('gruzcontrol-test-role');
   if(roleNames[selected])openApp(selected);
   else{
-    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><p class="sub" id="pwa-build">Сборка: …</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети дождись надписи «Готово оффлайн».</p></details></section>`;
+    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><p class="sub" id="pwa-build">Сборка: …</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети открой меню приложения и дождись надписи «Готово оффлайн».</p></details></section>`;
     fetch(new URL('../build.json', import.meta.url))
       .then(response => response.json())
       .then(({version}) => {
