@@ -4,6 +4,15 @@ window.WagonsRoles.admin=function(ctx){
   'use strict';
   const baseShell=ctx.shell;
   const {state,$,esc,shell,api,post,notify,localDate,tg,dismiss,syncWagonTelegramTheme,refreshLoads,openModal,reloadBoot,tone,money,vehicleName}=ctx;
+  let editingDraft = false;
+
+  async function afterLoadEdit(){
+    const returnToDraft = editingDraft;
+    editingDraft = false;
+    if (!returnToDraft) await renderHome();
+    else if (state.tab === 'report') await ctx.openRevision();
+  }
+
   async function downloadBackup(){
     const res=await window.PWA.fetch('/api/admin/backup',{headers:{'X-Telegram-Init-Data':tg?.initData||''},cache:'no-store'});
     if(!res.ok){let msg='Не удалось создать резервную копию';try{msg=(await res.json()).detail||msg}catch{}throw new Error(msg);}
@@ -129,16 +138,17 @@ window.WagonsRoles.admin=function(ctx){
     if(act==='ad-today'){day=localDate();await renderHome();return true;}
     if(act==='ad-refresh'){await renderHome();return true;}
     if(act==='ad-filter'){filter=id;await renderHome();return true;}
-    if(act==='ad-edit'||act==='ad-new'){await editor(act==='ad-edit'?Number(id):null,id);return true;}
+    if(act==='ad-revision-edit'){editingDraft=true;await editor(Number(id));return true;}
+    if(act==='ad-edit'||act==='ad-new'){editingDraft=false;await editor(act==='ad-edit'?Number(id):null,id);return true;}
     if(act==='ad-save'){
       if(saving)return true;saving=true;
       try{
       const form=$('#ad-load-form'),f=new FormData(form),b=Object.fromEntries(f);b._request_id=operationId;b.product_id=Number(b.product_id);b.crew=f.getAll('crew').map(Number);
       if(!b.rate_snapshot)delete b.rate_snapshot;
-      await post(selected?'/api/loads/'+selected.id:'/api/loads',b,selected?'PATCH':'POST');dismiss();await renderHome();notify('Сохранено. Итоги пересчитаны');}finally{saving=false;}return true;
+      await post(selected?'/api/loads/'+selected.id:'/api/loads',b,selected?'PATCH':'POST');dismiss();await afterLoadEdit();notify('Сохранено. Итоги пересчитаны');}finally{saving=false;}return true;
     }
-    if(act==='ad-status'){if(!confirm('Изменить статус? Начисления будут пересчитаны.'))return true;await post('/api/loads/'+selected.id+'/status',{status:id,reason:$('#ad-load-form [name="reason"]')?.value||''});dismiss();await renderHome();return true;}
-    if(act==='ad-delete'){if(confirm('Удалить погрузку? Вес, количество и начисления будут пересчитаны.')){await post('/api/loads/'+id,{},'DELETE');dismiss();await renderHome();}return true;}
+    if(act==='ad-status'){if(!confirm('Изменить статус? Начисления будут пересчитаны.'))return true;await post('/api/loads/'+selected.id+'/status',{status:id,reason:$('#ad-load-form [name="reason"]')?.value||''});dismiss();await afterLoadEdit();return true;}
+    if(act==='ad-delete'){if(confirm('Удалить погрузку? Вес, количество и начисления будут пересчитаны.')){await post('/api/loads/'+id,{},'DELETE');dismiss();await afterLoadEdit();}return true;}
     if(act.startsWith('ad-person-')){
       const items=await api('/api/loaders'),x=items.find(x=>x.id===Number(id));
       if(act.endsWith('-new')){const name=prompt('Имя грузчика');if(name?.trim())await post('/api/loaders',{name});}
@@ -155,7 +165,7 @@ window.WagonsRoles.admin=function(ctx){
       if(act.endsWith('-delete')&&confirm('Удалить продукцию из справочника? Ранее внесённые погрузки и начисления сохранятся.'))await post('/api/admin/products/'+id,{},'DELETE');
       await reloadBoot();await renderProducts();return true;
     }
-    if(act==='ad-cancel-statement'){if(confirm('Отменить сдачу для исправления? Номер, дата и состав ведомости сохранятся. Затем её нужно сдать заново.')){await post('/api/admin/statements/'+id+'/cancel',{});state.tab='report';await ctx.openRevision(id);notify('Сдача отменена. Проверь и сдай эту же ведомость заново.');}return true;}
+    if(act==='ad-cancel-statement'){if(confirm('Отменить сдачу для исправления? Номер, дата и состав ведомости сохранятся. Затем её нужно сдать заново.')){await post('/api/admin/statements/'+id+'/cancel',{});state.tab='report';await ctx.openRevision();notify('Сдача отменена. Проверь и сдай эту же ведомость заново.');}return true;}
     if(act==='ad-reset-open'){openModal('Очистить тестовые данные',`<p class="sub">Удалятся все погрузки, грузчики, бригады дня, начисления, ведомости и история. Пользователи и их доступы сохранятся.</p><label class="choice"><input type="checkbox" id="ad-reset-catalogs">Также удалить продукцию и тарифы</label><label class="field">Введи УДАЛИТЬ<input id="ad-reset-confirm" autocomplete="off"></label>${button('Очистить данные','ad-reset','',true)}`);return true;}
     if(act==='ad-reset'){await post('/api/admin/reset',{confirmation:$('#ad-reset-confirm').value,catalogs:$('#ad-reset-catalogs').checked});dismiss();await reloadBoot();state.loads=[];state.report=null;state.tab='admin-home';await renderHome();notify('Тестовые данные очищены');return true;}
     if(['approve','deny','block'].includes(act)){await accessUser(Number(id),act);return true;}

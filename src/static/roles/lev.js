@@ -5,8 +5,7 @@ window.WagonsRoles.lev=function(ctx){
   const baseShell=ctx.shell;
   const {vehicleName,state,$,esc,tone,money,shell,api,post,notify,reloadBoot,tg}=ctx;
   const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Almaty',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-  let mode='pending', current=null, busy=false, detailId=null, statementId=null;
-  let revisionId=null, revisionInclude=false, revisionData=null, revisionRequest=0;
+  let mode='pending', current=null, busy=false, detailId=null, statementId=null, reportRequest=0;
   const head=(title,sub)=>`<div class="lv-heading"><div class="eyebrow">УЧЁТ ПОГРУЗОК</div><h2 class="page-title">${title}</h2><p class="sub">${sub}</p></div>`;
   const empty=text=>`<section class="pane lv-empty">${text}</section>`;
   const amount=(n)=>`<strong class="lv-money ${n<0?'negative':''}">${money(n)}</strong>`;
@@ -133,42 +132,43 @@ window.WagonsRoles.lev=function(ctx){
   function tabs(){return (state.me?.role==='admin'?'<div class="ad-tools"><button class="btn" data-act="ad-go" data-id="tariffs">Тарифы</button><button class="btn" data-act="ad-go" data-id="lev-stats">Статистика</button></div>':'')+`<div class="lv-tabs">${[['pending','К сдаче'],['period','За период'],['archive','Сданные']].map(([id,name])=>`<button data-act="lv-mode" data-id="${id}" class="${mode===id?'selected':''}">${name}</button>`).join('')}</div>`;}
   async function renderReport(live=null){
     const shell=html=>baseShell(html,live);
-    statementId=null;revisionId=null;revisionData=null;revisionRequest++;
+    statementId=null;
+    const request=++reportRequest, selectedMode=mode;
     try{
-      let body='';current=null;
-      if(mode==='archive'){
+      let body='', next=null;
+      if(selectedMode==='archive'){
         const rows=await api('/api/statements');
         body=rows.map(x=>`<button class="pane lv-archive" data-act="lv-statement" data-id="${x.id}" data-cancelled="${x.cancelled?1:0}"><span><b>Ведомость № ${x.id}</b><small>${esc(x.from===x.to?x.from:x.from+' — '+x.to)} · ${x.cancelled?'На исправлении':'Сдана'}</small></span>${amount(x.stats.total_cents)}</button>`).join('')||empty('Сданных ведомостей пока нет');
       }else{
-        const overview=mode==='pending'?await api('/api/settlement-overview'):null;
-        const d=mode==='pending'?overview.pending:await api('/api/report?'+new URLSearchParams({start:state.reportStart,end:state.reportEnd}));
-        current=d;state.report=d;
-        body=(mode==='period'?`<section class="pane"><div class="lv-range"><label>С<input id="report-start" type="date" value="${state.reportStart}"></label><label>По<input id="report-end" type="date" value="${state.reportEnd}"></label></div><button class="btn full" data-act="load-report">Показать период</button></section>`:'')+`<section class="pane lv-hero"><small>${mode==='pending'?'К СДАЧЕ В КАССУ':'НАЧИСЛЕНО ЗА ПЕРИОД'}</small>${amount(d.stats.total_cents)}<p class="sub">${mode==='pending'?'Все несданные начисления, включая прошлые дни. Отрицательные суммы — корректировки.':'Общий отчёт, включая уже сданные начисления.'}</p>${mode==='pending'?`<button class="btn full" style="margin-bottom:8px" data-act="lv-draft">${window.PWA.mode==='test'?'Скачать документ':'В Telegram'}</button><button class="btn primary full" data-act="lv-submit" ${d.details.length?'':'disabled'}>Сдать ведомость</button>`:`<button class="btn primary full" data-act="send-report" data-id="docx">${window.PWA.mode==='test'?'Скачать документ':'В Telegram'}</button>`}</section>`+(mode==='pending'?`<details class="pane"><summary>Состав к сдаче · ${d.loads.length} погрузок</summary>${d.loads.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${money(x.total_cents)}</span></div>`).join('')||'<p>Всё сдано</p>'}</details><details class="pane"><summary>Не завершены · ${overview.unfinished.length}</summary><p class="sub">По сегодня включительно. Пока не начислены, сдачу не блокируют.</p>${overview.unfinished.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${statusName(x.status)}</span></div>`).join('')||'<p>Все погрузки завершены</p>'}</details>`:'')+details(d);
+        const overview=selectedMode==='pending'?await api('/api/settlement-overview'):null;
+        const d=selectedMode==='pending'?overview.pending:await api('/api/report?'+new URLSearchParams({start:state.reportStart,end:state.reportEnd}));
+        next=d;
+        body=(selectedMode==='period'?`<section class="pane"><div class="lv-range"><label>С<input id="report-start" type="date" value="${state.reportStart}"></label><label>По<input id="report-end" type="date" value="${state.reportEnd}"></label></div><button class="btn full" data-act="load-report">Показать период</button></section>`:'')+`<section class="pane lv-hero"><small>${selectedMode==='pending'?'К СДАЧЕ В КАССУ':'НАЧИСЛЕНО ЗА ПЕРИОД'}</small>${amount(d.stats.total_cents)}<p class="sub">${selectedMode==='pending'?'Все несданные начисления, включая прошлые дни. Отрицательные суммы — корректировки.':'Общий отчёт, включая уже сданные начисления.'}</p>${selectedMode==='pending'?`<button class="btn full" style="margin-bottom:8px" data-act="lv-draft">${window.PWA.mode==='test'?'Скачать документ':'В Telegram'}</button><button class="btn primary full" data-act="lv-submit" data-token="${esc(d.token)}" data-total="${d.stats.total_cents}" ${d.details.length?'':'disabled'}>${d.cancelled?'Сдать повторно':'Сдать ведомость'}</button>`:`<button class="btn primary full" data-act="send-report" data-id="docx">${window.PWA.mode==='test'?'Скачать документ':'В Telegram'}</button>`}</section>`+(selectedMode==='pending'?`<details class="pane"><summary>Состав к сдаче · ${d.loads.length} погрузок</summary>${d.loads.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${money(x.total_cents)}</span></div>`).join('')||'<p>Всё сдано</p>'}</details><details class="pane"><summary>Не завершены · ${overview.unfinished.length}</summary><p class="sub">По сегодня включительно. Пока не начислены, сдачу не блокируют.</p>${overview.unfinished.map(x=>`<div class="lv-line">${loadLink(x)}<span>${esc(x.load_date)} · ${statusName(x.status)}</span></div>`).join('')||'<p>Все погрузки завершены</p>'}</details>`:'')+details(d);
       }
-      if(state.tab!=='report')return;
+      if(selectedMode==='pending'&&next?.cancelled){
+        body=`<section class="pane"><b>Ведомость № ${next.id} · К сдаче</b><p class="sub">Дата сохраняется: ${esc(next.from===next.to?next.from:next.from+' — '+next.to)}. Новые завершённые погрузки автоматически добавляются в эту ведомость до её сдачи.</p></section>`+body;
+        if(state.me.role==='admin'){
+          body+=`<section class="pane"><h3>Изменить погрузки</h3>${(next.revision_loads||next.loads).map(x=>`<div class="lv-line"><span>${esc(vehicleName(x))} ${esc(x.reference||x.buyer||'')}</span><button class="btn" data-act="ad-revision-edit" data-id="${x.id}" ${x.deleted?'disabled':''}>Изменить</button></div>`).join('')}</section>`;
+          body+=`<details class="pane"><summary>Наемник на тупике за прошлые погрузки</summary><button class="btn" data-act="lv-contractor-preview" data-id="${next.id}">Проверить начисления</button><div id="lv-contractor-preview"></div></details>`;
+        }
+      }
+      if(request!==reportRequest||state.tab!=='report')return;
+      current=next;
+      if(next)state.report=next;
       shell(head('Начисления','Ведомости и расчёты с грузчиками')+tabs()+body);
-    }catch(e){notify(e.message);}
+    }catch(e){if(request===reportRequest&&state.tab==='report')notify(e.message);}
   }
   async function showStatement(id,live=null){
     const shell=html=>baseShell(html,live);
-    statementId=id;revisionId=null;revisionData=null;revisionRequest++;
-    const d=await api('/api/statements/'+id);current=null;
+    statementId=id;
+    const request=++reportRequest;
+    const d=await api('/api/statements/'+id);
+    if(request!==reportRequest||state.tab!=='report')return;
+    current=null;
     shell(head('Ведомость № '+id,'Погрузки за '+(d.from===d.to?d.from:d.from+' — '+d.to))+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane lv-hero"><small>РАСЧЁТ ЗАФИКСИРОВАН</small>${amount(d.stats.total_cents)}<p class="sub">Состав и суммы сохранены на момент сдачи</p>${state.me?.role==='admin'?`<button class="btn danger full" style="margin-bottom:10px" data-act="ad-cancel-statement" data-id="${id}">Отменить сдачу ведомости</button>`:''}<button class="btn primary full" data-act="lv-send" data-id="${id}">${window.PWA.mode==='test'?'Скачать документ':'В Telegram'}</button></section>`+details(d));
   }
-  async function openRevision(id,live=null){
-    if(revisionId!==Number(id))revisionInclude=false;
-    revisionId=Number(id);statementId=null;state.tab='report';revisionData=null;
-    const request=++revisionRequest;
-    try{
-      const d=await api('/api/admin/statements/'+id+'/revision?include_contractor='+revisionInclude);
-      if(request!==revisionRequest||state.tab!=='report')return;
-      revisionData=d;
-      const extra=d.details.filter(x=>x.is_contractor);
-      baseShell(head('Ведомость № '+id,'Дата сохраняется: '+(d.from===d.to?d.from:d.from+' — '+d.to))+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane"><b>Повторная сдача</b><p class="sub">Только погрузки исходной ведомости. Новые погрузки в неё не попадут.</p><label class="choice"><input type="checkbox" id="lv-include-contractor" ${revisionInclude?'checked':''}><strong>Добавить: Наемник на тупике — уже оплачено</strong></label><p class="sub">Тарифы берутся из раздела «Тарифы». Уже учтённые суммы повторно не добавляются.</p><p>Прежний итог: ${money(d.previous_total_cents)}<br>Новый итог: ${money(d.stats.total_cents)}</p>${extra.map(x=>`<p class="sub">№ ${esc(x.reference)} · ${esc(x.product_name)} · ${tone(x.rate_snapshot)} ₸/вагон · ${money(x.amount_cents)}</p>`).join('')}<button class="btn primary full" data-act="lv-resubmit" data-id="${id}">Сдать заново ведомость № ${id}</button></section>`+details(d),live);
-    }catch(e){
-      if(request!==revisionRequest||state.tab!=='report')return;
-      baseShell(head('Ведомость № '+id,'На исправлении')+`<button class="btn lv-back" data-act="lv-archive">← Все ведомости</button><section class="pane"><p>${esc(e.message)}</p><button class="btn" data-act="lv-revision-retry" data-id="${id}">Обновить расчёт</button><button class="btn" data-act="lv-revision-without" data-id="${id}">Без добавления наемника</button><button class="btn" data-act="nav" data-id="tariffs">Тарифы</button></section>`,live);
-    }
+  async function openRevision(){
+    state.tab='report';mode='pending';await renderReport();
   }
   async function loadReport(){await renderReport();}
   async function sendReport(fmt,id){await post(`/api/report/send/${fmt}`,id?{statement_id:Number(id)}:{start:state.reportStart,end:state.reportEnd});if(window.PWA.mode!=='test')notify('Файл отправлен тебе в Telegram');}
@@ -268,25 +268,38 @@ window.WagonsRoles.lev=function(ctx){
     if(act==='lv-open'){state.tab='report';mode='pending';await renderReport();return true;}
     if(act==='lv-archive'){state.tab='report';mode='archive';await renderReport();return true;}
     if(act==='lv-mode'){mode=id;await renderReport();return true;}
-    if(act==='lv-statement'){if(btn?.dataset.cancelled==='1')await openRevision(id);else await showStatement(id);return true;}
-    if(act==='lv-revision-retry'){await openRevision(id);return true;}
-    if(act==='lv-revision-without'){revisionInclude=false;await openRevision(id);return true;}
-    if(act==='lv-resubmit'){
-      if(busy||!revisionData)return true;
-      const d=revisionData;
-      if(!confirm('Повторно сдать ведомость № '+id+' на '+money(d.stats.total_cents)+'? Номер и дата сохранятся. Все суммы будут отмечены как оплаченные.'))return true;
-      busy=true;btn.disabled=true;
-      try{await post('/api/admin/statements/'+id+'/resubmit',{token:d.token,include_contractor:d.include_contractor});notify('Ведомость № '+id+' обновлена');await showStatement(id);}
-      catch(e){notify(e.message);await openRevision(id);}
-      finally{busy=false;btn.disabled=false;}return true;
-    }
+    if(act==='lv-statement'){if(btn?.dataset.cancelled==='1')await openRevision();else await showStatement(id);return true;}
     if(act==='lv-export'){await downloadFile('/api/statements/'+id+'/export',`Наряд_№${id}.docx`);return true;}
     if(act==='lv-send'){await sendReport('docx',id);return true;}
-    if(act==='lv-submit'){
-      if(busy||!current)return true;
-      if(!confirm('Сдать ведомость на '+money(current.stats.total_cents)+'? Эти начисления будут отмечены как оплаченные.'))return true;
+    if(act==='lv-contractor-preview'&&state.me.role==='admin'){
+      const panel=$('#lv-contractor-preview');
+      btn.disabled=true;
+      try{
+        panel.replaceChildren();
+        const d=await api('/api/admin/statements/'+id+'/revision?include_contractor=true');
+        if(!panel.isConnected)return true;
+        const contractorTotal=d.details.filter(x=>x.is_contractor).reduce((sum,x)=>sum+x.amount_cents,0);
+        panel.innerHTML=contractorTotal>0?`<p class="sub">Всего наемнику — ${money(contractorTotal)}. Итог ведомости — ${money(d.stats.total_cents)}.</p><button class="btn primary" data-act="lv-contractor-submit" data-id="${id}" data-token="${esc(d.token)}">Учесть и сдать повторно</button>`:
+          '<p class="sub">Начислений наемнику нет.</p>';
+      }finally{btn.disabled=false;}
+      return true;
+    }
+    if(act==='lv-contractor-submit'&&state.me.role==='admin'){
+      if(busy||!confirm('Учесть дополнительные начисления наемнику и сдать ведомость?'))return true;
       busy=true;btn.disabled=true;
-      try{const r=await post('/api/statements',{token:current.token});notify('Ведомость № '+r.id+' сдана');await showStatement(r.id);}
+      try{
+        const r=await post('/api/admin/statements/'+id+'/resubmit',{token:btn.dataset.token,include_contractor:true});
+        notify('Ведомость № '+r.id+' сдана');
+        await showStatement(r.id);
+      }finally{busy=false;btn.disabled=false;}
+      return true;
+    }
+    if(act==='lv-submit'){
+      if(busy||!current||mode!=='pending'||statementId)return true;
+      if(!confirm('Сдать ведомость на '+money(Number(btn.dataset.total))+'? Эти начисления будут отмечены как оплаченные.'))return true;
+      busy=true;btn.disabled=true;
+      try{const r=await post('/api/statements',{token:btn.dataset.token});notify('Ведомость № '+r.id+' сдана');await showStatement(r.id);}
+      catch(e){if(state.tab==='report'&&!statementId)await renderReport();throw e;}
       finally{busy=false;btn.disabled=false;}
       return true;
     }
@@ -337,7 +350,6 @@ window.WagonsRoles.lev=function(ctx){
     return false;
   }
   function handleChange(target){
-    if(target.id==='lv-include-contractor'){revisionInclude=target.checked;revisionData=null;const submit=$('[data-act="lv-resubmit"]');if(submit)submit.disabled=true;openRevision(revisionId);return true;}
     if(target.id==='lv-date'){overviewDate=target.value||today();renderOverview();return true;}
     if(target.id==='lv-stats-start'){statsStart=target.value;return true;}
     if(target.id==='lv-stats-end'){statsEnd=target.value;return true;}
@@ -351,20 +363,20 @@ window.WagonsRoles.lev=function(ctx){
     if(state.tab==='lev-detail')return renderTrace(live);
     if(state.tab==='lev-home')return detailId?showLoad(detailId,live):renderOverview(live);
     if(state.tab==='lev-stats')return renderStats(live);
-    if(state.tab==='report'&&!busy)return revisionId?openRevision(revisionId,live):statementId?showStatement(statementId,live):renderReport(live);
+    if(state.tab==='report'&&!busy)return statementId?showStatement(statementId,live):renderReport(live);
   }
   function navigationView(){
-    const view=structuredClone({mode,statementId,revisionId,revisionInclude,traceView,traceStack});
+    const view=structuredClone({mode,statementId,traceView,traceStack});
     const trace = view.traceView;
     view.key=state.tab==='lev-detail'?['trace',trace?.type,trace?.id,view.traceStack.length]:
-      state.tab==='report'?(statementId||revisionId?['statement',Number(statementId||revisionId)]:['report',mode]):null;
+      state.tab==='report'?(statementId?['statement',Number(statementId)]:['report',mode]):null;
     return view;
   }
   async function restoreNavigation(v){
-    mode=v.mode;statementId=v.statementId;revisionId=v.revisionId;revisionInclude=v.revisionInclude;
+    mode=v.mode;statementId=v.statementId;
     traceView=structuredClone(v.traceView);traceStack=structuredClone(v.traceStack);
     if(state.tab==='lev-detail')return renderTrace();
-    if(state.tab==='report')return revisionId?openRevision(revisionId):statementId?showStatement(statementId):renderReport();
+    if(state.tab==='report')return statementId?showStatement(statementId):renderReport();
     if(state.tab==='lev-stats')return renderStats();
     return renderOverview();
   }
