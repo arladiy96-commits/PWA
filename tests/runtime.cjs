@@ -48,11 +48,24 @@ bridge.initialize()`);
  for(const body of [{person_id:one},{loader_summary:true},{stats_section:'days'},{statement_id:sid},{pending:true}]){
   const r=await call('manager','POST','/api/report/send/docx',{start:'2026-11-11',end:'2026-11-11',...body});assert(Buffer.from(r.binary,'base64').length>100);
  }
+ const original=await get('/api/statements/'+sid);
  await call('admin','POST',`/api/admin/statements/${sid}/cancel`,{});
+ const cancelled=await get('/api/statements/pending');
+ assert.equal(cancelled.id,sid);
+ assert.equal(cancelled.cancelled,true);
  await call('admin','PUT',`/api/loads/${w}/crew`,{crew:[one,two]});
- const revision=await get(`/api/admin/statements/${sid}/revision`);
- await call('admin','POST',`/api/admin/statements/${sid}/resubmit`,{token:revision.token});
- const statement=await get('/api/statements/'+sid);assert.equal(statement.from,'2026-11-11');assert.equal(statement.to,'2026-11-11');
+ const extra=(await call('manager','POST','/api/loads',{transport:'truck',vehicle_kind:'fura',buyer:'После отката',product_id:pid,tonnes:'10',load_date:'2026-11-12',crew:[one]})).id;
+ await call('manager','POST',`/api/loads/${extra}/status`,{status:'loaded'});
+ assert.equal((await raw('manager','POST','/api/statements',{token:cancelled.token})).status,409);
+ const draft=(await get('/api/settlement-overview')).pending;
+ assert(draft.revision_loads.some(x=>x.id===w));
+ assert(draft.loads.some(x=>x.id===extra));
+ assert.equal((await call('manager','POST','/api/statements',{token:draft.token})).id,sid);
+ assert.equal((await call('manager','POST','/api/statements',{token:draft.token})).id,sid);
+ const statement=await get('/api/statements/'+sid);
+ for(const key of ['id','created_at','from','to'])assert.equal(statement[key],original[key]);
+ assert(statement.loads.some(x=>x.id===extra));
+ assert.equal((await get('/api/statements/pending')).details.length,0);
  const saved=py.runPython('bridge.export_database()');py.globals.set('saved',saved);py.runPython('bridge.restore_database(saved)\nbridge.initialize()');
  assert.equal((await get('/api/statements/'+sid)).stats.total_cents,statement.stats.total_cents);
  await call('admin','DELETE','/api/loads/'+w);assert.equal((await raw('admin','GET','/api/loads/'+w)).status,404);
