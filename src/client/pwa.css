@@ -24,3 +24,14 @@ html.pwa.lev-frost button.lf-identity{background:none;border-block:0;border-righ
 .pwa-document-message{margin-top:8px;color:#68483b;font-size:12px}
 /* Prevent iOS input zoom and respect the home indicator. */
 input,select,textarea{font-size:16px!important}
+
+/* Keep native text editing available in forms. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:is(input, textarea, [contenteditable]:not([contenteditable="false"])) {
+  -webkit-user-select: text;
+  user-select: text;
+}
