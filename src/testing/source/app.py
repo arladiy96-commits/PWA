@@ -1293,6 +1293,10 @@ def get_audit(user=Depends(active)):
 def pending_statement(c, start, end, include_reserved=False):
     start=check_date(start); end=check_date(end)
     if start>end: issue(400,'Дата начала позже даты окончания')
+    if not include_reserved:
+        draft=contractor.active_draft(c)
+        if draft:
+            return contractor.preview(c,draft,False,pending_statement,statement_report)[0]
     # Union includes removed crew and deleted/reopened loads: these produce reversals.
     entries=rows(c,"""WITH paid AS (
       SELECT load_id,loader_id,SUM(amount_cents) amount FROM statement_lines GROUP BY load_id,loader_id
@@ -1366,10 +1370,21 @@ async def statement_submit(request:Request,user=Depends(active)):
         d=pending_statement(c,b.get('start') or '0001-01-01',b.get('end') or '9999-12-31')
         if token!=d['token']: issue(409,'Начисления изменились. Обнови ведомость и проверь сумму.')
         if not d['details']: issue(400,'Нет новых начислений')
-        sid=c.execute('INSERT INTO statements(created_at,actor,token,snapshot) VALUES(?,?,?,?)',
-          (now(),user['tg_id'],token,json.dumps(d,ensure_ascii=False))).lastrowid
-        contractor.save_lines(c,sid,d['details'])
-        audit(c,user,'statement_submitted','statement',sid,None,{'total_cents':d['stats']['total_cents'],'lines':len(d['details'])})
+        draft=contractor.active_draft(c)
+        if draft:
+            sid=draft['id']
+            d['cancelled']=False;d['revision']=draft['revision']+1
+            contractor.save_lines(c,sid,d['details'])
+            c.execute('UPDATE statements SET cancelled=0,revision=?,token=?,snapshot=? WHERE id=?',
+                      (d['revision'],token,json.dumps(d,ensure_ascii=False),sid))
+            c.execute('DELETE FROM statement_reservations WHERE statement_id=?',(sid,))
+            audit(c,user,'statement_resubmitted','statement',sid,json.loads(draft['snapshot']),
+                  {'total_cents':d['stats']['total_cents'],'revision':d['revision']})
+        else:
+            sid=c.execute('INSERT INTO statements(created_at,actor,token,snapshot) VALUES(?,?,?,?)',
+              (now(),user['tg_id'],token,json.dumps(d,ensure_ascii=False))).lastrowid
+            contractor.save_lines(c,sid,d['details'])
+            audit(c,user,'statement_submitted','statement',sid,None,{'total_cents':d['stats']['total_cents'],'lines':len(d['details'])})
     return {'ok':True,'id':sid}
 
 

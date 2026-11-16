@@ -120,6 +120,14 @@ def reserve(c, row):
         c.execute('INSERT OR IGNORE INTO statement_reservations VALUES(?,?)',(load_id,row['id']))
 
 
+def active_draft(c):
+    # Oldest reopened statement receives unsubmitted accruals. Other reopened
+    # statements keep their own reserved loads until this one is submitted.
+    return one(c,"""SELECT * FROM statements s WHERE cancelled=1
+      AND EXISTS(SELECT 1 FROM statement_reservations r WHERE r.statement_id=s.id)
+      ORDER BY id LIMIT 1""")
+
+
 def preview(c, row, include, pending_fn, report_fn):
     if not row['cancelled']:
         fail('Сначала отмени сдачу этой ведомости')
@@ -128,7 +136,13 @@ def preview(c, row, include, pending_fn, report_fn):
     if not ids:
         fail('У этой отменённой ведомости нет закреплённого состава. Открой актуальную сданную ведомость.')
     data=pending_fn(c,'0001-01-01','9999-12-31',include_reserved=True)
-    details=[x for x in data['details'] if x['load_id'] in ids]
+    active=active_draft(c)
+    if active and active['id']==row['id']:
+        other_ids={r['load_id'] for r in rows(c,'SELECT load_id FROM statement_reservations WHERE statement_id<>?',(row['id'],))}
+        details=[x for x in data['details'] if x['load_id'] not in other_ids]
+        ids.update(x['load_id'] for x in details)
+    else:
+        details=[x for x in data['details'] if x['load_id'] in ids]
     additions=[]
     if include:
         for load_id in sorted(ids):
@@ -148,6 +162,10 @@ def preview(c, row, include, pending_fn, report_fn):
                   created_at=row['created_at'],cancelled=True,revision=row['revision'],
                   include_contractor=include,previous_total_cents=original['stats']['total_cents'])
     result['from']=original['from'];result['to']=original['to']
+    # Keep every original load editable, even if its current accrual is zero.
+    result['revision_loads']=[one(c,'''SELECT l.id,l.reference,l.buyer,l.transport,l.vehicle_kind,
+      l.load_date,l.status,l.deleted,l.tonnes,COALESCE(l.product_name_snapshot,p.name) product_name
+      FROM loads l JOIN products p ON p.id=l.product_id WHERE l.id=?''',(lid,)) for lid in sorted(ids)]
     result['token']=hashlib.sha256(json.dumps(result,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
     return order(result),additions
 
