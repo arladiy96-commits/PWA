@@ -104,6 +104,9 @@
   }
   function shell(inner,live=null){
     if(state.tab!=='lev-home'||inner.includes('lv-overview'))inner=overduePanel()+inner;
+    if (window.PWA.settingsMarkup && state.me.role !== 'manager') {
+      inner += '<div class="pwa-settings-link"><button type="button" class="btn" data-act="pwa-settings">Меню приложения</button></div>';
+    }
     live=live||liveListPaint;
     if(live){
       if(live.epoch!==uiEpoch||live.tab!==state.tab||liveBlocked()){livePending=true;return;}
@@ -419,7 +422,7 @@
           const denied=u.state==='denied',blocked=u.state==='blocked';
           const title=blocked?'Доступ заблокирован':denied?'Заявка отклонена':'Заявка отправлена';
           const hint=blocked||denied?'Обратись к главному администратору.':'Заявка уже поступила администратору. Как только он назначит роль, этот экран обновится сам.';
-          $('#app').innerHTML=`<div class="loading"><div style="font-size:45px">${blocked?'🔒':denied?'❌':'⏳'}</div><h2>${title}</h2><p>${hint}</p><p class="sub">Telegram ID: ${u.tg_id}</p><button class="btn primary" data-act="retry-access">↻ Проверить доступ</button></div>`;
+          $('#app').innerHTML=`<div class="loading"><div style="font-size:45px">${blocked?'🔒':denied?'❌':'⏳'}</div><h2>${title}</h2><p>${hint}</p><p class="sub">Telegram ID: ${u.tg_id}</p><button class="btn primary" data-act="retry-access">↻ Проверить доступ</button>${window.PWA.settingsMarkup?'<div class="pwa-settings-link"><button type="button" class="btn" data-act="pwa-settings">Меню приложения</button></div>':''}</div>`;
         }
         pendingScreen(state.me);
         const poll=async()=>{
@@ -451,6 +454,9 @@
           act==='os-back-stats'||(act==='ad-go'&&id==='ad-settings'))&&window.PWA.navigation.back())return;
       if(act==='nav'||act==='quick-nav')mainTabTarget=id;
       if(act==='ad-reset'||act==='preview-off')mainTabTarget='admin-home';
+      if(act==='pwa-settings'&&window.PWA.settingsMarkup){openModal('Меню приложения',window.PWA.settingsMarkup());return;}
+      if(act==='pwa-switch'){await window.PWA.leaveCabinet();return;}
+      if(act==='pwa-update'){window.PWA.applyUpdate();return;}
       if(await delegatedClick(act,id,btn))return;
       if(act==='quick-menu'){quickMenu();}
       else if(act==='quick-nav'){dismiss();if(isWagonMode())await switchMaximTab(id);else {state.tab=id;render();if(id==='report'&&!state.report)await loadReport();}}
