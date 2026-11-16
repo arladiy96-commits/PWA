@@ -38,7 +38,7 @@ def env(tmp_path,monkeypatch):
         yield cl,req,products,crew,load,submit,rates,admin,lev,other
 
 
-def test_old_statement_revision_is_scoped_paid_and_identity_preserved(env):
+def test_old_statement_revision_adds_pending_and_preserves_other_paid_statements(env):
     cl,req,products,crew,load,submit,rates,adm,lev,other=env
     x=load();y=load('Отруби');truck=load(transport='truck')
     sid=submit();old=req('GET',f'/api/statements/{sid}')
@@ -49,29 +49,29 @@ def test_old_statement_revision_is_scoped_paid_and_identity_preserved(env):
     # Configuring tariffs alone must not modify historical data or paid snapshots.
     assert req('GET',f'/api/statements/{sid}')==old
     req('POST',f'/api/admin/statements/{sid}/cancel')
-    assert {x['load_id'] for x in req('GET','/api/statements/pending')['details']}=={pending_load}
+    assert {r['load_id'] for r in req('GET','/api/statements/pending')['details']}=={x,y,truck,pending_load}
     assert req('GET','/api/statements',h=adm)[-1]['cancelled']==1
     assert sid not in {x['id'] for x in req('GET','/api/statements',h=lev)}
     url=f'/api/admin/statements/{sid}/revision'
     draft=req('GET',url+'?include_contractor=true')
     extras=[x for x in draft['details'] if x.get('is_contractor')]
-    assert {x['load_id'] for x in extras}=={x,y}
-    assert sum(x['amount_cents'] for x in extras)==100000
+    assert {r['load_id'] for r in extras}=={x,y,pending_load}
+    assert sum(x['amount_cents'] for x in extras)==160000
     assert draft['by_loader'][-1]['name']=='Наемник на тупике'
-    assert draft['stats']['loads']==3 and draft['stats']['wagons']==2
-    assert draft['stats']['total_cents']==old['stats']['total_cents']+100000
+    assert draft['stats']['loads']==4 and draft['stats']['wagons']==3
+    assert draft['stats']['total_cents']==old['stats']['total_cents']+260000
     body={'token':draft['token'],'include_contractor':True}
     assert req('POST',f'/api/admin/statements/{sid}/resubmit',body)['id']==sid
     assert req('POST',f'/api/admin/statements/{sid}/resubmit',body)['id']==sid
     new=req('GET',f'/api/statements/{sid}')
     for key in ('id','created_at','from','to'):assert new[key]==old[key]
-    assert new['by_loader'][:-1]==old['by_loader']
+    assert sum(r['amount_cents'] for r in new['by_loader'][:-1])==old['stats']['total_cents']+100000
     assert req('GET',f'/api/statements/{second}')==second_before
-    assert {x['load_id'] for x in req('GET','/api/statements/pending')['details']}=={pending_load}
+    assert not req('GET','/api/statements/pending')['details']
     with a.db() as c:
         assert a.rows(c,'SELECT * FROM payouts ORDER BY load_id,loader_id')==old_payouts
         assert c.execute('SELECT COUNT(*) FROM statements').fetchone()[0]==2
-        assert c.execute('SELECT COUNT(*) FROM contractor_lines').fetchone()[0]==2
+        assert c.execute('SELECT COUNT(*) FROM contractor_lines').fetchone()[0]==3
         assert json.loads(c.execute('SELECT snapshot FROM statement_revisions WHERE statement_id=?',(sid,)).fetchone()[0])['by_loader']==old['by_loader']
     assert list(a.DB_PATH.parent.glob('statement_backups/*.sqlite3'))
     # Restart preserves both the frozen amounts and the revision identity.

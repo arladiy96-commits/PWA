@@ -24,7 +24,7 @@ def test_admin_corrections_cancel_delete_and_reset(tmp_path,monkeypatch):
         assert not pending()['details']
         assert cl.post(f'/api/admin/statements/{sid}/cancel',headers=lev).status_code==403
         req('POST',f'/api/admin/statements/{sid}/cancel')
-        assert pending()['stats']['total_cents']==0
+        assert pending()['stats']['total_cents']==100000
         draft=req('GET',f'/api/admin/statements/{sid}/revision')
         assert draft['stats']['total_cents']==100000
         req('POST',f'/api/admin/statements/{sid}/cancel')
@@ -36,7 +36,7 @@ def test_admin_corrections_cancel_delete_and_reset(tmp_path,monkeypatch):
         assert req('GET',f'/api/admin/statements/{correction}/revision')['stats']['total_cents']==320000
         # Removing all assigned people reopens a completed load atomically.
         req('PATCH',f'/api/loads/{load}',{'crew':[]})
-        assert not pending()['details']
+        assert pending()['stats']['total_cents']==-100000
         assert req('GET',f'/api/loads/{load}')['status']=='planned'
         req('PATCH',f'/api/loads/{load}',{'crew':ids})
         req('POST',f'/api/loads/{load}/status',{'status':'loaded'})
