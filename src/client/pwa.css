@@ -98,10 +98,10 @@ body {
 
 .pwa-login-page {
   color-scheme: light;
-  background: #e9eeeb;
+  background: #171c22;
 }
 
-.pwa-login-page body { background: #e9eeeb; }
+.pwa-login-page body { background: inherit; }
 .pwa-login-page .ambient { display: none; }
 
 .pwa-login-page #app.app-frame {
@@ -124,7 +124,7 @@ body {
   margin: 0 auto;
   padding: max(24px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right))
     max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
-  color: #192d36;
+  color: #f2f5f4;
 }
 
 .pwa-login-brand { display: flex; align-items: center; gap: 11px; padding-left: 3px; }
@@ -136,7 +136,8 @@ body {
   border: 1px solid #cdd8d3;
   border-radius: 22px;
   background: #fbfcfb;
-  box-shadow: 0 10px 32px #263a4512;
+  color: #192d36;
+  box-shadow: 0 10px 32px #0004;
 }
 
 .pwa-login h1 { margin: 0; font-size: 32px; line-height: 1.12; letter-spacing: -.04em; }
@@ -189,7 +190,7 @@ body {
 
 .pwa-login-demo {
   padding: 0 4px;
-  color: #41564e;
+  color: #c2cfcb;
   font-size: 13px;
   line-height: 1.4;
 }
@@ -199,7 +200,9 @@ body {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: #234f47;
+  color: #bbded0;
   font-weight: 700;
   text-underline-offset: 3px;
 }
+
+.pwa-login-demo a:focus-visible { outline: 2px solid #bbded0; outline-offset: 3px; }
