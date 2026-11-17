@@ -16,7 +16,7 @@ export function showLogin(app, {signIn, expired, demo}) {
         <p>ГрузКонтроль</p>
       </header>
       <div class="pwa-login-card">
-        <h1 id="login-title">Вход в кабинет</h1>
+        <h1 id="login-title"${demo?.onBack ? ' tabindex="-1" autofocus' : ''}>Вход в кабинет</h1>
         <p class="pwa-login-hint">${demo
           ? 'Проверь вход с тестовым логином и паролем.'
           : 'Введи логин и пароль, которые выдал администратор.'}</p>

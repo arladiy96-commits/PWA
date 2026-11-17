@@ -115,34 +115,40 @@ function openLoginPreview(target, onBack) {
 }
 
 let loginPreview;
-async function showLoginPreview(link) {
+function showLoginPreview(link) {
   if (loginPreview) return;
   const root = document.documentElement;
   const preview = document.createElement('dialog');
+  const theme = document.querySelector('meta[name="theme-color"]');
+  const previousTheme = theme?.content;
+  const viewport = window.visualViewport;
+
+  function fitViewport() {
+    if (viewport.scale !== 1) return;
+    preview.style.top = `${viewport.offsetTop}px`;
+    preview.style.height = `${viewport.height}px`;
+  }
+
   loginPreview = preview;
   preview.className = 'pwa-login-preview';
-  let enteredFullscreen = false;
-  const android = /Android/i.test(navigator.userAgent);
-  if (android && document.fullscreenEnabled && typeof root.requestFullscreen === 'function' &&
-      !document.fullscreenElement && !matchMedia('(display-mode: fullscreen)').matches) {
-    try {
-      await root.requestFullscreen({navigationUI: 'hide'});
-      enteredFullscreen = true;
-    } catch {
-      // Some browsers and windows deny fullscreen. The form remains available.
-    }
-  }
+  preview.setAttribute('aria-labelledby', 'login-title');
   preview.addEventListener('close', () => {
+    viewport?.removeEventListener('resize', fitViewport);
+    viewport?.removeEventListener('scroll', fitViewport);
     preview.remove();
     loginPreview = undefined;
     root.classList.remove('pwa-login-page');
-    if (enteredFullscreen && document.fullscreenElement === root) {
-      void document.exitFullscreen().catch(() => {});
-    }
+    if (theme) theme.content = previousTheme;
     link.focus();
   }, {once: true});
   openLoginPreview(preview, () => preview.close());
   document.body.append(preview);
+  if (theme) theme.content = getComputedStyle(preview).backgroundColor;
+  if (viewport) {
+    fitViewport();
+    viewport.addEventListener('resize', fitViewport);
+    viewport.addEventListener('scroll', fitViewport);
+  }
   preview.showModal();
 }
 
@@ -153,7 +159,7 @@ if(config.mode==='test'){
         event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
         typeof window.HTMLDialogElement?.prototype.showModal !== 'function') return;
     event.preventDefault();
-    void showLoginPreview(link);
+    showLoginPreview(link);
   });
   const selected=sessionStorage.getItem('gruzcontrol-test-role');
   if (new URLSearchParams(location.search).get('login-preview') === '1') {
