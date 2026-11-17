@@ -3,27 +3,30 @@ const loginMessages = {
   401: 'Неверный логин или пароль.',
   403: 'Доступ закрыт. Обратись к администратору.',
   422: 'Проверь логин и пароль.',
-  429: 'Слишком много попыток. Попробуй чуть позже.'
+  429: 'Слишком много попыток. Попробуй чуть позже.',
+  invalidResponse: 'Сервер не подтвердил вход. Попробуй позже.'
 };
 
-export function showLogin(app, signIn, expired) {
+export function showLogin(app, {signIn, expired, demo}) {
   document.documentElement.classList.add('pwa-login-page');
-  document.querySelector('meta[name="theme-color"]').content = '#e8edf0';
+  document.querySelector('meta[name="theme-color"]').content = '#e9eeeb';
   app.innerHTML = `
     <section class="pwa-login" aria-labelledby="login-title">
       <header class="pwa-login-brand">
-        <img src="${new URL('../icons/gruzcontrol-180.png', import.meta.url)}" width="52" height="52" alt="">
+        <img src="${new URL('../icons/gruzcontrol-180.png', import.meta.url)}" width="48" height="48" alt="">
         <p>ГрузКонтроль</p>
       </header>
       <div class="pwa-login-card">
-        <h1 id="login-title">Вход</h1>
-        <p class="pwa-login-hint">Введи логин и пароль, которые выдал администратор.</p>
+        <h1 id="login-title">Вход в кабинет</h1>
+        <p class="pwa-login-hint">${demo
+          ? 'Проверь вход с тестовым логином и паролем.'
+          : 'Введи логин и пароль, которые выдал администратор.'}</p>
         <form id="login">
           <label for="login-name">Логин</label>
-          <input id="login-name" name="login" autocomplete="username" autocapitalize="none" spellcheck="false" enterkeyhint="next" required>
+          <input id="login-name" name="login" autocomplete="${demo ? 'off' : 'username'}" autocapitalize="none" spellcheck="false" enterkeyhint="next" required>
           <label for="login-password">Пароль</label>
           <div class="pwa-login-password">
-            <input id="login-password" name="password" type="password" autocomplete="current-password" enterkeyhint="go" required>
+            <input id="login-password" name="password" type="password" autocomplete="${demo ? 'off' : 'current-password'}" autocapitalize="none" spellcheck="false" enterkeyhint="go" required>
             <button type="button" aria-controls="login-password" aria-label="Показать пароль">Показать</button>
           </div>
           <p class="pwa-login-error" role="alert"></p>
@@ -31,6 +34,11 @@ export function showLogin(app, signIn, expired) {
           <button type="submit" class="pwa-login-submit">Войти</button>
         </form>
       </div>
+      ${demo ? `
+        <aside class="pwa-login-demo">
+          <p>Тестовый логин <code>${demo.login}</code> · пароль <code>${demo.password}</code></p>
+          <a href="${demo.backHref}">${demo.backLabel}</a>
+        </aside>` : ''}
     </section>`;
 
   const form = app.querySelector('#login');
@@ -72,23 +80,14 @@ export function showLogin(app, signIn, expired) {
     status.textContent = 'Проверяем данные…';
 
     try {
-      const response = await signIn(credentials);
-      if (!response.ok) {
-        if (response.status === 401) {
-          login.setAttribute('aria-invalid', 'true');
-          password.setAttribute('aria-invalid', 'true');
-        }
-        error.textContent = loginMessages[response.status] || 'Сервер сейчас не может выполнить вход. Попробуй позже.';
-        return;
+      const result = await signIn(credentials);
+      if (result === 401) {
+        login.setAttribute('aria-invalid', 'true');
+        password.setAttribute('aria-invalid', 'true');
       }
-
-      const data = await response.json().catch(() => null);
-      if (typeof data?.access_token !== 'string' || !data.access_token.trim()) {
-        error.textContent = 'Сервер не подтвердил вход. Попробуй позже.';
-        return;
+      if (result) {
+        error.textContent = loginMessages[result] || 'Сервер сейчас не может выполнить вход. Попробуй позже.';
       }
-      sessionStorage.setItem('gruzcontrol-server-session', data.access_token);
-      location.reload();
     } catch (err) {
       error.textContent = err.name === 'TimeoutError' ? 'Сервер долго не отвечает. Попробуй ещё раз.'
         : err.name === 'SecurityError' || err.name === 'QuotaExceededError' ? 'Не удалось сохранить сеанс. Проверь настройки браузера.'

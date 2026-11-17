@@ -28,6 +28,7 @@ let updateApp;
 function settingsMarkup() {
   return `<p class="sub" id="pwa-cache-status" role="status">${offlineStatus}</p>
     <button type="button" class="btn full" data-act="pwa-update"${updateApp ? '' : ' hidden'}>Обновить приложение</button>
+    ${config.mode === 'test' ? '<a class="btn full pwa-login-link" href="?login-preview=1">Проверить экран входа</a>' : ''}
     <button type="button" class="btn full" data-act="pwa-switch">${config.mode === 'test' ? 'Сменить кабинет' : 'Выйти'}</button>`;
 }
 
@@ -97,9 +98,25 @@ window.addEventListener('pwa-session-expired', () => {
 });
 if(config.mode==='test'){
   const selected=sessionStorage.getItem('gruzcontrol-test-role');
-  if(roleNames[selected])openApp(selected);
+  if (new URLSearchParams(location.search).get('login-preview') === '1') {
+    const demo = {
+      login: 'lev',
+      password: 'demo',
+      backHref: './',
+      backLabel: roleNames[selected] ? 'Вернуться в кабинет' : 'Выбрать тестовый кабинет'
+    };
+    showLogin(app, {
+      demo,
+      signIn({login, password}) {
+        if (login !== demo.login || password !== demo.password) return 401;
+        sessionStorage.setItem('gruzcontrol-test-role', 'manager');
+        location.replace('./');
+      }
+    });
+    void setupOffline();
+  } else if(roleNames[selected])openApp(selected);
   else{
-    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><p class="sub" id="pwa-build">Сборка: …</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети открой меню приложения и дождись надписи «Готово оффлайн».</p></details></section>`;
+    app.innerHTML=`<section class="pwa-entry"><span class="eyebrow">ТЕСТОВАЯ ВЕРСИЯ</span><h1>ГрузКонтроль</h1><p>Выбери кабинет</p><div class="pwa-roles">${Object.entries(roleNames).map(([id,name])=>`<button class="btn" data-role="${id}">${name}<span>→</span></button>`).join('')}</div><a class="btn pwa-login-link" href="?login-preview=1">Проверить экран входа</a><p class="sub">Данные только на этом устройстве. Рабочий сервер не подключён.</p><p class="sub" id="pwa-build">Сборка: …</p><details><summary>Как установить на телефон</summary><p>iPhone: Safari → «Поделиться» → «На экран Домой». Android: меню браузера → «Установить приложение» или «Добавить на главный экран».</p><p>Для работы без сети открой меню приложения и дождись надписи «Готово оффлайн».</p></details></section>`;
     fetch(new URL('../build.json', import.meta.url))
       .then(response => response.json())
       .then(({version}) => {
@@ -115,11 +132,20 @@ if(config.mode==='test'){
   else{
     const expired = sessionStorage.getItem('gruzcontrol-session-expired') === '1';
     sessionStorage.removeItem('gruzcontrol-session-expired');
-    const signIn = credentials => createServerAdapter(config).fetch(config.loginPath, {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-      signal: AbortSignal.timeout?.(15000)
+    showLogin(app, {
+      expired,
+      async signIn(credentials) {
+        const response = await createServerAdapter(config).fetch(config.loginPath, {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          signal: AbortSignal.timeout?.(15000)
+        });
+        if (!response.ok) return response.status;
+        const data = await response.json().catch(() => null);
+        if (typeof data?.access_token !== 'string' || !data.access_token.trim()) return 'invalidResponse';
+        sessionStorage.setItem('gruzcontrol-server-session', data.access_token);
+        location.reload();
+      }
     });
-    showLogin(app, signIn, expired);
   }
 }
