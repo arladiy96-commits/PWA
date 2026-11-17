@@ -20,5 +20,19 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET'||url.origin!==scope.origin||!url.pathname.startsWith(scope.pathname)||url.pathname.includes('/api/'))return;
   const path=url.pathname===scope.pathname?scope.pathname+'index.html':url.pathname;
   if(!allowed.has(path))return;
+  if (path === scope.pathname + 'manifest.webmanifest') {
+    event.respondWith((async () => {
+      let response;
+      try {
+        response = await fetch(event.request, {cache: 'no-cache'});
+        if (response.ok) return response;
+      } catch {
+        // Fall back to the installed manifest when offline.
+      }
+      const cache = await caches.open(CACHE);
+      return (await cache.match(new URL(path, scope.origin).href)) || response || Response.error();
+    })());
+    return;
+  }
   event.respondWith((async()=>{const cache=await caches.open(CACHE);return (await cache.match(new URL(path,scope.origin).href))||fetch(event.request);})());
 });
