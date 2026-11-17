@@ -11,14 +11,49 @@ async function temporaryOrigin(){
  await new Promise(resolve=>originServer.listen(0,'127.0.0.1',resolve));
  return `http://127.0.0.1:${originServer.address().port}`;
 }
+const demoLogins = {admin:'admin',manager:'lev',wagon:'maxim',storekeeper:'olesya'};
+async function signIn(page, role) {
+ await page.getByLabel('Логин', {exact:true}).fill(demoLogins[role]);
+ await page.getByLabel('Пароль', {exact:true}).fill('demo');
+ await page.getByRole('button', {name:'Войти', exact:true}).click();
+ await expect(page.locator('.nav')).toBeVisible();
+ expect((await api(page,'/api/me')).data.user.role).toBe(role);
+}
 async function start(page,role='admin',origin='/'){
- await page.goto(origin);await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
+ await page.goto(origin);
+ await signIn(page, role);
 }
 async function api(page,path,method='GET',body){return page.evaluate(async({path,method,body})=>{
  const r=await window.PWA.fetch(path,{method,...(body?{body:JSON.stringify(body)}:{})});
  const data=r.headers.get('Content-Type')?.includes('json')?await r.json():{size:(await r.blob()).size};
  return {status:r.status,data};
 },{path,method,body});}
+test('demo login validates credentials and remembers only the signed-in role',async({page})=>{
+ await page.addInitScript(()=>{
+  if (!localStorage.getItem('gruzcontrol-demo-session')) sessionStorage.setItem('gruzcontrol-test-role','admin');
+ });
+ await page.goto('/?login-preview=1');
+ await expect(page.getByRole('heading',{name:'Вход в кабинет'})).toBeVisible();
+ await expect(page.locator('.pwa-roles')).toHaveCount(0);
+ await page.locator('.pwa-login-demo summary').click();
+ for(const login of Object.values(demoLogins)){
+  await expect(page.locator('.pwa-login-demo').getByText(login,{exact:true})).toBeVisible();
+ }
+ await page.getByLabel('Логин',{exact:true}).fill('lev');
+ await page.getByLabel('Пароль',{exact:true}).fill('wrong');
+ await page.getByRole('button',{name:'Войти',exact:true}).click();
+ await expect(page.getByRole('alert')).toHaveText('Неверный логин или пароль.');
+ await expect(page.locator('.nav')).toHaveCount(0);
+ await signIn(page,'manager');
+ await page.reload();
+ await expect(page.locator('.nav')).toBeVisible();
+ expect((await api(page,'/api/me')).data.user.role).toBe('manager');
+ await page.locator('[data-act="pwa-settings"]').click();
+ await page.getByRole('button',{name:'Выйти',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Вход в кабинет'})).toBeVisible();
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'Вход в кабинет'})).toBeVisible();
+});
 test('cabinets, saved data, offline reload, documents, no external API',async({page,context,browserName})=>{
  const origin=await temporaryOrigin();
  const errors=[];page.on('pageerror',e=>errors.push(e.message));const external=[];page.on('request',r=>{if(!r.url().startsWith(origin)&&!r.url().startsWith('blob:')&&!r.url().startsWith('data:'))external.push(r.url());});
@@ -45,7 +80,8 @@ test('cabinets, saved data, offline reload, documents, no external API',async({p
  await page.reload();await expect(page.locator('.nav')).toBeVisible();
  expect((await api(page,`/api/statements/${sid}`)).data.stats.total_cents).toBe(200000);
  for(const role of ['manager','wagon','storekeeper']){
-  await page.locator('[data-act="pwa-settings"]').click();await page.locator('[data-act="pwa-switch"]').click();await page.locator(`[data-role="${role}"]`).click();await expect(page.locator('.nav')).toBeVisible();
+  await page.locator('[data-act="pwa-settings"]').click();await page.getByRole('button',{name:'Выйти',exact:true}).click();
+  await signIn(page, role);
   expect((await api(page,'/api/loads')).status).toBe(200);
   if(role==='manager'){
    await page.locator('[data-act="nav"][data-id="loaders"]').click();

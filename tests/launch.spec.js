@@ -6,7 +6,7 @@ test('brand launch dismisses and leaves entry usable; icons are available',async
   await page.goto('/');
   await expect(page.locator('#pwa-launch video')).toHaveAttribute('poster','./client/launch-poster.jpg');
   await expect(page.locator('#pwa-launch')).toBeHidden({timeout:5500});
-  await expect(page.locator('[data-role="manager"]')).toBeVisible();
+  await expect(page.getByRole('textbox', {name:'Логин'})).toBeVisible();
   expect(await page.evaluate(()=>document.elementFromPoint(innerWidth/2,innerHeight/2)?.closest('#pwa-launch')!==null)).toBe(false);
   const icons=await page.evaluate(async()=>{
     const manifest=await(await fetch('./manifest.webmanifest')).json();
@@ -25,7 +25,7 @@ test('reduced motion and failed launch module cannot trap the user',async({page}
   await page.route('**/client/launch.js',route=>route.abort());
   await page.reload();
   await expect(page.locator('#pwa-launch')).toBeHidden({timeout:5500});
-  await expect(page.locator('[data-role="manager"]')).toBeVisible();
+  await expect(page.getByRole('textbox', {name:'Логин'})).toBeVisible();
 });
 
 test('launch asset and playback failure fallback',async({page,request})=>{
@@ -35,5 +35,5 @@ test('launch asset and playback failure fallback',async({page,request})=>{
   await page.route('**/client/launch.mp4',route=>route.abort());
   await page.goto('/');
   await expect(page.locator('#pwa-launch')).toHaveCount(0,{timeout:3000});
-  await expect(page.locator('[data-role="manager"]')).toBeVisible();
+  await expect(page.getByRole('textbox', {name:'Логин'})).toBeVisible();
 });
