@@ -96,23 +96,68 @@ window.addEventListener('pwa-session-expired', () => {
   sessionStorage.setItem('gruzcontrol-session-expired', '1');
   location.reload();
 });
-if(config.mode==='test'){
-  const selected=sessionStorage.getItem('gruzcontrol-test-role');
-  if (new URLSearchParams(location.search).get('login-preview') === '1') {
-    const demo = {
+function openLoginPreview(target, onBack) {
+  const selected = sessionStorage.getItem('gruzcontrol-test-role');
+  showLogin(target, {
+    demo: {
       login: 'lev',
       password: 'demo',
       backHref: './',
-      backLabel: roleNames[selected] ? 'Вернуться в кабинет' : 'Выбрать тестовый кабинет'
-    };
-    showLogin(app, {
-      demo,
-      signIn({login, password}) {
-        if (login !== demo.login || password !== demo.password) return 401;
-        sessionStorage.setItem('gruzcontrol-test-role', 'manager');
-        location.replace('./');
-      }
-    });
+      backLabel: roleNames[selected] ? 'Вернуться в кабинет' : 'Выбрать тестовый кабинет',
+      onBack
+    },
+    signIn({login, password}) {
+      if (login !== 'lev' || password !== 'demo') return 401;
+      sessionStorage.setItem('gruzcontrol-test-role', 'manager');
+      location.replace('./');
+    }
+  });
+}
+
+let loginPreview;
+async function showLoginPreview(link) {
+  if (loginPreview) return;
+  const root = document.documentElement;
+  const preview = document.createElement('dialog');
+  loginPreview = preview;
+  preview.className = 'pwa-login-preview';
+  let enteredFullscreen = false;
+  const android = /Android/i.test(navigator.userAgent);
+  if (android && document.fullscreenEnabled && typeof root.requestFullscreen === 'function' &&
+      !document.fullscreenElement && !matchMedia('(display-mode: fullscreen)').matches) {
+    try {
+      await root.requestFullscreen({navigationUI: 'hide'});
+      enteredFullscreen = true;
+    } catch {
+      // Some browsers and windows deny fullscreen. The form remains available.
+    }
+  }
+  preview.addEventListener('close', () => {
+    preview.remove();
+    loginPreview = undefined;
+    root.classList.remove('pwa-login-page');
+    if (enteredFullscreen && document.fullscreenElement === root) {
+      void document.exitFullscreen().catch(() => {});
+    }
+    link.focus();
+  }, {once: true});
+  openLoginPreview(preview, () => preview.close());
+  document.body.append(preview);
+  preview.showModal();
+}
+
+if(config.mode==='test'){
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a.pwa-login-link');
+    if (!link || event.defaultPrevented || event.button !== 0 ||
+        event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
+        typeof window.HTMLDialogElement?.prototype.showModal !== 'function') return;
+    event.preventDefault();
+    void showLoginPreview(link);
+  });
+  const selected=sessionStorage.getItem('gruzcontrol-test-role');
+  if (new URLSearchParams(location.search).get('login-preview') === '1') {
+    openLoginPreview(app);
     void setupOffline();
   } else if(roleNames[selected])openApp(selected);
   else{

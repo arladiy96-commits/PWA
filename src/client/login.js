@@ -40,6 +40,13 @@ export function showLogin(app, {signIn, expired, demo}) {
         </aside>` : ''}
     </section>`;
 
+  if (demo?.onBack) {
+    app.querySelector('.pwa-login-demo a').addEventListener('click', event => {
+      event.preventDefault();
+      demo.onBack();
+    });
+  }
+
   const form = app.querySelector('#login');
   const login = form.elements.login;
   const password = form.elements.password;
