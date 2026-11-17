@@ -9,7 +9,6 @@ const loginMessages = {
 
 export function showLogin(app, {signIn, expired, demo}) {
   document.documentElement.classList.add('pwa-login-page');
-  document.querySelector('meta[name="theme-color"]').content = '#e9eeeb';
   app.innerHTML = `
     <section class="pwa-login" aria-labelledby="login-title">
       <header class="pwa-login-brand">
