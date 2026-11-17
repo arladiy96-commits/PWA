@@ -347,10 +347,10 @@
     state.liveDetailId=id;
   }
   async function changeStatus(id,status){const x=state.loads.find(x=>x.id===id)||await api('/api/loads/'+id);
-    if(status==='loaded'&&!window.confirm(`Подтвердить завершение: ${vehicleName(x)} ${x.reference||'#'+id}?\nПосле этого изменять запись сможет только администратор.`))return;
-    if(status==='planned'&&!window.confirm('Вернуть в ожидание? Начисления этой погрузки будут отменены.'))return;
+    if(status==='loaded'&&!await window.PWA.confirmAction({title:'Завершить погрузку?',message:`${vehicleName(x)} ${x.reference||'#'+id}\nПосле завершения изменять запись сможет только администратор.`,confirmLabel:'Завершить'}))return;
+    if(status==='planned'&&!await window.PWA.confirmAction({title:'Вернуть в ожидание?',message:'Начисления этой погрузки будут отменены.',confirmLabel:'Вернуть'}))return;
     await post(`/api/loads/${id}/status`,{status});dismiss();notify(status==='loaded'?'Погрузка завершена, начисления рассчитаны':'Статус обновлён');await refreshLoads();}
-  async function deleteLoad(id){if(!window.confirm('Удалить погрузку из активного учёта? Действие попадёт в журнал.'))return;await api(`/api/loads/${id}`,{method:'DELETE'});dismiss();await refreshLoads();notify('Запись удалена');}
+  async function deleteLoad(id){if(!await window.PWA.confirmAction({title:'Удалить погрузку из активного учёта?',message:'Действие попадёт в журнал.',confirmLabel:'Удалить',danger:true}))return;await api(`/api/loads/${id}`,{method:'DELETE'});dismiss();await refreshLoads();notify('Запись удалена');}
   // Отдельные модули ролевых экранов, общая авторизация и API — здесь.
   // Ошибка в экране одного сотрудника не ломает загрузку остальных ролей.
   function createRole(name,context){
@@ -362,8 +362,8 @@
   }
   const maxim=createRole('maxim',{state,$,esc,icon,tone,localDate,monthStart,addDays,dateHuman,canClose,shell,openModal,productOptions,refreshLoads,isWagonMode,notify,api});
   const olesya=createRole('olesya',{vehicleName,vehicleField,state,$,esc,tone,money,shell,canClose,canCrew,canCreate,loadStatus,api,post,openModal,dismiss,notify,refreshLoads,formLoad,icon,localDate,addDays,reloadBoot,saveLoadRequest});
-  const lev=createRole('lev',{openModal,showDetail,openTruckForm:async()=>{await olesya.handleClick('olesya-new-truck');return true;},formLoad,render,dismiss,vehicleName,state,$,esc,tone,money,shell,api,post,notify,reloadBoot,tg});
-  const admin=createRole('admin',{openRevision:(id)=>lev.openRevision(id),openModal,reloadBoot,tone,money,vehicleName,render,state,$,esc,shell,api,post,notify,localDate,tg,dismiss,syncWagonTelegramTheme,refreshLoads});
+  const lev=createRole('lev',{confirmAction:window.PWA.confirmAction,askText:window.PWA.askText,openModal,showDetail,openTruckForm:async()=>{await olesya.handleClick('olesya-new-truck');return true;},formLoad,render,dismiss,vehicleName,state,$,esc,tone,money,shell,api,post,notify,reloadBoot,tg});
+  const admin=createRole('admin',{confirmAction:window.PWA.confirmAction,askText:window.PWA.askText,openRevision:(id)=>lev.openRevision(id),openModal,reloadBoot,tone,money,vehicleName,render,state,$,esc,shell,api,post,notify,localDate,tg,dismiss,syncWagonTelegramTheme,refreshLoads});
   function roleMethod(module,method,...args){
     if(typeof module[method]!=='function')throw new Error('Экран временно недоступен: '+method);
     return module[method](...args);
@@ -456,7 +456,7 @@
       if(act==='ad-reset'||act==='preview-off')mainTabTarget='admin-home';
       if(act==='pwa-settings'&&window.PWA.settingsMarkup){openModal('Меню приложения',window.PWA.settingsMarkup());return;}
       if(act==='pwa-switch'){await window.PWA.leaveCabinet();return;}
-      if(act==='pwa-update'){window.PWA.applyUpdate();return;}
+      if(act==='pwa-update'){await window.PWA.applyUpdate();return;}
       if(await delegatedClick(act,id,btn))return;
       if(act==='quick-menu'){quickMenu();}
       else if(act==='quick-nav'){dismiss();if(isWagonMode())await switchMaximTab(id);else {state.tab=id;render();if(id==='report'&&!state.report)await loadReport();}}
@@ -502,7 +502,7 @@
 
   let liveBusy=false,livePending=false,liveTimer=null,liveController=null,mainDirty=false,uiEpoch=0;
   function liveBlocked(){
-    return mainDirty||!$('#overlay').classList.contains('hidden')||
+    return mainDirty||!$('#overlay').classList.contains('hidden')||$('#pwa-dialog[open]')||
       document.activeElement?.matches?.('input,select,textarea,[contenteditable="true"]');
   }
   function flushLive(){
@@ -593,6 +593,6 @@
   }
 
   $('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))dismiss();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#pwa-dialog[open]'))dismiss();});
   enter();
 })();
