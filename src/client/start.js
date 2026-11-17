@@ -1,5 +1,6 @@
 import {createNavigation} from './navigation.js';
 import config from './config.js';
+import {createAppDialogs} from './dialog.js';
 import {showDocument} from './document-panel.js';
 import {createServerAdapter} from './server-adapter.js';
 const app=document.getElementById('app');
@@ -39,7 +40,8 @@ async function leaveCabinet() {
   location.reload();
 }
 
-window.PWA={navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument,settingsMarkup,leaveCabinet,applyUpdate:()=>updateApp?.()};
+const appDialogs = createAppDialogs(navigation);
+window.PWA={...appDialogs,navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument,settingsMarkup,leaveCabinet,applyUpdate:()=>updateApp?.()};
 async function openApp(role){
   app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
   try{
@@ -71,8 +73,8 @@ async function setupOffline(){
       const text = waiting ? 'Есть обновление' : reg.active
         ? (config.mode === 'test' ? 'Готово оффлайн' : navigator.onLine ? 'Сервер' : 'Нет сети')
         : 'Загружаем оффлайн…';
-      displayStatus(text, waiting ? () => {
-        if (!confirm('Обновить приложение? Несохранённый ввод будет потерян.')) return;
+      displayStatus(text, waiting ? async () => {
+        if (!await appDialogs.confirmAction({title:'Обновить приложение?',message:'Несохранённый ввод будет потерян.',confirmLabel:'Обновить'})) return;
         navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), {once: true});
         waiting.postMessage('ACTIVATE');
       } : undefined);

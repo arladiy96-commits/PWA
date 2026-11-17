@@ -35,3 +35,59 @@ body {
   -webkit-user-select: text;
   user-select: text;
 }
+
+#pwa-dialog {
+  color-scheme: light;
+  box-sizing: border-box;
+  width: min(calc(100% - 32px), 420px);
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid #c5d6df;
+  border-radius: 20px;
+  background: linear-gradient(155deg, #f2f7fa, #e2edf3);
+  color: #172f40;
+  box-shadow: 0 16px 44px #152e4955;
+}
+
+#pwa-dialog::backdrop {
+  background: #1b354c66;
+  backdrop-filter: blur(5px);
+}
+
+#pwa-dialog form { padding: 20px; }
+#pwa-dialog h2 { margin: 0; font-size: 20px; line-height: 1.25; }
+#pwa-dialog p { margin: 8px 0 0; color: #455c6d; white-space: pre-line; overflow-wrap: anywhere; }
+
+#pwa-dialog input {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid #b7c9d4;
+  border-radius: 10px;
+  background: #fff;
+  color: #172f40;
+  font-size: 16px;
+}
+
+.pwa-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+#pwa-dialog .btn {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid #bdcfd9;
+  border-radius: 11px;
+  background: #e2ebf1;
+  color: #203c4c;
+}
+
+#pwa-dialog .pwa-dialog-accept { background: #2c6c76; border-color: #2c6c76; color: #fff; }
+#pwa-dialog .pwa-dialog-accept.is-danger { background: #953848; border-color: #953848; }
+#pwa-dialog :focus-visible { outline: 2px solid #246c76; outline-offset: 2px; }

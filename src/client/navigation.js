@@ -85,7 +85,11 @@ export function createNavigation({showExit, hideExit, exitDelay = 2500}) {
   function close(key) {
     if (entries[index]?.key !== key || restoring || pending) return;
     entries[index].leave = () => {};
-    back();
+    // The caller can wait here before closing the layer underneath.
+    return new Promise(resolve => {
+      deferred.push(resolve);
+      back();
+    });
   }
 
   addEventListener('popstate', async event => {
