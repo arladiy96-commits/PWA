@@ -3,7 +3,7 @@ window.WagonsRoles=window.WagonsRoles||{};
 window.WagonsRoles.admin=function(ctx){
   'use strict';
   const baseShell=ctx.shell;
-  const {state,$,esc,shell,api,post,notify,localDate,tg,dismiss,syncWagonTelegramTheme,refreshLoads,openModal,reloadBoot,tone,money,vehicleName}=ctx;
+  const {confirmAction,askText,state,$,esc,shell,api,post,notify,localDate,tg,dismiss,syncWagonTelegramTheme,refreshLoads,openModal,reloadBoot,tone,money,vehicleName}=ctx;
   let editingDraft = false;
 
   async function afterLoadEdit(){
@@ -52,8 +52,8 @@ window.WagonsRoles.admin=function(ctx){
   }
   async function accessUser(id,action){
     const select=$(`#role-${id}`);if(!select)return;
-    if(action==='deny'&&!confirm('Отклонить заявку этого пользователя?'))return;
-    if(action==='block'&&!confirm('Заблокировать доступ сотруднику?'))return;
+    if(action==='deny'&&!await confirmAction({title:'Отклонить заявку пользователя?',confirmLabel:'Отклонить',danger:true}))return;
+    if(action==='block'&&!await confirmAction({title:'Заблокировать доступ сотруднику?',confirmLabel:'Заблокировать',danger:true}))return;
     const wantedState=action==='approve'?'active':action==='deny'?'denied':'blocked';
     const result=await post(`/api/users/${id}/access`,{role:select.value,state:wantedState});
     notify(result.changed===false?'Изменений нет':action==='approve'?'Доступ выдан':action==='deny'?'Заявка отклонена':'Доступ заблокирован');
@@ -115,11 +115,11 @@ window.WagonsRoles.admin=function(ctx){
     if(act==='ad-buyers-tab'){buyerTransport=id;await renderBuyers();return true;}
     if(act==='ad-buyer-edit'){
       const x=buyerItems.find(x=>x.id===Number(id));if(!x)return true;
-      const name=prompt('Название покупателя',x.name);
+      const name=await askText({title:'Название покупателя',value:x.name});
       if(name?.trim()){await post('/api/admin/buyers/'+id,{name},'PATCH');await renderBuyers();notify('Подсказка изменена');}return true;
     }
     if(act==='ad-buyer-delete'){
-      if(confirm('Удалить покупателя из подсказок? В сохранённых погрузках он останется.')){await post('/api/admin/buyers/'+id,{},'DELETE');await renderBuyers();notify('Покупатель убран из подсказок');}return true;
+      if(await confirmAction({title:'Удалить покупателя из подсказок?',message:'В сохранённых погрузках он останется.',confirmLabel:'Удалить',danger:true})){await post('/api/admin/buyers/'+id,{},'DELETE');await renderBuyers();notify('Покупатель убран из подсказок');}return true;
     }
 
     if(act==='ad-backups-refresh'){await renderBackups();return true;}
@@ -131,7 +131,7 @@ window.WagonsRoles.admin=function(ctx){
     }
     if(act==='ad-restore'){
       if(saving)return true;
-      if(!confirm('Восстановить запись и связанные данные? Вес, количество и остаток к сдаче будут пересчитаны. Сданные ведомости останутся в истории.'))return true;
+      if(!await confirmAction({title:'Восстановить запись и связанные данные?',message:'Вес, количество и остаток к сдаче будут пересчитаны. Сданные ведомости останутся в истории.',confirmLabel:'Восстановить'}))return true;
       saving=true;try{await post('/api/admin/trash/'+id+'/restore',{});await reloadBoot();await renderTrash();notify('Восстановлено. Итоги пересчитаны');}finally{saving=false;}return true;
     }
     if(act==='ad-go'){state.tab=id;await ctx.render();return true;}
@@ -147,25 +147,25 @@ window.WagonsRoles.admin=function(ctx){
       if(!b.rate_snapshot)delete b.rate_snapshot;
       await post(selected?'/api/loads/'+selected.id:'/api/loads',b,selected?'PATCH':'POST');dismiss();await afterLoadEdit();notify('Сохранено. Итоги пересчитаны');}finally{saving=false;}return true;
     }
-    if(act==='ad-status'){if(!confirm('Изменить статус? Начисления будут пересчитаны.'))return true;await post('/api/loads/'+selected.id+'/status',{status:id,reason:$('#ad-load-form [name="reason"]')?.value||''});dismiss();await afterLoadEdit();return true;}
-    if(act==='ad-delete'){if(confirm('Удалить погрузку? Вес, количество и начисления будут пересчитаны.')){await post('/api/loads/'+id,{},'DELETE');dismiss();await afterLoadEdit();}return true;}
+    if(act==='ad-status'){if(!await confirmAction({title:'Изменить статус?',message:'Начисления будут пересчитаны.',confirmLabel:'Изменить'}))return true;await post('/api/loads/'+selected.id+'/status',{status:id,reason:$('#ad-load-form [name="reason"]')?.value||''});dismiss();await afterLoadEdit();return true;}
+    if(act==='ad-delete'){if(await confirmAction({title:'Удалить погрузку?',message:'Вес, количество и начисления будут пересчитаны.',confirmLabel:'Удалить',danger:true})){await post('/api/loads/'+id,{},'DELETE');dismiss();await afterLoadEdit();}return true;}
     if(act.startsWith('ad-person-')){
       const items=await api('/api/loaders'),x=items.find(x=>x.id===Number(id));
-      if(act.endsWith('-new')){const name=prompt('Имя грузчика');if(name?.trim())await post('/api/loaders',{name});}
-      if(act.endsWith('-edit')){const name=prompt('Имя грузчика',x.name);if(name?.trim())await post('/api/loaders/'+id,{name},'PATCH');}
+      if(act.endsWith('-new')){const name=await askText({title:'Имя грузчика'});if(name?.trim())await post('/api/loaders',{name});}
+      if(act.endsWith('-edit')){const name=await askText({title:'Имя грузчика',value:x.name});if(name?.trim())await post('/api/loaders/'+id,{name},'PATCH');}
       if(act.endsWith('-toggle'))await post('/api/loaders/'+id,{active:!x.active},'PATCH');
-      if(act.endsWith('-delete')&&confirm('Удалить грузчика из справочника? Ранее внесённые бригады и начисления сохранятся.'))await post('/api/admin/loaders/'+id,{},'DELETE');
+      if(act.endsWith('-delete')&&await confirmAction({title:'Удалить грузчика из справочника?',message:'Ранее внесённые бригады и начисления сохранятся.',confirmLabel:'Удалить',danger:true}))await post('/api/admin/loaders/'+id,{},'DELETE');
       await reloadBoot();await renderPeople();return true;
     }
     if(act.startsWith('ad-product-')){
       const items=await api('/api/products'),x=items.find(x=>x.id===Number(id));
-      if(act.endsWith('-new')){const name=prompt('Название продукции');if(name?.trim())await post('/api/products',{name});}
-      if(act.endsWith('-edit')){const name=prompt('Название продукции',x.name);if(name?.trim())await post('/api/admin/products/'+id,{name},'PATCH');}
+      if(act.endsWith('-new')){const name=await askText({title:'Название продукции'});if(name?.trim())await post('/api/products',{name});}
+      if(act.endsWith('-edit')){const name=await askText({title:'Название продукции',value:x.name});if(name?.trim())await post('/api/admin/products/'+id,{name},'PATCH');}
       if(act.endsWith('-toggle'))await post('/api/admin/products/'+id,{active:!x.active},'PATCH');
-      if(act.endsWith('-delete')&&confirm('Удалить продукцию из справочника? Ранее внесённые погрузки и начисления сохранятся.'))await post('/api/admin/products/'+id,{},'DELETE');
+      if(act.endsWith('-delete')&&await confirmAction({title:'Удалить продукцию из справочника?',message:'Ранее внесённые погрузки и начисления сохранятся.',confirmLabel:'Удалить',danger:true}))await post('/api/admin/products/'+id,{},'DELETE');
       await reloadBoot();await renderProducts();return true;
     }
-    if(act==='ad-cancel-statement'){if(confirm('Отменить сдачу для исправления? Номер, дата и состав ведомости сохранятся. Затем её нужно сдать заново.')){await post('/api/admin/statements/'+id+'/cancel',{});state.tab='report';await ctx.openRevision();notify('Сдача отменена. Проверь и сдай эту же ведомость заново.');}return true;}
+    if(act==='ad-cancel-statement'){if(await confirmAction({title:'Отменить сдачу ведомости?',message:'Номер, дата и состав сохранятся. После исправления ведомость нужно сдать заново.',confirmLabel:'Отменить сдачу',danger:true})){await post('/api/admin/statements/'+id+'/cancel',{});state.tab='report';await ctx.openRevision();notify('Сдача отменена. Проверь и сдай эту же ведомость заново.');}return true;}
     if(act==='ad-reset-open'){openModal('Очистить тестовые данные',`<p class="sub">Удалятся все погрузки, грузчики, бригады дня, начисления, ведомости и история. Пользователи и их доступы сохранятся.</p><label class="choice"><input type="checkbox" id="ad-reset-catalogs">Также удалить продукцию и тарифы</label><label class="field">Введи УДАЛИТЬ<input id="ad-reset-confirm" autocomplete="off"></label>${button('Очистить данные','ad-reset','',true)}`);return true;}
     if(act==='ad-reset'){await post('/api/admin/reset',{confirmation:$('#ad-reset-confirm').value,catalogs:$('#ad-reset-catalogs').checked});dismiss();await reloadBoot();state.loads=[];state.report=null;state.tab='admin-home';await renderHome();notify('Тестовые данные очищены');return true;}
     if(['approve','deny','block'].includes(act)){await accessUser(Number(id),act);return true;}

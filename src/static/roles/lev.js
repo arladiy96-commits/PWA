@@ -3,7 +3,7 @@ window.WagonsRoles=window.WagonsRoles||{};
 window.WagonsRoles.lev=function(ctx){
   'use strict';
   const baseShell=ctx.shell;
-  const {vehicleName,state,$,esc,tone,money,shell,api,post,notify,reloadBoot,tg}=ctx;
+  const {confirmAction,askText,vehicleName,state,$,esc,tone,money,shell,api,post,notify,reloadBoot,tg}=ctx;
   const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Almaty',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   let mode='pending', current=null, busy=false, detailId=null, statementId=null, reportRequest=0;
   const head=(title,sub)=>`<div class="lv-heading"><div class="eyebrow">УЧЁТ ПОГРУЗОК</div><h2 class="page-title">${title}</h2><p class="sub">${sub}</p></div>`;
@@ -285,7 +285,7 @@ window.WagonsRoles.lev=function(ctx){
       return true;
     }
     if(act==='lv-contractor-submit'&&state.me.role==='admin'){
-      if(busy||!confirm('Учесть дополнительные начисления наемнику и сдать ведомость?'))return true;
+      if(busy||!await confirmAction({title:'Сдать ведомость с начислениями наёмнику?',confirmLabel:'Сдать'}))return true;
       busy=true;btn.disabled=true;
       try{
         const r=await post('/api/admin/statements/'+id+'/resubmit',{token:btn.dataset.token,include_contractor:true});
@@ -296,7 +296,7 @@ window.WagonsRoles.lev=function(ctx){
     }
     if(act==='lv-submit'){
       if(busy||!current||mode!=='pending'||statementId)return true;
-      if(!confirm('Сдать ведомость на '+money(Number(btn.dataset.total))+'? Эти начисления будут отмечены как оплаченные.'))return true;
+      if(!await confirmAction({title:'Сдать ведомость на '+money(Number(btn.dataset.total))+'?',message:'Эти начисления будут отмечены как оплаченные.',confirmLabel:'Сдать'}))return true;
       busy=true;btn.disabled=true;
       try{const r=await post('/api/statements',{token:btn.dataset.token});notify('Ведомость № '+r.id+' сдана');await showStatement(r.id);}
       catch(e){if(state.tab==='report'&&!statementId)await renderReport();throw e;}
@@ -316,12 +316,12 @@ window.WagonsRoles.lev=function(ctx){
     if(act==='lv-add-loader'){loaderEditor();return true;}
     if(act==='rename-loader'){
       if(state.me.role==='manager'){loaderEditor(id,btn.dataset.name);return true;}
-      const name=prompt('Имя грузчика:',btn.dataset.name);
+      const name=await askText({title:'Имя грузчика',value:btn.dataset.name});
       if(name&&name.trim()){await post('/api/loaders/'+id,{name:name.trim()},'PATCH');await reloadBoot();await renderLoaders();}
       return true;
     }
     if(act==='archive-product'){
-      if(confirm('Отправить продукцию в архив? История погрузок сохранится.')){
+      if(await confirmAction({title:'Отправить продукцию в архив?',message:'История погрузок сохранится.',confirmLabel:'В архив'})){
         await post('/api/products/'+id+'/archive',{});await reloadBoot();await renderTariffs();
       }
       return true;
