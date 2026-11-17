@@ -91,3 +91,94 @@ body {
 #pwa-dialog .pwa-dialog-accept { background: #2c6c76; border-color: #2c6c76; color: #fff; }
 #pwa-dialog .pwa-dialog-accept.is-danger { background: #953848; border-color: #953848; }
 #pwa-dialog :focus-visible { outline: 2px solid #246c76; outline-offset: 2px; }
+
+.pwa-login-page {
+  color-scheme: light;
+  background: #e8edf0;
+}
+
+.pwa-login-page body { background: #e8edf0; }
+.pwa-login-page .ambient { display: none; }
+
+.pwa-login-page #app.app-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 0;
+  overflow: auto;
+}
+
+.pwa-login {
+  display: grid;
+  align-content: center;
+  gap: 20px;
+  width: min(100%, 424px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  color: #192d36;
+}
+
+.pwa-login-brand { display: flex; align-items: center; gap: 12px; padding-left: 2px; }
+.pwa-login-brand img { display: block; border-radius: 14px; }
+.pwa-login-brand p { margin: 0; font-size: 19px; font-weight: 750; letter-spacing: -.025em; }
+
+.pwa-login-card {
+  padding: clamp(18px, 6vw, 28px);
+  border: 1px solid #d3dde1;
+  border-radius: 22px;
+  background: #fafcfc;
+  box-shadow: 0 10px 32px #263a4512;
+}
+
+.pwa-login h1 { margin: 0; font-size: 32px; line-height: 1.12; letter-spacing: -.04em; }
+.pwa-login-hint { margin: 8px 0 24px; color: #4c626c; font-size: 14px; line-height: 1.45; }
+.pwa-login label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 650; }
+.pwa-login label[for="login-password"] { margin-top: 17px; }
+
+.pwa-login input {
+  min-height: 49px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #aebfc6;
+  border-radius: 11px;
+  background: #fff;
+  color: #192d36;
+}
+
+.pwa-login :is(input, button):focus-visible { outline: 2px solid #286069; outline-offset: 2px; }
+.pwa-login input[aria-invalid="true"] { border-color: #a44540; }
+.pwa-login-password { position: relative; }
+.pwa-login-password input { padding-right: 96px; }
+.pwa-login-password button {
+  position: absolute;
+  inset: 2px 3px 2px auto;
+  min-width: 88px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #26555d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pwa-login-submit {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 11px;
+  background: #275761;
+  color: #fff;
+  font-weight: 750;
+}
+
+.pwa-login-submit:disabled { opacity: .72; }
+.pwa-login-error, .pwa-login-status { margin: 11px 0 0; font-size: 14px; line-height: 1.4; }
+.pwa-login-error { color: #963832; }
+.pwa-login-status { color: #4c626c; }
+.pwa-login-error:empty, .pwa-login-status:empty { margin: 0; }

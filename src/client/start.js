@@ -3,6 +3,7 @@ import config from './config.js';
 import {createAppDialogs} from './dialog.js';
 import {showDocument} from './document-panel.js';
 import {createServerAdapter} from './server-adapter.js';
+import {showLogin} from './login.js';
 const app=document.getElementById('app');
 const roleNames={admin:'Администратор',manager:'Лев',wagon:'Максим',storekeeper:'Заведующий складом',pending:'Тестовая заявка'};
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -43,7 +44,9 @@ async function leaveCabinet() {
 const appDialogs = createAppDialogs(navigation);
 window.PWA={...appDialogs,navigation,mode:config.mode,fetch:(...args)=>adapter.fetch(...args),download:showDocument,settingsMarkup,leaveCabinet,applyUpdate:()=>updateApp?.()};
 async function openApp(role){
-  app.innerHTML='<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>';
+  app.innerHTML = config.mode === 'test'
+    ? '<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Готовим тестовую базу…</p><p class="sub">Первая загрузка может занять немного времени.</p></div>'
+    : '<div class="loading"><div class="spinner"></div><h2>ГрузКонтроль</h2><p>Открываем кабинет…</p></div>';
   try{
     if(config.mode==='test'){
       const {createTestAdapter}=await import('./test-adapter.js');adapter=await createTestAdapter(role);
@@ -86,7 +89,12 @@ async function setupOffline(){
     navigator.serviceWorker.addEventListener('controllerchange', status);
   } catch { displayStatus('Оффлайн не готов'); }
 }
-window.addEventListener('pwa-session-expired',()=>{sessionStorage.removeItem('gruzcontrol-server-session');location.reload();});
+window.addEventListener('pwa-session-expired', () => {
+  if (!sessionStorage.getItem('gruzcontrol-server-session')) return;
+  sessionStorage.removeItem('gruzcontrol-server-session');
+  sessionStorage.setItem('gruzcontrol-session-expired', '1');
+  location.reload();
+});
 if(config.mode==='test'){
   const selected=sessionStorage.getItem('gruzcontrol-test-role');
   if(roleNames[selected])openApp(selected);
@@ -105,9 +113,13 @@ if(config.mode==='test'){
   const token=sessionStorage.getItem('gruzcontrol-server-session');
   if(token){adapter=createServerAdapter(config,token);openApp();}
   else{
-    app.innerHTML='<form class="pwa-entry" id="login"><h1>ГрузКонтроль</h1><label class="field">Логин<input name="login" autocomplete="username" required></label><label class="field">Пароль<input name="password" type="password" autocomplete="current-password" required></label><p id="login-error" role="alert"></p><button class="btn primary">Войти</button></form>';
-    app.querySelector('form').onsubmit=async e=>{e.preventDefault();const f=e.target;f.querySelector('button').disabled=true;
-      try{const client=createServerAdapter(config);const r=await client.fetch(config.loginPath,{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(f)))});const data=await r.json();if(!r.ok||!data.access_token)throw Error(data.detail||'Сервер не подтвердил вход');sessionStorage.setItem('gruzcontrol-server-session',data.access_token);location.reload();}
-      catch(err){document.getElementById('login-error').textContent=err.message;f.querySelector('button').disabled=false;}};
+    const expired = sessionStorage.getItem('gruzcontrol-session-expired') === '1';
+    sessionStorage.removeItem('gruzcontrol-session-expired');
+    const signIn = credentials => createServerAdapter(config).fetch(config.loginPath, {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+      signal: AbortSignal.timeout?.(15000)
+    });
+    showLogin(app, signIn, expired);
   }
 }
