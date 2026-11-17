@@ -16,9 +16,9 @@ export function showLogin(app, {signIn, expired, demo}) {
         <p>ГрузКонтроль</p>
       </header>
       <div class="pwa-login-card">
-        <h1 id="login-title"${demo?.onBack ? ' tabindex="-1" autofocus' : ''}>Вход в кабинет</h1>
+        <h1 id="login-title">Вход в кабинет</h1>
         <p class="pwa-login-hint">${demo
-          ? 'Проверь вход с тестовым логином и паролем.'
+          ? 'Войди в офлайн-кабинет под тестовой учётной записью.'
           : 'Введи логин и пароль, которые выдал администратор.'}</p>
         <form id="login">
           <label for="login-name">Логин</label>
@@ -34,18 +34,12 @@ export function showLogin(app, {signIn, expired, demo}) {
         </form>
       </div>
       ${demo ? `
-        <aside class="pwa-login-demo">
-          <p>Тестовый логин <code>${demo.login}</code> · пароль <code>${demo.password}</code></p>
-          <a href="${demo.backHref}">${demo.backLabel}</a>
-        </aside>` : ''}
+        <details class="pwa-login-demo">
+          <summary>Демо-логины</summary>
+          <ul>${demo.accounts.map(account => `<li><span>${account.label}</span><code>${account.login}</code></li>`).join('')}</ul>
+          <p>Общий пароль <code>${demo.password}</code></p>
+        </details>` : ''}
     </section>`;
-
-  if (demo?.onBack) {
-    app.querySelector('.pwa-login-demo a').addEventListener('click', event => {
-      event.preventDefault();
-      demo.onBack();
-    });
-  }
 
   const form = app.querySelector('#login');
   const login = form.elements.login;

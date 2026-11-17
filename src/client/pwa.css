@@ -7,9 +7,6 @@ html.pwa.lev-frost button.lf-identity{background:none;border-block:0;border-righ
 .pwa-settings-link{margin:12px 0 2px}
 #modal [data-act="pwa-update"]{margin-bottom:8px}
 #modal [data-act="pwa-update"][hidden]{display:none!important}
-.pwa-entry{margin:auto;padding:45px 24px;max-width:480px;color:#19283c;font-family:system-ui;overflow:auto;height:100dvh;box-sizing:border-box}
-.pwa-entry h1{font-size:32px;margin:12px 0}.pwa-entry p{line-height:1.5}.pwa-entry .eyebrow{font-size:11px;letter-spacing:2px}.pwa-entry .sub{color:#526175;font-size:13px}.pwa-entry details{font-size:13px;margin-top:24px}.pwa-entry .field input{background:#f0f3f7;color:#172334}
-.pwa-roles{display:grid;gap:10px;margin:24px 0}.pwa-roles .btn{display:flex;justify-content:space-between;align-items:center;padding:17px;background:#e9eef4;border:1px solid #a7b5c5;color:#172334;font-size:16px;border-radius:12px}
 #pwa-document{position:fixed;z-index:2000;left:12px;right:12px;bottom:calc(85px + env(safe-area-inset-bottom,0px));margin:auto;max-width:480px;background:#f5f8fc;border:1px solid #a9bacb;border-radius:14px;padding:12px;color:#19283c;box-shadow:0 8px 30px #20314a38;font:14px system-ui}
 .pwa-document-head,.pwa-document-actions{display:flex;align-items:center;gap:8px}
 .pwa-document-head{justify-content:space-between}
@@ -92,9 +89,6 @@ body {
 #pwa-dialog .pwa-dialog-accept.is-danger { background: #953848; border-color: #953848; }
 #pwa-dialog :focus-visible { outline: 2px solid #246c76; outline-offset: 2px; }
 
-.pwa-login-link { text-decoration: none; }
-#modal .pwa-login-link { margin-bottom: 8px; }
-.pwa-entry .pwa-login-link { background: #dbe8e8; border-color: #9fb7ba; color: #20474d; }
 
 .pwa-login-page {
   color-scheme: light;
@@ -103,20 +97,6 @@ body {
 
 .pwa-login-page body { background: inherit; }
 .pwa-login-page .ambient { display: none; }
-
-.pwa-login-preview {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  border: 0;
-  padding: 0;
-  background: #e9eeeb;
-  overflow: auto;
-}
 
 .pwa-login-page #app.app-frame:has(> .pwa-login) {
   position: fixed;
@@ -207,15 +187,31 @@ body {
   font-size: 13px;
   line-height: 1.4;
 }
-.pwa-login-demo p { margin: 0; }
-.pwa-login-demo code { padding: 2px 4px; border-radius: 4px; background: #dae5df; color: #233e34; }
-.pwa-login-demo a {
-  display: inline-flex;
-  align-items: center;
+.pwa-login-demo summary {
   min-height: 44px;
+  padding: 12px 0;
   color: #234f47;
   font-weight: 700;
-  text-underline-offset: 3px;
+  cursor: pointer;
 }
+.pwa-login-demo ul {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.pwa-login-demo li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pwa-login-demo p { margin: 0; }
+.pwa-login-demo code { padding: 2px 4px; border-radius: 4px; background: #dae5df; color: #233e34; }
+.pwa-login-demo summary:focus-visible { outline: 2px solid #286069; outline-offset: 3px; }
 
-.pwa-login-demo a:focus-visible { outline: 2px solid #286069; outline-offset: 3px; }
+.pwa-login-meta { padding: 0 4px; color: #41564e; }
+.pwa-login-meta .sub { margin: 0 0 6px; color: inherit; }
+.pwa-login-meta [data-act="pwa-update"] {
+  margin: 3px 0 10px;
+  background: #e0e9e4;
+  border-color: #a9bdb1;
+  color: #234f47;
+}
+.pwa-login-meta [data-act="pwa-update"][hidden] { display: none; }
