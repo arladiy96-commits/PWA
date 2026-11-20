@@ -18,7 +18,7 @@ self.addEventListener('fetch',event=>{
   const url=new URL(event.request.url),scope=new URL(self.registration.scope);
   // Never intercept/cache API, cross-origin traffic, writes, or other apps.
   if(event.request.method!=='GET'||url.origin!==scope.origin||!url.pathname.startsWith(scope.pathname)||url.pathname.includes('/api/'))return;
-  const path=url.pathname===scope.pathname?scope.pathname+'index.html':url.pathname;
+  const path=url.pathname.endsWith('/') ? url.pathname+'index.html' : url.pathname;
   if(!allowed.has(path))return;
   if (path === scope.pathname + 'manifest.webmanifest') {
     event.respondWith((async () => {
