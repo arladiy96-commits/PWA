@@ -8,3 +8,5 @@ nav small:not(:first-child){margin-top:22px}.summary{display:grid;grid-template-
 @media(max-width:760px){.summary{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.summary button{padding:10px}.segments{padding:6px}.balances{grid-template-columns:1fr}}
 @media print{header,nav,.tabs,footer,.tools,.segments,.heading>button,dialog{display:none!important}body,#page,.workspace{background:white}.shell,.workspace{display:block}#page{padding:0}.scroll,article{overflow:visible}table{white-space:normal}article{margin-top:15px}tr{break-inside:avoid}.link{color:inherit}.board,.split{display:block}}
 .journal-summary{margin-top:16px}
+
+.reconcile,.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}.analysis-grid{margin-top:16px}.reconcile article+article,.analysis-grid article+article{margin:0}.desk-links{display:flex;gap:12px;margin:18px 0}.desk-links button{font-weight:600;color:var(--teal)}@media(max-width:1150px){.reconcile,.analysis-grid{grid-template-columns:1fr}}@media print{.desk-links{display:none}.reconcile,.analysis-grid{display:block}}

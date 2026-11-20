@@ -6,8 +6,9 @@ const demoKey='gruzcontrol-desktop-preview-v1', loginKey='gruzcontrol-demo-sessi
 import {initialRates,price,grouped,exportRows} from './office.js';
 const rateKey='gruzcontrol-desktop-rates-v1';
 let rates=initialRates;
-const titles={overview:'Обзор смены', reports:'Анализ погрузок',tariffs:'Тарифы',journal:'Журнал погрузок',statements:'Ведомости',stats:'Статистика',people:'Табель'};
-const view={tab:'overview',queue:'overdue',statusFilter:'Все',from:day(-29),to:day(),dimension:'buyer',group:'',reportType:'Все',date:day(),month:day().slice(0,7),type:'Все',query:'',selected:null,statement:'',person:'',cell:'',statDay:''};
+import {comparison,totals} from './analysis.js';
+const titles={dayCheck:'Сверка дня',compare:'Сравнение периодов',overview:'Обзор смены', reports:'Анализ погрузок',tariffs:'Тарифы',journal:'Журнал погрузок',statements:'Ведомости',stats:'Статистика',people:'Табель'};
+const view={cashDate:day(),payee:'',aStart:day(-6),aEnd:day(),prod:'',vehicle:'',axis:'buyer',segment:'',side:'current',tab:'overview',queue:'overdue',statusFilter:'Все',from:day(-29),to:day(),dimension:'buyer',group:'',reportType:'Все',date:day(),month:day().slice(0,7),type:'Все',query:'',selected:null,statement:'',person:'',cell:'',statDay:''};
 const safe=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sum=(rows,f)=>rows.reduce((v,r)=>v+f(r),0);
 const label=r=>r.type+(r.ref?' № '+r.ref:'');
@@ -34,7 +35,7 @@ function openDesk(){
   try{loads=JSON.parse(sessionStorage.getItem(demoKey))||sample();}
   catch{message='Не удалось прочитать сохранённый пример.';loads=sample();}
   app.innerHTML=`<header><b class="logo">ГК</b><strong>ГрузКонтроль</strong><span class="sep"></span><span>Рабочий стол</span><div class="spacer"></div><small>Демо · кабинет Льва</small><button data-act="logout">Выйти</button></header>
-  <div class="shell"><nav aria-label="Разделы">${[['Смена','overview','journal','statements'],['Аналитика','reports','stats','people'],['Настройки','tariffs']].map(([group,...keys])=>'<small>'+group+'</small>'+keys.map(key=>button('tab',titles[key],'data-id="'+key+'"')).join('')).join('')}<a href="../">Мобильный кабинет ↗</a></nav>
+  <div class="shell"><nav aria-label="Разделы">${[['Смена','overview','journal','dayCheck','statements'],['Аналитика','compare','reports','stats','people'],['Настройки','tariffs']].map(([group,...keys])=>'<small>'+group+'</small>'+keys.map(key=>button('tab',titles[key],'data-id="'+key+'"')).join('')).join('')}<a href="../">Мобильный кабинет ↗</a></nav>
   <div class="workspace"><div class="tabs"></div><section id="page"></section><footer><span>Демоданные этой вкладки</span><span>Ctrl + K · Поиск в журнале</span></footer></div></div>`;
   render();
 }
@@ -51,7 +52,7 @@ function render(){
   if(!usedTabs.includes(view.tab))usedTabs.push(view.tab);
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===view.tab));
   document.querySelector('.tabs').innerHTML=usedTabs.map(k=>button('tab',titles[k],`data-id="${k}" class="${view.tab===k?'active':''}"`)).join('');
-  const content={overview,journal,statements,stats,people,reports,tariffs}[view.tab]();
+  const content={dayCheck,compare,overview,journal,statements,stats,people,reports,tariffs}[view.tab]();
   document.querySelector('#page').innerHTML=`<div class="heading"><h1>${titles[view.tab]}</h1>${view.tab==='journal'?button('new','＋ Добавить погрузку','class="primary"'):''}</div>${message?'<p role="status">'+safe(message)+'</p>':''}${content}`;
 }
 function journal(){
@@ -89,7 +90,7 @@ function overview(){
   return `<div class="summary">${cards.map(([v,t,a])=>button('metric','<span>'+t+'</span><strong>'+v+'</strong>',`data-id="${a}"`)).join('')}</div>
   <div class="board"><article><div class="caption">Контроль погрузок</div><div class="segments">${[['overdue','С прошлых дней'],['waiting','Без бригады'],['active','В работе сегодня']].map(([id,n])=>button('queue',n+' · '+groups[id].length,`data-id="${id}" aria-pressed="${view.queue===id}"`)).join('')}</div>${queue.length?table(['Дата','Погрузка','Покупатель','Вес, т'],queue.map(r=>`<tr><td>${dateLabel(r.date)}</td><td>${drillRow(r)}</td><td>${safe(r.buyer)}</td><td>${number(r.weight)}</td></tr>`)):empty('Таких погрузок сейчас нет.')}</article>
   <article><div class="caption">Бригады сегодня</div>${teams.length?table(['Состав','В работе','Загружено'],teams.map(g=>`<tr><td>${safe(g.key)}</td><td>${g.rows.filter(r=>!r.done).length}</td><td>${g.rows.filter(r=>r.done).length}</td></tr>`)):empty('Бригады ещё не назначены.')}</article></div>
-  <article><div class="caption">Начисления к ближайшей сдаче ${button('tab','Открыть ведомость →','data-id="statements"')}</div><div class="balances">${[...ledger(pending)].map(([n,v])=>line(n,money(v))).join('')||empty('Всё сдано.')}</div></article>`;
+  <div class="desk-links">${button('tab','Сверить начисления за день →','data-id="dayCheck"')}${button('tab','Сравнить затраты за периоды →','data-id="compare"')}</div><article><div class="caption">Начисления к ближайшей сдаче ${button('tab','Открыть ведомость →','data-id="statements"')}</div><div class="balances">${[...ledger(pending)].map(([n,v])=>line(n,money(v))).join('')||empty('Всё сдано.')}</div></article>`;
 }
 function reportRows(){
   return loads.filter(r=>r.done&&r.date>=view.from&&r.date<=view.to&&(view.reportType==='Все'||(r.type==='Вагон')===(view.reportType==='Вагоны')));
@@ -105,6 +106,27 @@ function reports(){
 function tariffs(){
   return `<article><div class="caption">Ставки для новых демопогрузок</div>${table(['Продукция','Вагон, ₸','Машина до 20 т, ₸/т','От 20 т, ₸/т','Наемник, ₸/вагон',''],rates.map((r,i)=>`<tr><td>${r.product}</td>${['wagon','small','large','contractor'].map(k=>'<td>'+number(r[k])+'</td>').join('')}<td>${button('rate','Изменить','data-id="'+i+'"')}</td></tr>`))}</article>
   <article><div class="caption">Проверить расчёт</div><form id="estimate"><label>Продукция<select name="product"><option>Мука</option><option>Отруби</option></select></label><label>Транспорт<select name="type"><option>Вагон</option><option>Фура</option><option>КамАЗ</option></select></label><label>Вес, т<input name="weight" type="number" min=".01" max="1000" step=".01" value="68.5" required></label><label>Человек<input name="count" type="number" min="1" max="100" step="1" value="3" required></label><button class="primary">Рассчитать</button></form><div id="estimate-result" aria-live="polite"></div></article>`;
+}
+
+function dayCheck(){
+  const rows=loads.filter(r=>r.date===view.cashDate);
+  const done=rows.filter(r=>r.done), paid=done.filter(r=>r.statement), pending=done.filter(r=>!r.statement);
+  const accounts=ledger(done), paidAccounts=ledger(paid), pendingAccounts=ledger(pending);
+  const chosen=accounts.has(view.payee)?view.payee:'';
+  const detail=chosen?done.filter(r=>ledger([r]).has(chosen)):done;
+  return `<div class="tools"><label>Дата погрузки <input type="date" id="cashDate" value="${view.cashDate}"></label>${button('print','Печать сверки')}</div><div class="metrics">${line('Начислено',money(totals(done).cost))}${line('В сданных ведомостях',money(totals(paid).cost))}${line('Ещё к сдаче',money(totals(pending).cost))}</div><div class="reconcile"><article><div class="caption">Расчёты по людям</div>${table(['Получатель','Начислено','Сдано','К сдаче'],[...accounts].map(([n,v])=>`<tr class="${chosen===n?'selected':''}"><td>${button('payee',safe(n),'class="link" data-name="'+safe(n)+'"')}</td><td>${money(v)}</td><td>${money(paidAccounts.get(n)||0)}</td><td>${money(pendingAccounts.get(n)||0)}</td></tr>`))}${done.length?'':empty('За выбранный день начислений нет.')}</article><article><div class="caption">${chosen?safe(chosen):'Все начисления за день'} ${chosen?button('payee','Все','data-name=""'):''}</div>${table(['Погрузка','Сумма','Ведомость'],detail.map(r=>`<tr><td>${drillRow(r)}</td><td>${money(chosen?ledger([r]).get(chosen):r.fund+r.contractor)}</td><td>${button('document',safe(r.statement||'К сдаче'),'class="link" data-name="'+safe(r.statement||'')+'"')}</td></tr>`))}</article></div>
+  <article class="journal-summary"><div class="caption">Ещё без начислений · ${rows.length-done.length}</div>${rows.length===done.length?empty('Все погрузки дня завершены.'):table(['Погрузка','Покупатель','Вес, т','Статус'],rows.filter(r=>!r.done).map(r=>`<tr><td>${drillRow(r)}</td><td>${safe(r.buyer)}</td><td>${number(r.weight)}</td><td>${badge(r)}</td></tr>`))}</article>`;
+}
+function compare(){
+  const d=comparison(loads,view.aStart,view.aEnd,view.axis,view.prod,view.vehicle);
+  const g=d.groups.find(x=>x.name===view.segment)||d.groups[0];
+  const signed=v=>(v>0?'+':'')+money(v);
+  const rate=t=>t.weight?money(Math.round(t.cost/t.weight)):'—';
+  const side=view.side==='previous'?'previous':'current';
+  const periods=['Текущий','Предыдущий'];
+  return `<div class="tools"><label>С <input type="date" id="aStart" value="${view.aStart}"></label><label>По <input type="date" id="aEnd" value="${view.aEnd}"></label><select aria-label="Продукция" id="prod">${['','Мука','Отруби'].map(v=>option(v,view.prod,v||'Вся продукция')).join('')}</select><select aria-label="Транспорт" id="vehicle">${['','Вагон','Фура','КамАЗ'].map(v=>option(v,view.vehicle,v||'Весь транспорт')).join('')}</select><select id="axis" aria-label="Разрез сравнения">${[['buyer','По покупателям'],['type','По транспорту'],['product','По продукции'],['crew','По бригадам']].map(([v,n])=>option(v,view.axis,n)).join('')}</select></div>
+  <article><div class="caption">Сравнение с ${dateLabel(d.before)} — ${dateLabel(d.until)}</div>${table(['Период','Погрузок','Тонн','Фонд бригад','Наемник','Всего','За тонну'],[d.now,d.prior].map((t,i)=>`<tr><td>${periods[i]}</td><td>${t.count}</td><td>${number(t.weight)}</td><td>${money(t.fund)}</td><td>${money(t.contractor)}</td><td><b>${money(t.cost)}</b></td><td>${rate(t)}</td></tr>`))}</article>
+  <div class="analysis-grid"><article><div class="caption">Изменение затрат <b>${signed(d.now.cost-d.prior.cost)}</b></div>${table(['Группа','Предыдущий','Текущий','Разница'],d.groups.map(x=>`<tr class="${g===x?'selected':''}"><td>${button('segment',safe(x.name),'class="link" data-name="'+safe(x.name)+'"')}</td><td>${money(x.b.cost)}</td><td>${money(x.a.cost)}</td><td>${signed(x.delta)}</td></tr>`))}${g?'':empty('За оба периода подходящих погрузок нет.')}</article><article><div class="caption">${safe(g?.name||'Погрузки группы')}</div><div class="segments">${['current','previous'].map((v,i)=>button('side',periods[i],'data-id="'+v+'" aria-pressed="'+(side===v)+'"')).join('')}</div>${g?.[side].length?table(['Дата','Погрузка','Тонн','Затраты'],g[side].map(r=>`<tr><td>${dateLabel(r.date)}</td><td>${drillRow(r)}</td><td>${number(r.weight)}</td><td>${money(r.fund+r.contractor)}</td></tr>`)):empty('В этом периоде погрузок группы нет.')}</article></div>`;
 }
 
 function inspector(r){
@@ -143,6 +165,10 @@ document.addEventListener('click',event=>{
   const r=loads.find(x=>x.id===view.selected);
   message='';
   switch(b?.dataset.act||'row'){
+    case 'payee':view.payee=view.payee===b.dataset.name?'':b.dataset.name;break;
+    case 'document':view.tab='statements';view.statement=b.dataset.name;view.person='';break;
+    case 'segment':view.segment=b.dataset.name;break;
+    case 'side':view.side=b.dataset.id;break;
     case 'metric':
       if(b.dataset.id==='statements'){view.tab='statements';view.statement='';}
       else Object.assign(view,{tab:'journal',date:day(),query:'',type:'Все',statusFilter:b.dataset.id==='finished'?'Загружен':'Все',selected:null});
@@ -225,9 +251,11 @@ dialog.addEventListener('submit',e=>{
 });
 app.addEventListener('change',e=>{
   const el=e.target;
-  if(!['date','month','type','statement','from','to','dimension','reportType','statusFilter'].includes(el.id)||!el.value&&el.id!=='statement')return;
+  if(!['date','month','type','statement','from','to','dimension','reportType','statusFilter','cashDate','aStart','aEnd','prod','vehicle','axis'].includes(el.id)||!el.value&&!['statement','prod','vehicle'].includes(el.id))return;
   if(el.id==='from'&&el.value>view.to)view.to=el.value;
   if(el.id==='to'&&el.value<view.from)view.from=el.value;
+  if(el.id==='aStart'&&el.value>view.aEnd)view.aEnd=el.value;
+  if(el.id==='aEnd'&&el.value<view.aStart)view.aStart=el.value;
   view[el.id]=el.value;
   if(el.id==='month'){view.cell='';view.statDay='';}
   if(el.id==='date'||el.id==='type'||el.id==='statusFilter')view.selected=null;
